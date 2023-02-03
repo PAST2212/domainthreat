@@ -3,7 +3,7 @@ Daily Domain Monitoring for Brands and Mailing Domain Names
 
 This is my first Project on Github.
 
-Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup.com) or other words.
+Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
 
 You can recognize 
 - combo squatting (e.g. amazon-shop.com), 
@@ -31,7 +31,7 @@ Features:
 
 How it Works:
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
-Put your brands or mailing domain names into this list to monitor
+Put your brands or mailing domain names into this list to monitor (without the TLD).
 
 ![image](https://user-images.githubusercontent.com/124390875/216693388-b5543d15-26a0-410d-a62b-6e3764b713b6.png)
 Put here your legal word collisions you want to exclude from the results to reduce false positives
