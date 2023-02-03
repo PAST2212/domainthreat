@@ -3,7 +3,9 @@ Daily Domain Monitoring for Brands and Mailing Domain Names
 
 This is my first Project on Github.
 
-Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup.com) in case of look-alike domains and other words you want on a daily base.
+Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup.com) or other words.
+
+You can recognize combo squatting (e.g. amazon-shop.com), typo squatting (ammazon.com), brand impersonations, phishing attacks and other forms of look-alike Domains (e.g. arnazon.com).
 
 You can use it to monitor and track recently registered domains with your brands in it or that looks similar to your brands to recognize for example phishing attacks (e.g. CEO-Fraud) or other forms of fraud.
 
