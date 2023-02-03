@@ -30,14 +30,14 @@ Features:
 
 
 How it Works:
-![image](https://user-images.githubusercontent.com/124390875/216680838-2f862bb8-093c-4fbf-a5bf-d53c4f45e9c3.png)
+![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
 Put your brands or mailing domain names into this list to monitor
 
-![image](https://user-images.githubusercontent.com/124390875/216681164-9e82874c-a0bb-4658-b3c5-7408753cd4b7.png)
+![image](https://user-images.githubusercontent.com/124390875/216693388-b5543d15-26a0-410d-a62b-6e3764b713b6.png)
 Put here your legal word collisions you want to exclude from the results to reduce false positives
 
-![image](https://user-images.githubusercontent.com/124390875/216681414-59efc295-50ac-4241-a8b2-61e3d38b5f9b.png)
+![image](https://user-images.githubusercontent.com/124390875/216693614-2b112eda-d900-4283-9161-ef96562d9357.png)
 Put here generic words from your strings you have in your monitoring list to exlcude them from the longest common substring textdistance operations to reduce false positives
 
-![image](https://user-images.githubusercontent.com/124390875/216681886-731b918b-87bf-4812-b2eb-448976c7e497.png)
+![image](https://user-images.githubusercontent.com/124390875/216693534-06a412d5-597d-4fae-acd5-1ce18502d5c5.png)
 Put here common words that are describing your brands, industry, brand names, etc. Leave Key 'Exceptions' unchanged. 
