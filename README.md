@@ -19,7 +19,7 @@ Features:
 - IDN Detection
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality
-- Keyword Searches in Page Source Codes with describing Keywords, even if they are in other languages (using Google Translator API)
+- Keyword Searches in Page Source Codes with describing Keywords, even if they are in other languages (using Google Translator API - english per default)
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default
 
 
