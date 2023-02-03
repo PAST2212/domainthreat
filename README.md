@@ -39,5 +39,7 @@ Put here your legal word collisions you want to exclude from the results to redu
 ![image](https://user-images.githubusercontent.com/124390875/216693614-2b112eda-d900-4283-9161-ef96562d9357.png)
 Put here generic words from your strings you have in your monitoring list to exlcude them from the longest common substring textdistance operations to reduce false positives
 
+
 ![image](https://user-images.githubusercontent.com/124390875/216693534-06a412d5-597d-4fae-acd5-1ce18502d5c5.png)
+
 Put here common words that are describing your brands, industry, brand names, etc. Leave Key 'Exceptions' unchanged. 
