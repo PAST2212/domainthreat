@@ -17,6 +17,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). I will publish 
 Features:
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN Detection
+- CSV Export
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality
 - Keyword Searches in Page Source Codes with describing Keywords, even if they are in other languages (using Google Translator API - english per default)
