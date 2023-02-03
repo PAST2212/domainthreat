@@ -1,5 +1,5 @@
 # domainthreat
-Daily Domain Monitoring for Brands and Mailing Domains 
+Daily Domain Monitoring for Brands and Mailing Domain Names
 
 This is my first Project on Github.
 
