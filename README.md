@@ -21,3 +21,5 @@ Features:
 - Keyword Searches in Page Source Codes with describing Keywords, even if they are in other languages (using Google Translator API)
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default
 
+
+![image](https://user-images.githubusercontent.com/124390875/216680838-2f862bb8-093c-4fbf-a5bf-d53c4f45e9c3.png)
