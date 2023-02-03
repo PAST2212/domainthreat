@@ -15,14 +15,12 @@ You can recognize
 Im using this public source as daily feed:
 https://www.whoisds.com/newly-registered-domains
 
-Desktop path is default path to create output.
-
 Some TLDs are not included in this public source (e.g. .de TLD). I will publish another script in near future to bypass it by using CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
 Features:
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN Detection
-- CSV Export
+- CSV Export (Desktop path is default path to create output)
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality
 - Keyword Searches in Page Source Codes with describing Keywords, even if they are in other languages (using Google Translator API - english per default)
