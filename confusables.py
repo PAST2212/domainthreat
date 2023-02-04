@@ -1,4 +1,4 @@
-# Source Substitution Table: https://github.com/x0rz/phishing_catcher/blob/master/confusables.py
+# Source: https://github.com/x0rz/phishing_catcher/blob/master/confusables.py
 
 import idna
 
