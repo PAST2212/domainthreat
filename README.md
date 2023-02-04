@@ -40,4 +40,5 @@ Put here generic words from your strings you have in your monitoring list to exl
 
 ![image](https://user-images.githubusercontent.com/124390875/216693534-06a412d5-597d-4fae-acd5-1ce18502d5c5.png)
 
-Put here common words that are describing your brands, industry, brand names, etc. Leave Key 'Exceptions' unchanged. 
+Put here common words that are describing your brands, industry, brand names, etc. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API. 
+Leave Key 'Exceptions' unchanged. 
