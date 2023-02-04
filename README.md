@@ -51,3 +51,6 @@ Put here generic words from your strings you have in your monitoring list to exl
 
 Put in Key 'Industry' commonly used words that are describing your brands, industry, brand names, products on websites. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API. 
 Leave Key 'Exceptions' unchanged. 
+
+
+A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
