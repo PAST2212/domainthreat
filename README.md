@@ -11,7 +11,7 @@ Thought experiment:
 If example company "IBM" monitors their brand "IBM", send mails via @ibmgroup.com and attacker registers the domain ibrngroup.com (m = rn) for spear phishing purposes (e.g. CEO Fraud). 
 Typical Brand Domain Monitoring Solutions may experience difficulties because the distance between monitored brand name "IBM" and registered domain name "ibrngroup.com" is too big to classify it as a true positive and therefore makes it harder for the targeted company to take appropriate measures more proactively. This scenario is avoidable by also monitoring your mailing domain names and thus focussing more on text strings rather than brands.
 
-This was my motivation for this project.
+This was the motivation for this project.
 
 You can recognize 
 - combo squatting (e.g. amazon-shop.com), 
@@ -55,3 +55,5 @@ Leave Key 'Exceptions' unchanged.
 
 
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
+
+Written in Python 3.7
