@@ -20,10 +20,10 @@ You can recognize
 - phishing attacks (e.g. CEO-Fraud),
 - and other forms of phishing websites / look-alike Domains (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p')
 
-Im using this public source as daily feed:
+Im using this public source as daily data feed:
 https://www.whoisds.com/newly-registered-domains
 
-Some TLDs are not included in this public source (e.g. .de TLD). I will publish another script in near future to bypass it by using CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
+Some TLDs are not included in this public source (e.g. .de TLD). I will publish an additional script in near future to bypass it by using CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
 Features:
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
@@ -37,6 +37,7 @@ Features:
 
 
 How it Works:
+
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
 Put your brands or mailing domain names into this list for monitoring operations (without the TLD).
 
