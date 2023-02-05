@@ -31,7 +31,7 @@ Features:
 - CSV Export (Desktop path is default path to create output)
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default). This is to cover needs of international companies and foreign-speaking markets / websites.
+- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
