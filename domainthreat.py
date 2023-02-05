@@ -311,7 +311,7 @@ print('Quantity of Newly Registered or Updated Domains from', daterange.strftime
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
 if not os.path.exists(console_file_path):
     print('Create Monitoring with Newly Registered Domains')
-    header = ['Domains', 'Keyword Found', 'Date', 'Topic found in Source Code']
+    header = ['Domains', 'Keyword Found', 'Date', 'Topic found in Source Code', 'Detected by']
     with open(console_file_path, 'w') as f:
         writer = csv.writer(f)
         writer.writerow(header)
@@ -324,21 +324,21 @@ with open(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.
         for domain in lines:
             domain = domain.strip()
             if keyword in domain and all(black_keyword not in domain for black_keyword in Blacklist) is True:
-                writer.writerow([domain, keyword, today, Topic_Match()])
+                writer.writerow([domain, keyword, today, Topic_Match(), "Full Word Match"])
 
             elif jaccard(keyword, domain) is not None:
-                writer.writerow([domain, keyword, today, Topic_Match()])
+                writer.writerow([domain, keyword, today, Topic_Match(), "Jaccard"])
 
             elif damerau(keyword, domain) is not None:
-                writer.writerow([domain, keyword, today, Topic_Match()])
+                writer.writerow([domain, keyword, today, Topic_Match(), "Damerau-Levenshtein"])
 
             elif jaro_winkler(keyword, domain) is not None:
-                writer.writerow([domain, keyword, today, Topic_Match()])
+                writer.writerow([domain, keyword, today, Topic_Match(), "Jaro-Winkler"])
 
             elif LCS(keyword, domain, 0.5) is not None:
-                writer.writerow([domain, keyword, today, Topic_Match()])
+                writer.writerow([domain, keyword, today, Topic_Match(), "LCS"])
 
             elif unconfuse(domain) is not domain:
                 latin_domain = unicodedata.normalize('NFKD', unconfuse(domain)).encode('latin-1', 'ignore').decode('latin-1')
                 if keyword in latin_domain:
-                    writer.writerow([domain, keyword, today, Topic_Match()])
+                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Match"])
