@@ -23,7 +23,7 @@ You can recognize
 Im using this public source as daily data feed:
 https://www.whoisds.com/newly-registered-domains
 
-Some TLDs are not included in this public source (e.g. .de TLD). I will publish an additional script in near future to bypass it by using CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
+Some TLDs are not included in this public source (e.g. .de TLD). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
 Features:
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
