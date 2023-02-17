@@ -64,7 +64,7 @@ Leave Key 'Exceptions' unchanged.
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 
 **Authors**
-Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
+- Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
 
 Written in Python 3.7
