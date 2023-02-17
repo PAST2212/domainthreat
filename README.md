@@ -1,5 +1,5 @@
 # domainthreat
-Daily Domain Monitoring for Brands and Mailing Domain Names
+**Daily Domain Monitoring for Brands and Mailing Domain Names**
 
 This is my first Project on Github.
 
@@ -13,7 +13,7 @@ Typical Brand (Protection) Domain Monitoring Solutions may experience difficulti
 
 This was the motivation for this project.
 
-You can recognize 
+**You can recognize**
 - combo squatting (e.g. amazon-shop.com), 
 - typo squatting (ammazon.com), 
 - brand impersonations, 
@@ -25,24 +25,27 @@ https://www.whoisds.com/newly-registered-domains
 
 Some TLDs are not included in this public source (e.g. .de TLD). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
-Features:
+**Features:**
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN / Homoglyph Detection
-- CSV Export (Desktop path is default path to create output)
+- CSV Export (HOME path is default path to create output)
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
-How to install:
+**Example Screenshot:**
+![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
+
+**How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
 - pip install -r requirements.txt
 
-How to run:
+**How to run:**
 - python3 domainthreat.py
 
-Before the first run - How it Works:
+**Before the first run - How it Works:**
 
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
 Put your brands or mailing domain names into this list for monitoring operations (without the TLD).
