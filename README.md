@@ -28,7 +28,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **Features:**
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN / Homoglyph Detection
-- CSV Export (HOME path is default path to create output)
+- CSV Export ("Ubuntu\home\User\Desktop" path is default path to create output)
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
@@ -46,7 +46,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - python3 domainthreat.py
 
 **Before the first run - How it Works:**
-
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
 Put your brands or mailing domain names into this list for monitoring operations (without the TLD).
 
