@@ -45,7 +45,7 @@ Topics = {'Exceptions': ['Page Source Code is not processable'],
           }
 
 # Desktop as Standard Path for CSV file Output
-desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+desktop = os.path.join(os.path.join(os.environ['HOME']), 'Desktop')
 
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
