@@ -36,11 +36,11 @@ Features:
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
 How to install:
-git clone https://github.com/PAST2212/domainthreat.git
-pip install -r requirements.txt
+- git clone https://github.com/PAST2212/domainthreat.git
+- pip install -r requirements.txt
 
 How to run:
-python3 domainthreat.py
+- python3 domainthreat.py
 
 Before the first run - How it Works:
 
