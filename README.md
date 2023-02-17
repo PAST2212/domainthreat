@@ -35,7 +35,6 @@ Features:
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
-
 How to install:
 git clone https://github.com/PAST2212/domainthreat.git
 pip install -r requirements.txt
