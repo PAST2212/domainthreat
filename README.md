@@ -36,7 +36,14 @@ Features:
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
 
-How it Works:
+How to install:
+git clone https://github.com/PAST2212/domainthreat.git
+pip install -r requirements.txt
+
+How to run:
+python3 domainthreat.py
+
+Before the first run - How it Works:
 
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
 Put your brands or mailing domain names into this list for monitoring operations (without the TLD).
