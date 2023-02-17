@@ -13,7 +13,7 @@ Typical Brand (Protection) Domain Monitoring Solutions may experience difficulti
 
 This was the motivation for this project.
 
-**You can recognize**
+**You can recognize:**
 - combo squatting (e.g. amazon-shop.com), 
 - typo squatting (ammazon.com), 
 - brand impersonations, 
@@ -61,8 +61,11 @@ Put here generic words from your strings you have in your monitoring list to exl
 Put in Key 'Industry' commonly used words that are describing your brands, industry, brand names, products on websites. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API. 
 Leave Key 'Exceptions' unchanged. 
 
-
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
+
+**Authors**
+Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
+
 
 Written in Python 3.7
 
