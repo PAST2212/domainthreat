@@ -25,6 +25,9 @@ https://www.whoisds.com/newly-registered-domains
 
 Some TLDs are not included in this public source (e.g. .de TLD). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
+**Example Screenshot:**
+![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
+
 **Features:**
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN / Homoglyph Detection
@@ -34,9 +37,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
-
-**Example Screenshot:**
-![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
 
 **How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
