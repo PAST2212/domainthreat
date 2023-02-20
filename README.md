@@ -40,6 +40,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
+- cd domainthreat
 - pip install -r requirements.txt
 
 **How to run:**
