@@ -75,3 +75,6 @@ TO DO:
 - Increase Speed - Website Page source requests for hundreds of domains massively slows down the whole process time. 
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
+- Add New Source - whoisds has capped quantity of daily registrations to 100.000
+
+
