@@ -263,6 +263,9 @@ def html_title(domain):
         return 'No Website Title Found'
     except (UnicodeError, UnicodeEncodeError, UnicodeDecodeError):
         pass
+    except requests.exceptions.TooManyRedirects:
+        return 'No Website Title Found'
+        pass
 
 # Get HTML Description Tag
 def html_description(domain):
@@ -283,6 +286,9 @@ def html_description(domain):
     except (TypeError, AttributeError):
         return 'No Website Description Found'
     except (UnicodeError, UnicodeEncodeError, UnicodeDecodeError):
+        pass
+    except requests.exceptions.TooManyRedirects:
+        return 'No Website Description Found'
         pass
 
 # Make sure to delete older file
