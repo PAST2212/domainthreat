@@ -46,6 +46,13 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **How to run:**
 - python3 domainthreat.py
 
+**How to update**: Type command in zonethreat directory
+- git pull
+
+**Changelog**
+- Please see Changelog for Updates:
+- https://github.com/PAST2212/domainthreat/blob/main/Changelog
+
 **Before the first run - How it Works:**
 
 ![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
@@ -75,6 +82,6 @@ TO DO:
 - Increase Speed - Website Page source requests for hundreds of domains massively slows down the whole process time. 
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
-- Add New Source - whoisds has capped quantity of daily registrations to 100.000
+- Add New Source - whoisds has capped quantity of daily registrations to 100.000 - Will add ICANN TLD Zones compatibility
 
 
