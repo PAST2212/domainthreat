@@ -18,8 +18,8 @@ This was the motivation for this project.
 - typo squatting (ammazon.com), 
 - brand impersonations, 
 - phishing attacks (e.g. CEO-Fraud),
-- IDN Detection / look-alike Domains based on full word matching (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p')
-- IDN Detection / look-alike Domains based on partial word matching (e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' + "ya" instead of "ay" + "1" instead of "l")
+- IDN Detection / look-alike Domains based on full word matching (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p'),
+- IDN Detection / look-alike Domains based on partial word matching (e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' AND "ya" instead of "ay" AND Number "1" instead of Letter "l")
 
 Im using this public source as daily data feed:
 https://www.whoisds.com/newly-registered-domains
