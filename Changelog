@@ -1,5 +1,6 @@
 v 1.01 (16.03.2023)
-- Add IDN Partial Word Matching Feature
+- Add IDN Partial Word Matching Feature - If an IDN domain registration is also a typosquatted domain and therefore a fuzzy matching detection case
+- e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' + "ya" instead of "ay" + "1" instead of "l"
 
 v 1.01 (16.03.2023)
 - Fixing some Bugs
