@@ -18,7 +18,8 @@ This was the motivation for this project.
 - typo squatting (ammazon.com), 
 - brand impersonations, 
 - phishing attacks (e.g. CEO-Fraud),
-- and other forms of phishing websites / look-alike Domains (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p')
+- IDN Detection / look-alike Domains based on full word matching (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p')
+- IDN Detection / look-alike Domains based on partial word matching (𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' + "ya" instead of "ay" + "1" instead of "l")
 
 Im using this public source as daily data feed:
 https://www.whoisds.com/newly-registered-domains
@@ -83,5 +84,3 @@ TO DO:
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
 - Add New Source - whoisds has capped quantity of daily registrations to 100.000 - Will add ICANN TLD Zones compatibility
-
-
