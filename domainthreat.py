@@ -347,4 +347,13 @@ with open(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.
             elif unconfuse(domain) is not domain:
                 latin_domain = unicodedata.normalize('NFKD', unconfuse(domain)).encode('latin-1', 'ignore').decode('latin-1')
                 if keyword in latin_domain:
-                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Match"])
+                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Full Word Match"])
+                    
+                elif damerau(keyword, latin_domain) is not None:
+                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Similar Match"])
+
+                elif jaccard(keyword, latin_domain) is not None:
+                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Similar Match"])
+
+                elif jaro_winkler(keyword, latin_domain) is not None:
+                    writer.writerow([domain, keyword, today, Topic_Match(), "IDN Similar Match"])
