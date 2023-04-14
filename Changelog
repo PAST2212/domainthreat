@@ -1,3 +1,6 @@
+v 1.03 (14.04.2023)
+- Iterating over Input as List and not readlines from TXT File
+
 v 1.02 (21.03.2023)
 - Add IDN Partial Word Matching Feature - If an IDN domain registration is also a typosquatted domain and therefore a fuzzy matching detection case
 - e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' + "ya" instead of "ay" + number "1" instead of letter "l"
