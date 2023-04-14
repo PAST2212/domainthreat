@@ -50,6 +50,9 @@ desktop = os.path.join(os.path.join(os.environ['HOME']), 'Desktop')
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
 
+# Domainfile Input as List
+list_file_domains = []
+
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
 # Lenght of brand name or string decides threshold
 def damerau(keyword, domain):
@@ -308,10 +311,14 @@ request = requests.get(domain_file)
 zipfile = zipfile.ZipFile(BytesIO(request.content))
 zipfile.extractall(desktop)
 
-# Encode domain names 'utf-8-sig'
-file1 = open(desktop+'/domain-names.txt', 'r', encoding='utf-8-sig')
-lines = file1.readlines()
-print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y')+':', len(lines), 'Domains')
+def read_input_file():
+    file_domains = open(desktop + '/domain-names.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_domains:
+        domain = my_domains.replace("\n", "").lower().strip()
+        list_file_domains.append(domain)
+
+
+read_input_file()
 
 # Create new file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
@@ -321,14 +328,15 @@ if not os.path.exists(console_file_path):
     with open(console_file_path, 'w') as f:
         writer = csv.writer(f)
         writer.writerow(header)
-        f.close()
+
+print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y')+':', len(list_file_domains), 'Domains')
+
 
 # Write and append results to csv file per calender week
 with open(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', mode='a', newline='') as f:
     writer = csv.writer(f, delimiter=',')
     for keyword in brandnames:
-        for domain in lines:
-            domain = domain.strip()
+        for domain in list_file_domains:
             if keyword in domain and all(black_keyword not in domain for black_keyword in Blacklist) is True:
                 writer.writerow([domain, keyword, today, Topic_Match(), "Full Word Match"])
 
