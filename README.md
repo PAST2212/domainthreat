@@ -32,7 +32,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **Features:**
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - IDN / Homoglyph Detection
-- CSV Export ("Ubuntu\home\User\Desktop" path is default path to create output)
+- CSV Export ("home\User\domainthreat" path is default path to create output)
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
@@ -49,6 +49,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **How to update**: Type command in domainthreat directory
 - git pull
+- In case of a Merge Error: Try "git reset --hard" before "git pull"
 
 **Changelog**
 - Please see Changelog for Updates:
@@ -56,14 +57,16 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **Before the first run - How it Works:**
 
-![image](https://user-images.githubusercontent.com/124390875/216693263-1f4b68dd-ac95-4bda-8887-dba1044b3103.png)
-Put your brands or mailing domain names into this list for monitoring operations (without the TLD).
+![image](https://user-images.githubusercontent.com/124390875/232223596-d3cd5aaf-8a57-43c0-8a52-5c553b68f0c7.png)
+Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" for monitoring operations (without the TLD).
 
-![image](https://user-images.githubusercontent.com/124390875/216693388-b5543d15-26a0-410d-a62b-6e3764b713b6.png)
-Put here common word collisions you want to exclude from the results to reduce false positives.
+![image](https://user-images.githubusercontent.com/124390875/232223685-efddf523-c07f-460e-9b75-6523963a7111.png)
+Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" you want to exclude from the results to reduce false positives.
+e.g. blacklist "lotto" if you monitor keyword "otto"
 
-![image](https://user-images.githubusercontent.com/124390875/216693614-2b112eda-d900-4283-9161-ef96562d9357.png)
-Put here generic words from your strings you have in your monitoring list to exlcude them from the longest common substring textdistance operations to reduce false positives.
+![image](https://user-images.githubusercontent.com/124390875/232223785-6774f821-854b-4e6c-b22d-db01c9545ca6.png)
+Put generic words from your strings into this TXT file "User Input/blacklist_lcs.txt" you have in your keywords list to exlcude from the longest common substring (lcs) textdistance operations in order to reduce false positives. LCS only performs for keywords longer than 8 characters per default.
+e.g. blacklist "group" if you monitor keyword "companygroup", e.g. blacklist "france" if you monitor keyword "companyfrance"
 
 
 ![image](https://user-images.githubusercontent.com/124390875/216693534-06a412d5-597d-4fae-acd5-1ce18502d5c5.png)
