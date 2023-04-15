@@ -22,10 +22,6 @@ daterange = datetime.datetime.today() - datetime.timedelta(days=1)
 
 whoisit.bootstrap(overrides=True)
 
-# Important if there are common word collisions between brand names and other words to reduce false positives
-# e.g. blacklist "lotto" if you monitor brand "otto"
-Blacklist = ["cultur", "kultur", "intuit", "tuition"]
-
 # Important if generic words are in brand names list to reduce false positives
 # e.g. blacklist "group" if you monitor mailing domain string for your company "companygroup"
 blacklist_LCS = ['travel', 'airways', 'airlines', 'cruises', 'france', 'group']
@@ -330,6 +326,8 @@ def read_input_keywords_file():
         list_file_keywords.append(domain)
 
 read_input_keywords_file()
+
+print(list_file_keywords, len(list_file_keywords))
 
 # Read Blacklist Input TXT File as List
 def read_input_blacklist_file():
