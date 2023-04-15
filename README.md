@@ -65,7 +65,7 @@ e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" 
 3. Put generic words from your strings into this TXT file "User Input/blacklist_lcs.txt" line per line you have in your keywords list to exlcude from the longest common substring (LCS) textdistance operations in order to reduce false positives. LCS only performs for keywords longer than 8 characters per default.
 e.g. blacklist "group" if you monitor keyword "companygroup", e.g. blacklist "france" if you monitor keyword "companyfrance", ...
 
-4. Put commonly used words into this TXT file "User Input/topic_keywords.txt" that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in page source codes. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API.
+4. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in page source codes. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API.
 e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., ...
 
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
