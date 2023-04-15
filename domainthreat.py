@@ -318,12 +318,15 @@ request = requests.get(domain_file)
 zipfile = zipfile.ZipFile(BytesIO(request.content))
 zipfile.extractall(desktop)
 
+
 # Read Domain Input TXT File as List
 def read_input_file():
     file_domains = open(desktop + '/domain-names.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_domains.append(domain)
+    file_domains.close()
+
 
 read_input_file()
 
@@ -333,6 +336,8 @@ def read_input_keywords_file():
     for my_domains in file_keywords:
         domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_keywords.append(domain)
+    file_keywords.close()
+
 
 read_input_keywords_file()
 
@@ -342,6 +347,8 @@ def read_input_blacklist_file():
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_blacklist_keywords.append(domain)
+    file_blacklist.close()
+
 
 read_input_blacklist_file()
 
@@ -351,17 +358,22 @@ def read_input_blacklist_lcs_file():
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_blacklist_lcs.append(domain)
+    file_blacklist.close()
+
 
 read_input_blacklist_lcs_file()
-         
+
 # Read Topic Keywords for Page Source Code Keyword Searches as List
 def read_input_topic_file():
     file_topic = open(desktop + '/User Input/topic_keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_topic:
         domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_topic_page_source_code.append(domain)
+    file_topic.close()
+
 
 read_input_topic_file()
+
 
 # Create new Output file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
