@@ -1,3 +1,5 @@
+# Strings or brand names to monitor
+# e.g. brands or mailing domain names that your company is using for sending mails
 tui
 tuitravel
 tuiairways
