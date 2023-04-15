@@ -1,3 +1,6 @@
+v 1.04 (15.04.2023)
+- Read Keywords, Blacklist Keywords, Blacklist LCS Keywords and Topic Keywords for Page Sorce Code Searching from TXT Files in new added Folder "User Input"
+
 v 1.03 (14.04.2023)
 - Iterating over Input as List and not readlines from TXT File
 
