@@ -320,7 +320,7 @@ read_input_file()
 
 # Read Keywords TXT File as List
 def read_input_keywords_file():
-    file_keywords = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
+    file_keywords = open(desktop + '/User Input/keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_keywords:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_keywords.append(domain)
@@ -331,7 +331,7 @@ print(list_file_keywords, len(list_file_keywords))
 
 # Read Blacklist for Keywords TXT File as List
 def read_input_blacklist_file():
-    file_blacklist = open(desktop + '/blacklist_keywords.txt', 'r', encoding='utf-8-sig')
+    file_blacklist = open(desktop + '/User Input/blacklist_keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_blacklist_keywords.append(domain)
@@ -339,7 +339,7 @@ def read_input_blacklist_file():
 read_input_blacklist_file()
 
 def read_input_blacklist_lcs_file():
-    file_blacklist = open(desktop + '/blacklist_lcs.txt', 'r', encoding='utf-8-sig')
+    file_blacklist = open(desktop + '/User Input/blacklist_lcs.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_blacklist_lcs.append(domain)
