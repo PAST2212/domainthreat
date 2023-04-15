@@ -57,21 +57,18 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **Before the first run - How it Works:**
 
-![image](https://user-images.githubusercontent.com/124390875/232223596-d3cd5aaf-8a57-43c0-8a52-5c553b68f0c7.png)
-Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" for monitoring operations (without the TLD).
+1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some TUI Names are listed per default.
 
-![image](https://user-images.githubusercontent.com/124390875/232223685-efddf523-c07f-460e-9b75-6523963a7111.png)
-Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" you want to exclude from the results to reduce false positives.
-e.g. blacklist "lotto" if you monitor keyword "otto"
+2. Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
+e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon"
 
-![image](https://user-images.githubusercontent.com/124390875/232223785-6774f821-854b-4e6c-b22d-db01c9545ca6.png)
-Put generic words from your strings into this TXT file "User Input/blacklist_lcs.txt" you have in your keywords list to exlcude from the longest common substring (lcs) textdistance operations in order to reduce false positives. LCS only performs for keywords longer than 8 characters per default.
+3. Put generic words from your strings into this TXT file "User Input/blacklist_lcs.txt" line per line you have in your keywords list to exlcude from the longest common substring (LCS) textdistance operations in order to reduce false positives. LCS only performs for keywords longer than 8 characters per default.
 e.g. blacklist "group" if you monitor keyword "companygroup", e.g. blacklist "france" if you monitor keyword "companyfrance"
 
 
 ![image](https://user-images.githubusercontent.com/124390875/216693534-06a412d5-597d-4fae-acd5-1ce18502d5c5.png)
 
-Put in Key 'Industry' commonly used words that are describing your brands, industry, brand names, products on websites. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API. Use **small letters/characters** for generating better results.
+4. Put in Key 'Industry' commonly used words that are describing your brands, industry, brand names, products on websites. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API. Use **small letters/characters** for generating better results.
 Leave Key 'Exceptions' unchanged. 
 
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
