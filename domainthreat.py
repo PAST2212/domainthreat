@@ -312,7 +312,7 @@ zipfile = zipfile.ZipFile(BytesIO(request.content))
 zipfile.extractall(desktop)
 
 def read_input_file():
-    file_domains = open(desktop + '/domain-names.txt', 'r', encoding='utf-8-sig')
+    file_domains = open(desktop + '/domainthreat/domain-names.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_domains.append(domain)
@@ -323,7 +323,7 @@ read_input_file()
 list_file_keywords = []
 
 def read_input_keywords_file():
-    file_domains = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
+    file_domains = open(desktop + '/domainthreat/keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_keywords.append(domain)
