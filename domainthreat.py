@@ -45,7 +45,7 @@ Topics = {'Exceptions': ['Page Source Code is not processable'],
           }
 
 # Desktop as Standard Path for CSV file Output
-desktop = os.path.join(os.path.join(os.environ['HOME']), 'Desktop')
+desktop = os.path.join(os.path.join(os.environ['HOME']))
 
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
@@ -319,6 +319,19 @@ def read_input_file():
 
 
 read_input_file()
+
+list_file_keywords = []
+
+def read_input_keywords_file():
+    file_domains = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_domains:
+        domain = my_domains.replace("\n", "").lower().strip()
+        list_file_keywords.append(domain)
+
+
+read_input_keywords_file()
+
+print(list_file_keywords)
 
 # Create new file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
