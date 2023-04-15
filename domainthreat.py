@@ -22,7 +22,6 @@ daterange = datetime.datetime.today() - datetime.timedelta(days=1)
 
 whoisit.bootstrap(overrides=True)
 
-
 # Generic Header for making Page Source Requests
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
 
@@ -42,12 +41,18 @@ today = datetime.date.today()
 # Daily Domain Input File as List
 list_file_domains = []
 
+# Strings or brand names to monitor
+# e.g. brands or mailing domain names that your company is using for sending mails
 # Keyword File as List
 list_file_keywords = []
 
+# Important if there are common word collisions between brand names and other words to reduce false positives
+# e.g. blacklist "lotto" if you monitor brand "otto"
 # Blacklist File as List
 list_file_blacklist_keywords = []
 
+# Important if generic words are in brand names list to reduce false positives
+# e.g. blacklist "group" if you monitor mailing domain string for your company "companygroup"
 # Blacklist LCS File as List
 list_file_blacklist_lcs = []
 
@@ -322,32 +327,31 @@ read_input_file()
 def read_input_keywords_file():
     file_keywords = open(desktop + '/User Input/keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_keywords:
-        domain = my_domains.replace("\n", "").lower().strip()
+        domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_keywords.append(domain)
 
 read_input_keywords_file()
-
-print(list_file_keywords, len(list_file_keywords))
 
 # Read Blacklist for Keywords TXT File as List
 def read_input_blacklist_file():
     file_blacklist = open(desktop + '/User Input/blacklist_keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_blacklist:
-        domain = my_domains.replace("\n", "").lower().strip()
+        domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_blacklist_keywords.append(domain)
 
 read_input_blacklist_file()
 
+# Read Blacklist Keywords for Longest Common Substring Method as List
 def read_input_blacklist_lcs_file():
     file_blacklist = open(desktop + '/User Input/blacklist_lcs.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_blacklist:
-        domain = my_domains.replace("\n", "").lower().strip()
+        domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
         list_file_blacklist_lcs.append(domain)
 
 read_input_blacklist_lcs_file()
          
           
-# Create new file with fixed columns
+# Create new Output file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
 if not os.path.exists(console_file_path):
     print('Create Monitoring with Newly Registered Domains')
