@@ -22,9 +22,6 @@ daterange = datetime.datetime.today() - datetime.timedelta(days=1)
 
 whoisit.bootstrap(overrides=True)
 
-# Important if generic words are in brand names list to reduce false positives
-# e.g. blacklist "group" if you monitor mailing domain string for your company "companygroup"
-blacklist_LCS = ['travel', 'airways', 'airlines', 'cruises', 'france', 'group']
 
 # Generic Header for making Page Source Requests
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
@@ -49,7 +46,10 @@ list_file_domains = []
 list_file_keywords = []
 
 # Blacklist File as List
-list_file_blacklist = []
+list_file_blacklist_keywords = []
+
+# Blacklist LCS File as List
+list_file_blacklist_lcs = []
 
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
 # Lenght of brand name or string decides threshold
@@ -111,7 +111,7 @@ def LCS(keyword, domain, keywordthreshold):
                         if len(keyword[i:j]) > max_lenght:
                             max_lenght = len(keyword[i:j])
                             longestcommonsubstring = keyword[i:j]
-        if (len(longestcommonsubstring) / len(keyword)) > keywordthreshold and len(longestcommonsubstring) is not len(keyword) and all(black_keyword_lcs not in keyword for black_keyword_lcs in blacklist_LCS) is True:
+        if (len(longestcommonsubstring) / len(keyword)) > keywordthreshold and len(longestcommonsubstring) is not len(keyword) and all(black_keyword_lcs not in keyword for black_keyword_lcs in list_file_blacklist_lcs) is True:
             return domain
 
 # Make Domain creation date lookup via WHOIS or RDAP protocol.
@@ -318,7 +318,7 @@ def read_input_file():
 
 read_input_file()
 
-# Read Keywords Input TXT File as List
+# Read Keywords TXT File as List
 def read_input_keywords_file():
     file_keywords = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_keywords:
@@ -329,16 +329,24 @@ read_input_keywords_file()
 
 print(list_file_keywords, len(list_file_keywords))
 
-# Read Blacklist Input TXT File as List
+# Read Blacklist for Keywords TXT File as List
 def read_input_blacklist_file():
     file_blacklist = open(desktop + '/blacklist_keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().strip()
-        list_file_blacklist.append(domain)
+        list_file_blacklist_keywords.append(domain)
 
 read_input_blacklist_file()
-          
 
+def read_input_blacklist_lcs_file():
+    file_blacklist = open(desktop + '/blacklist_lcs.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_blacklist:
+        domain = my_domains.replace("\n", "").lower().strip()
+        list_file_blacklist_lcs.append(domain)
+
+read_input_blacklist_lcs_file()
+         
+          
 # Create new file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
 if not os.path.exists(console_file_path):
@@ -356,7 +364,7 @@ with open(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.
     writer = csv.writer(f, delimiter=',')
     for keyword in list_file_keywords:
         for domain in list_file_domains:
-            if keyword in domain and all(black_keyword not in domain for black_keyword in list_file_blacklist) is True:
+            if keyword in domain and all(black_keyword not in domain for black_keyword in list_file_blacklist_keywords) is True:
                 writer.writerow([domain, keyword, today, Topic_Match(), "Full Word Match"])
 
             elif jaccard(keyword, domain) is not None:
