@@ -5,3 +5,5 @@ tuifly
 tuiairlines
 ltur
 tuigroup
+tuifrance
+tuicruises
