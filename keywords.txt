@@ -1,7 +1,0 @@
-tui
-tuitravel
-tuiairways
-tuifly
-tuiairlines
-ltur
-tuigroup
