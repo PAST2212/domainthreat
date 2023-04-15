@@ -45,7 +45,7 @@ Topics = {'Exceptions': ['Page Source Code is not processable'],
           }
 
 # Desktop as Standard Path for CSV file Output
-desktop = os.path.join(os.path.join(os.environ['HOME']))
+desktop = os.path.join(os.path.join(os.environ['HOME']), 'domainthreat')
 
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
@@ -295,8 +295,8 @@ def html_description(domain):
         pass
 
 # Make sure to delete older file
-if os.path.isfile(desktop+'/domainthreat/domain-names.txt'):
-  os.remove(desktop+'/domainthreat/domain-names.txt')
+if os.path.isfile(desktop+'/domain-names.txt'):
+  os.remove(desktop+'/domain-names.txt')
 
 # Get Input of newly registered and updated Domains from open source whoisds
 previous_Date = daterange
@@ -309,10 +309,10 @@ request = requests.get(domain_file)
 
 # Extracting the zip file contents
 zipfile = zipfile.ZipFile(BytesIO(request.content))
-zipfile.extractall(desktop + '/domainthreat/')
+zipfile.extractall(desktop)
 
 def read_input_file():
-    file_domains = open(desktop + '/domainthreat/domain-names.txt', 'r', encoding='utf-8-sig')
+    file_domains = open(desktop + '/domain-names.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_domains.append(domain)
@@ -323,7 +323,7 @@ read_input_file()
 list_file_keywords = []
 
 def read_input_keywords_file():
-    file_domains = open(desktop + '/domainthreat/keywords.txt', 'r', encoding='utf-8-sig')
+    file_domains = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_keywords.append(domain)
