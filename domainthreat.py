@@ -25,13 +25,6 @@ whoisit.bootstrap(overrides=True)
 # Generic Header for making Page Source Requests
 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
 
-# Topic Keywords to look for in page source
-# e.g. product brands or words that are describing your industry or products
-# e.g. Keyword "fashion" for a fashion company
-Topics = {'Exceptions': ['Page Source Code is not processable'],
-          'Industry': ['holiday', 'vacation', 'travel', 'journey', 'hotel', 'book', 'cruise', 'resort', 'club']
-          }
-
 # Desktop as Standard Path for CSV file Output
 desktop = os.path.join(os.path.join(os.environ['HOME']), 'domainthreat')
 
@@ -55,6 +48,17 @@ list_file_blacklist_keywords = []
 # e.g. blacklist "group" if you monitor mailing domain string for your company "companygroup"
 # Blacklist LCS File as List
 list_file_blacklist_lcs = []
+
+# Page Source Code Keyword File as List
+list_file_topic_page_source_code = []
+
+# Topic Keywords to look for in page source
+# e.g. product brands or words that are describing your industry or products
+# e.g. Keyword "fashion" for a fashion company
+Topics = {'Exceptions': ['Page Source Code is not processable'],
+          'Industry': list_file_topic_page_source_code
+          }
+
 
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
 # Lenght of brand name or string decides threshold
@@ -350,7 +354,15 @@ def read_input_blacklist_lcs_file():
 
 read_input_blacklist_lcs_file()
          
-          
+# Read Topic Keywords for Page Source Code Keyword Searches as List
+def read_input_topic_file():
+    file_topic = open(desktop + '/User Input/topic_keywords.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_topic:
+        domain = my_domains.replace("\n", "").lower().strip().replace(",", "")
+        list_file_topic_page_source_code.append(domain)
+
+read_input_topic_file()
+
 # Create new Output file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
 if not os.path.exists(console_file_path):
