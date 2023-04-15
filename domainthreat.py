@@ -22,10 +22,6 @@ daterange = datetime.datetime.today() - datetime.timedelta(days=1)
 
 whoisit.bootstrap(overrides=True)
 
-# Strings or brand names to monitor
-# e.g. brands or mailing domain names that your company is using for sending mails
-brandnames = ["tui", "tuitravel", "tuiairways", "tuifly", "tuiairlines", "ltur", "tuigroup", "tuicruises", "robinson", "tuifrance"]
-
 # Important if there are common word collisions between brand names and other words to reduce false positives
 # e.g. blacklist "lotto" if you monitor brand "otto"
 Blacklist = ["cultur", "kultur", "intuit", "tuition"]
@@ -50,8 +46,14 @@ desktop = os.path.join(os.path.join(os.environ['HOME']), 'domainthreat')
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
 
-# Domainfile Input as List
+# Daily Domain Input File as List
 list_file_domains = []
+
+# Keyword File as List
+list_file_keywords = []
+
+# Blacklist File as List
+list_file_blacklist = []
 
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
 # Lenght of brand name or string decides threshold
@@ -311,27 +313,33 @@ request = requests.get(domain_file)
 zipfile = zipfile.ZipFile(BytesIO(request.content))
 zipfile.extractall(desktop)
 
+# Read Domain Input TXT File as List
 def read_input_file():
     file_domains = open(desktop + '/domain-names.txt', 'r', encoding='utf-8-sig')
     for my_domains in file_domains:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_domains.append(domain)
 
-
 read_input_file()
 
-list_file_keywords = []
-
+# Read Keywords Input TXT File as List
 def read_input_keywords_file():
-    file_domains = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
-    for my_domains in file_domains:
+    file_keywords = open(desktop + '/keywords.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_keywords:
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_keywords.append(domain)
 
-
 read_input_keywords_file()
 
-print(list_file_keywords)
+# Read Blacklist Input TXT File as List
+def read_input_blacklist_file():
+    file_blacklist = open(desktop + '/blacklist_keywords.txt', 'r', encoding='utf-8-sig')
+    for my_domains in file_blacklist:
+        domain = my_domains.replace("\n", "").lower().strip()
+        list_file_blacklist.append(domain)
+
+read_input_blacklist_file():
+          
 
 # Create new file with fixed columns
 console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
@@ -348,9 +356,9 @@ print('Quantity of Newly Registered or Updated Domains from', daterange.strftime
 # Write and append results to csv file per calender week
 with open(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', mode='a', newline='') as f:
     writer = csv.writer(f, delimiter=',')
-    for keyword in brandnames:
+    for keyword in list_file_keywords:
         for domain in list_file_domains:
-            if keyword in domain and all(black_keyword not in domain for black_keyword in Blacklist) is True:
+            if keyword in domain and all(black_keyword not in domain for black_keyword in list_file_blacklist) is True:
                 writer.writerow([domain, keyword, today, Topic_Match(), "Full Word Match"])
 
             elif jaccard(keyword, domain) is not None:
