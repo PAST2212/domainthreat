@@ -295,8 +295,8 @@ def html_description(domain):
         pass
 
 # Make sure to delete older file
-if os.path.isfile(desktop+'/domain-names.txt'):
-  os.remove(desktop+'/domain-names.txt')
+if os.path.isfile(desktop+'/domainthreat/domain-names.txt'):
+  os.remove(desktop+'/domainthreat/domain-names.txt')
 
 # Get Input of newly registered and updated Domains from open source whoisds
 previous_Date = daterange
@@ -309,7 +309,7 @@ request = requests.get(domain_file)
 
 # Extracting the zip file contents
 zipfile = zipfile.ZipFile(BytesIO(request.content))
-zipfile.extractall(desktop)
+zipfile.extractall(desktop + '/domainthreat/')
 
 def read_input_file():
     file_domains = open(desktop + '/domainthreat/domain-names.txt', 'r', encoding='utf-8-sig')
