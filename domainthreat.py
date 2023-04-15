@@ -336,7 +336,7 @@ def read_input_blacklist_file():
         domain = my_domains.replace("\n", "").lower().strip()
         list_file_blacklist.append(domain)
 
-read_input_blacklist_file():
+read_input_blacklist_file()
           
 
 # Create new file with fixed columns
