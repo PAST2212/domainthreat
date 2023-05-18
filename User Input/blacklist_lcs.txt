@@ -1,6 +1,0 @@
-travel
-airways
-airlines
-cruises
-france
-group
