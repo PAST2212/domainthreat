@@ -3,9 +3,6 @@
 
 **New in Version 2.0**
 - Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
-- Example Screenshot
-![image](https://github.com/PAST2212/domainthreat/assets/124390875/d05784d1-0f7f-4abf-befe-8c075c7c3ac4)
-
 
 This is my first Project on Github.
 
@@ -22,7 +19,7 @@ This was the motivation for this project.
 **You can recognize:**
 - combo squatting (e.g. amazon-shop.com), 
 - typo squatting (ammazon.com), 
-- brand impersonations, 
+- brand impersonations,
 - phishing attacks (e.g. CEO-Fraud),
 - IDN Detection / look-alike Domains based on full word matching (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p'),
 - IDN Detection / look-alike Domains based on partial word matching (e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' AND "ya" instead of "ay" AND Number "1" instead of Letter "l")
@@ -46,7 +43,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
 - Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
-
 
 **How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
