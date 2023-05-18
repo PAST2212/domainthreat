@@ -34,6 +34,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
 
 **Features:**
+- Multithreading (50 workers by defaul) & Multiprocessing
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - brand name searches on websites which do not contain the brand itself in domain name
 - IDN / Homoglyph Detection
@@ -61,7 +62,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Please see Changelog for Updates:
 - https://github.com/PAST2212/domainthreat/blob/main/Changelog
 
-
 **Before the first run - How it Works:**
 1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
@@ -84,6 +84,7 @@ TO DO:
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
 - Add Possibility to enumerate user mail names
+- Add Possibility to parse Arguments (e.g. workers for multithreading)
 
 Note:
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources as I do or other public sources
