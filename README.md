@@ -1,6 +1,12 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
+**New in Version 2.0**
+- Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
+- Example Screenshot
+![image](https://github.com/PAST2212/domainthreat/assets/124390875/d05784d1-0f7f-4abf-befe-8c075c7c3ac4)
+
+
 This is my first Project on Github.
 
 Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
@@ -31,13 +37,16 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **Features:**
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
+- brand name searches on websites which do not contain the brand itself in domain name
 - IDN / Homoglyph Detection
-- CSV Export ("home\User\domainthreat" path is default path to create output)
+- CSV Export
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
-- Mix of Sequence-based, Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
+- Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
+- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default.
+- Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
+
 
 **How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
@@ -55,29 +64,29 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Please see Changelog for Updates:
 - https://github.com/PAST2212/domainthreat/blob/main/Changelog
 
-**Before the first run - How it Works:**
 
+**Before the first run - How it Works:**
 1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
 2. Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
--  e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon", ...
+-  e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon", e.g. blacklist "intuitive" if you want to monitor "tui" ...
 
-3. Put generic words from your strings into this TXT file "User Input/blacklist_lcs.txt" line per line you have in your keywords list to exlcude from the longest common substring (LCS) textdistance operations in order to reduce false positives. LCS only performs for keywords longer than 8 characters per default.
--  e.g. blacklist "group" if you monitor keyword "companygroup", e.g. blacklist "france" if you monitor keyword "companyfrance", ...
+3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in page source codes. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API.
+-  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
-4. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in page source codes. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API.
--  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., ...
+4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations on domains which neither contain your brand names in domain name nor are similar registered, but in page source code of website (used/listed on website). Some "TUI" Names are listed per default.
 
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 
 **Authors**
 - Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
-
 Written in Python 3.7
 
 TO DO:
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
-- Add New Source - whoisds has capped quantity of daily registrations to 100.000
 - Add Possibility to enumerate user mail names
+
+Note:
+- Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources as I do or other public sources
