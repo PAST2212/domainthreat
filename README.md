@@ -3,6 +3,7 @@
 
 **New in Version 2.0**
 - Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
+- Export Results to separate file "Newly-Registered-Topic_Domains_Calender-Week"
 
 This is my first Project on Github.
 
