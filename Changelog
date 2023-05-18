@@ -1,3 +1,8 @@
+v 2.0 (18.05.2023)
+- Add Multiprocessing and Multithreading
+- Add new feature to find brand names on websites which neither contain brand name in domain name nor are similar registered. 
+  ==> Searching for domain registrations which contain keyword from topic_keywords.txt file. Make Page Source Code lookups to search for brands
+
 v 1.04 (15.04.2023)
 - Read Keywords, Blacklist Keywords, Blacklist LCS Keywords and Topic Keywords for Page Sorce Code Searching from TXT Files in new added Folder "User Input"
 
