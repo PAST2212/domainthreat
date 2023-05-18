@@ -89,3 +89,4 @@ TO DO:
 
 Note:
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources as I do or other public sources
+- Thresholds are intentionally tolerant by default in order to consider degree of freedom in choosing variations of domain names from attacker side
