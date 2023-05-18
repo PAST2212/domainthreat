@@ -3,7 +3,7 @@ vacation
 travel
 journey
 hotel
-book
+booking
 cruise
 resort
-club
+tourism
