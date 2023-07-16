@@ -511,4 +511,4 @@ if __name__=='__main__':
 if __name__=='__main__':
     print(FR + f'Start Page Source Detection for brand keywords {uniquebrands} in topic domain names\n' + S)
     page_source_search_in_topic_keyword_results(50)
-    print(FG + '\nEnd Page Source Detection for brand keywords {uniquebrands} in topic domain names\n' + S)
+    print(FG + f'\nEnd Page Source Detection for brand keywords {uniquebrands} in topic domain names\n' + S)
