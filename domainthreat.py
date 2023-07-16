@@ -416,7 +416,6 @@ def fuzzy_operations(x, container1, container2):
 
 def page_source_search_in_brand_keyword_results(n):
     thread_ex_list = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
-    print(thread_ex_list)
     print(len(thread_ex_list), 'Domain registrations detected with keywords from file keywords.txt in domain name or are similar registered\n')
 
     with ThreadPoolExecutor(n) as executor:
@@ -431,7 +430,6 @@ def page_source_search_in_brand_keyword_results(n):
 def page_source_search_in_topic_keyword_results(n):
     if len(uniquebrands) > 0:
         thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y]
-        print(thread_ex_list)
         print(len(thread_ex_list), 'Domain registrations detected with topic keywords from file topic_keywords.txt in domain name\n')
 
         dummy_u = []
