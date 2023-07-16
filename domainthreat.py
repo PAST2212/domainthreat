@@ -26,6 +26,8 @@ FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET
 # Paramater "days=1" means newest feed from today up to maximum oldest feed of newly registered domains "days=4" with free access
 daterange = datetime.datetime.today() - datetime.timedelta(days=1)
 
+previous_date = daterange.strftime('20%y-%m-%d')
+
 # Generic Header for making Page Source Requests
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36', 'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
 
@@ -224,14 +226,9 @@ def html_tags(domain):
 
 
 def download_input_domains():
-    previous_date = daterange.strftime('20%y-%m-%d')
-
+    
     if os.path.isfile(f'{desktop}/domain-names.txt'):
         os.remove(f'{desktop}/domain-names.txt')
-
-    if os.path.isfile(f'{desktop}/{previous_date}.txt'):
-        os.rename(f'{desktop}/{previous_date}.txt', f'{desktop}/domain-names.txt')
-
 
     previous_date_formated = previous_date + '.zip'
     new = base64.b64encode(previous_date_formated.encode('ascii'))
@@ -284,6 +281,10 @@ def write_topic_monitoring_results_to_csv(listo):
 
 # Read Domain Input TXT File as List
 def read_input_file():
+    
+    if os.path.isfile(f'{desktop}/{previous_date}.txt'):
+        os.rename(f'{desktop}/{previous_date}.txt', f'{desktop}/domain-names.txt')
+
     try:
         file_domains = open(f'{desktop}/domain-names.txt', 'r', encoding='utf-8-sig')
         for my_domains in file_domains:
