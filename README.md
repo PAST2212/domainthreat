@@ -43,7 +43,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
-- Domain Registrar, Domain Creation Date, MX- and A-Record lookups are included but not activated by default (Will update the functions in future).
+- MX- and A-Record lookups are included but not activated by default (Will update the functions in future).
 - Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
@@ -90,3 +90,5 @@ TO DO:
 Note:
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources as I do or other public sources
 - **Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate** .Change them if you want to match your particular needs
+- Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
+- Recommend python version >= 3.7 
