@@ -39,7 +39,6 @@ fuzzy_results = []
 
 # Set Standard Path for CSV file Output and TXT file Input
 desktop = os.path.join(os.path.expanduser('~'), 'domainthreat')
-print('Standard Path for Output: ', desktop)
 
 # Print Out Date of Domains in CSV file
 today = datetime.date.today()
