@@ -106,8 +106,8 @@ def jaccard(keyword, domain, n_gram):
 # Using Edit-based Textdistance Jaro Winkler for finding look-a-like Domains
 def jaro_winkler(keyword, domain):
     domain_name = tldextract.extract(domain).domain
-    Jaro_Winkler = textdistance.jaro_winkler.normalized_similarity(keyword, domain_name)
-    if Jaro_Winkler >= 0.9:
+    winkler = textdistance.jaro_winkler.normalized_similarity(keyword, domain_name)
+    if winkler >= 0.9:
         return domain
 
 
@@ -133,7 +133,7 @@ def LCS(keyword, domain, keywordthreshold):
 
 # Make DNS MX-Record lookup.
 # Not activated per default
-def MX_record(domain):
+def mx_record(domain):
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
@@ -149,7 +149,7 @@ def MX_record(domain):
 
 # Make DNS A-Record lookup.
 # Not activated per default
-def A_record(domain):
+def a_record(domain):
     resolver = dns.resolver.Resolver()
     resolver.timeout = 1
     resolver.lifetime = 1
