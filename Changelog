@@ -1,5 +1,5 @@
 v 2.1 (16.07.2023)
-- Improve Exception Handling and web scraping. Other Bug fixes. Change from jaccard unigram (n=1) to jaccard bigram (n=2) algorithm.
+- Improved Exception Handling and web scraping. Other Bug fixes. Change from jaccard unigram (n=1) to jaccard bigram (n=2) algorithm.
 
 v 2.0 (18.05.2023)
 - Add Multiprocessing and Multithreading
