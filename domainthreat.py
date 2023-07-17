@@ -91,9 +91,10 @@ def damerau(keyword, domain):
 
 # Using Token-based Textdistance Jaccard for finding look-a-like Domains
 def jaccard(keyword, domain, n_gram):
-    domain_name = tldextract.extract(domain).domain
-    ngram_keyword = [keyword[i:i+n_gram] for i in range(len(keyword)-n_gram+1)]
-    ngram_domain_name = [domain_name[i:i+n_gram] for i in range(len(domain_name)-n_gram+1)]
+    domain_letter_weight = '#' + tldextract.extract(domain).domain + '#'
+    keyword_letter_weight = '#' + keyword + '#'
+    ngram_keyword = [keyword_letter_weight[i:i+n_gram] for i in range(len(keyword_letter_weight)-n_gram+1)]
+    ngram_domain_name = [domain_letter_weight[i:i+n_gram] for i in range(len(domain_letter_weight)-n_gram+1)]
     intersection = set(ngram_keyword).intersection(ngram_domain_name)
     union = set(ngram_keyword).union(ngram_domain_name)
     similarity = len(intersection) / len(union) if len(union) > 0 else 0
