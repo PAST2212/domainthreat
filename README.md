@@ -109,7 +109,7 @@ Type command in domainthreat directory
 
 **Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
-- **Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate** .Change them if you want to match your particular (company) needs
+- Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
 - Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.7
