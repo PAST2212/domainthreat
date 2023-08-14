@@ -47,12 +47,12 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - MX- and A-Record lookups are included but not activated by default (Will update the functions in future).
 - Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
-- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
+- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
 
 
 **Principles**
 1. Basic Domainmonitoring<br>
-1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. new**tuigroup**.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
+1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
 1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. new**tuigroup**.shop) of domain monitoring results from point 1.1.<br>
    ==> Results are exported to Newly-Registered-Domains .csv File<br>
 
@@ -60,7 +60,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 2.2. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1.<br>
    ==> Results are exported to Newly-Registered-Topic_Domains .csv File<br>
-
 
 
 **How to install:**
