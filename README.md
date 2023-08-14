@@ -52,7 +52,9 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **Principles**
 1. Basic Domainmonitoring
-1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. new**tuigroup**.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names. 
+
+1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. new**tuigroup**.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.
+
 1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. new**tuigroup**.shop) of domain monitoring results from point 1.1.
    ==> Results are exported to Newly-Registered-Domains .csv File
 3. Advanced Domainmonitoring
