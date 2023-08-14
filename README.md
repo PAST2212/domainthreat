@@ -79,10 +79,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - git pull
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
 
-**Changelog**
-- Please see Changelog for Updates:
-- https://github.com/PAST2212/domainthreat/blob/main/Changelog
-
 **Before the first run - How it Works:**
 1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
@@ -93,6 +89,10 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 -  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
 4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations on domains which neither contain your brand names in domain name nor are similar registered, but in page source code of website (used/listed on website). Some "TUI" Names are listed per default.
+
+# **Changelog**
+- Please see Changelog for Updates:
+- https://github.com/PAST2212/domainthreat/blob/main/Changelog
 
 # **Notes**
 
