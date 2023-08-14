@@ -49,6 +49,19 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
 
+
+**Principles**
+1. Basic Domainmonitoring
+1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. new**tuigroup**.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names. 
+1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. new**tuigroup**.shop) of domain monitoring results from point 1.1.
+   ==> Results are exported to Newly-Registered-Domains .csv File
+3. Advanced Domainmonitoring
+2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.
+2.2. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1.
+   ==> Results are exported to Newly-Registered-Topic_Domains .csv File
+
+
+
 **How to install:**
 - git clone https://github.com/PAST2212/domainthreat.git
 - cd domainthreat
