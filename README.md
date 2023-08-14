@@ -36,7 +36,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **Example Screenshot:**
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
 
-**Features:**
+# **Features:**
 - Multithreading (50 workers by defaul) & Multiprocessing
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - brand name searches on websites which do not contain the brand itself in domain name
@@ -50,7 +50,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
 
 
-**Principles**
+# **Principles**
 1. Basic Domainmonitoring<br>
 1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
 1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. new**tuigroup**.shop) of domain monitoring results from point 1.1.<br>
