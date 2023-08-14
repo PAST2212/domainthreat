@@ -74,7 +74,9 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **How to run:**
 - python3 domainthreat.py
 
-**How to update**: Type command in domainthreat directory
+**How to update**: 
+Type command in domainthreat directory
+- cd domainthreat
 - git pull
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
 
