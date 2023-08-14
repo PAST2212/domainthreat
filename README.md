@@ -95,8 +95,6 @@ Type command in domainthreat directory
 
 4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations on domains which neither contain your brand names in domain name nor are similar registered, but in page source code of website (used/listed on website). Some "TUI" Names are listed per default.
 
-A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
-
 # **Notes**
 
 **Authors**
@@ -110,7 +108,8 @@ A perfect supplement to this wonderful project: https://github.com/elceef/dnstwi
 
 **Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
-- **Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate** .Change them if you want to match your particular needs
+- **Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate** .Change them if you want to match your particular (company) needs
 - Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
+- A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.7
 - Recommend python version >= 3.7 
