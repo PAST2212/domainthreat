@@ -105,6 +105,7 @@ Type command in domainthreat directory
 - Add Possibility to make Subdomain Scans
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
+- Evaluate other Translator / translation possibilities
 
 **Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
