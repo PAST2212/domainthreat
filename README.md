@@ -35,7 +35,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **Example Screenshot:**
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
 
-# **Features:**
+# **Features**
 - Multithreading (50 workers by defaul) & Multiprocessing
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - brand name searches on websites which do not contain the brand itself in domain name
