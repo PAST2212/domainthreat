@@ -53,7 +53,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **1. Basic Domainmonitoring**<br>
 
 1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
-1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. new**tuigroup**.shop) of domain monitoring results from point 1.1.<br>
+1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. newtuigroup.shop) of domain monitoring results from point 1.1.<br>
 
    ==> Results are exported to Newly-Registered-Domains .csv File<br>
 
@@ -97,19 +97,20 @@ Type command in domainthreat directory
 
 A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 
-# **Author**
+# **Notes**
+
+**Authors**
 - Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
-Written in Python 3.7
-
-TO DO:
+**TO DO**
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
 - Add Possibility to make Subdomain Scans
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 
-Note:
+**Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
 - **Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate** .Change them if you want to match your particular needs
 - Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
+- Written in Python 3.7
 - Recommend python version >= 3.7 
