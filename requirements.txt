@@ -1,8 +1,6 @@
 idna==2.10
 textdistance==4.3.0
 tldextract==3.3.1
-whois==0.9.16
-whoisit==2.6.2
 dnspython==2.2.1
 requests==2.28.1
 beautifulsoup4==4.11.1
