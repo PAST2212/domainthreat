@@ -12,7 +12,7 @@ import dns.resolver
 import requests
 from bs4 import BeautifulSoup
 import unicodedata
-from googletrans import Translator
+import translators as ts
 from concurrent.futures import ThreadPoolExecutor
 import multiprocessing
 import pandas as pd
@@ -54,7 +54,8 @@ brandnames = []
 # Important if there are common word collisions between brand names and other words to reduce false positives
 # e.g. blacklist "lotto" if you monitor brand "otto"
 # Blacklist File as List
-blacklist = []
+blacklist_keywords = []
+
 
 # Important if generic words are in brand names list to reduce false positives
 # e.g. blacklist "group" if you monitor mailing domain string for your company "companygroup"
@@ -68,6 +69,9 @@ list_topics = []
 
 # List for finding Results of Topics in Page Source of fuzzy domains results
 topics_matches_domains = []
+
+# Website Status
+status_codes = []
 
 
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
@@ -135,8 +139,8 @@ def LCS(keyword, domain, keywordthreshold):
 # Not activated per default
 def mx_record(domain):
     resolver = dns.resolver.Resolver()
-    resolver.timeout = 1
-    resolver.lifetime = 1
+    resolver.timeout = 5
+    resolver.lifetime = 5
     resolver.nameservers = ['8.8.8.8']
     try:
         MX = resolver.resolve(domain, 'MX')
@@ -146,13 +150,12 @@ def mx_record(domain):
         pass
 
 
-
 # Make DNS A-Record lookup.
 # Not activated per default
 def a_record(domain):
     resolver = dns.resolver.Resolver()
-    resolver.timeout = 1
-    resolver.lifetime = 1
+    resolver.timeout = 5
+    resolver.lifetime = 5
     resolver.nameservers = ['8.8.8.8']
     try:
         A = resolver.resolve(domain, 'A')
@@ -162,16 +165,45 @@ def a_record(domain):
         pass
 
 
+#Check for website status
+def website_status(domain):
+    resolver = dns.resolver.Resolver()
+    resolver.timeout = 5
+    resolver.lifetime = 5
+    resolver.nameservers = ['8.8.8.8']
+    try:
+        resolver.resolve(domain, 'NS')
+
+    except (dns.resolver.NXDOMAIN, dns.resolver.NoNameservers):
+        return (domain, 'ServerError')
+
+    except (dns.resolver.NoAnswer, dns.resolver.LifetimeTimeout):
+        return (domain, 'Status unknown')
+
+    except:
+        return (domain, 'Status unknown')
+
+
 # Normalize String and translate HTML Title and HTML Description and HTML Description via Google API
 def normalize_caseless_tag(transl):
     transle = re.sub("\.", "", transl)
-    translator = Translator()
-    try:
-        result = translator.translate(transle, dest='en').text
-        return unicodedata.normalize("NFKD", result).lower()
 
-    except Exception as e:
-        print(f'Webpage Translation Error: {transl}', e)
+    try:
+        bing = ts.translate_text(transle, 'bing')
+        return unicodedata.normalize("NFKD", bing).lower()
+
+    except:
+        try:
+            alibaba = ts.translate_text(transle, 'alibaba')
+            return unicodedata.normalize("NFKD", alibaba).lower()
+
+        except:
+            try:
+                google = ts.translate_text(transle, 'google')
+                return unicodedata.normalize("NFKD", google).lower()
+
+            except Exception as e:
+                print(f'Webpage Translation Error: {transl}', e)
 
 
 # Check if Topic Keyword is in Page Source
@@ -201,6 +233,7 @@ def html_tags(domain):
     try:
         response = request_session.get(domains, headers=headers, allow_redirects=True, timeout=(5, 30))
         if response.raise_for_status() is None:
+            status_codes.append((domain, 'Online'))
             soup = BeautifulSoup(response.text, 'lxml')
             hey.append(domain)
             title = soup.find('title')
@@ -215,18 +248,19 @@ def html_tags(domain):
 
     except (TypeError, AttributeError, requests.exceptions.ReadTimeout, KeyError):
         print('Parsing Webpage Error. Something went wrong at scraping: ', domain)
+        status_codes.append((domain, 'Status unknown'))
 
     except (HTTPError, requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout, requests.exceptions.TooManyRedirects):
-        print('Server Connection Error. Domain is probably not online: ', domain)
+        status_codes.append((domain, 'ServerError'))
 
     except Exception as e:
         print('Other Error occured: ', e)
+        status_codes.append((domain, 'Status unknown'))
 
     return list(filter(None, hey))
 
 
 def download_input_domains():
-    
     if os.path.isfile(f'{desktop}/domain-names.txt'):
         os.remove(f'{desktop}/domain-names.txt')
 
@@ -248,7 +282,7 @@ def create_new_csv_file_domainresults():
     console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
     if not os.path.exists(console_file_path):
         print('Create Monitoring with Newly Registered Domains')
-        header = ['Domains', 'Keyword Found', 'Date', 'Detected by', 'Topic found in Source Code']
+        header = ['Domains', 'Keyword Found', 'Date', 'Detected by', 'Topic found in Source Code', 'Website Status']
         with open(console_file_path, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(header)
@@ -263,7 +297,7 @@ def write_domain_monitoring_results_to_csv():
 
 
 def create_new_csv_file_topicresults():
-    console_file_path = f'{desktop}/Newly-Registered-Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
+    console_file_path = f'{desktop}/Newly_Registered_Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
     if not os.path.exists(console_file_path):
         print('Create Monitoring with Newly Registered Topic Domains')
         header = ['Domains', 'Brand in Page Source Code', 'Date']
@@ -273,7 +307,7 @@ def create_new_csv_file_topicresults():
 
 
 def write_topic_monitoring_results_to_csv(listo):
-    with open(f'{desktop}/Newly-Registered-Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', mode='a', newline='') as f:
+    with open(f'{desktop}/Newly_Registered_Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', mode='a', newline='') as f:
         writer = csv.writer(f, delimiter=',')
         for k in listo:
             writer.writerow([k[0], k[1], k[2]])
@@ -281,10 +315,8 @@ def write_topic_monitoring_results_to_csv(listo):
 
 # Read Domain Input TXT File as List
 def read_input_file():
-    
     if os.path.isfile(f'{desktop}/{previous_date}.txt'):
         os.rename(f'{desktop}/{previous_date}.txt', f'{desktop}/domain-names.txt')
-
     try:
         file_domains = open(f'{desktop}/domain-names.txt', 'r', encoding='utf-8-sig')
         for my_domains in file_domains:
@@ -322,7 +354,7 @@ def read_input_blacklist_file():
     for my_domains in file_blacklist:
         domain = my_domains.replace("\n", "").lower().replace(",", "").replace(" ", "").strip()
         if domain is not None and domain != '':
-            blacklist.append(domain)
+            blacklist_keywords.append(domain)
     file_blacklist.close()
 
 
@@ -360,63 +392,70 @@ def topics_to_csv(input_data):
             return y[1]
 
 
+def website_status_to_csv(input_data):
+    for y in status_codes:
+        if y[0] == input_data:
+            return y[1]
+
+
 def postprocessing_domain_results_outputfile():
     df = pd.read_csv(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', delimiter=',')
     df['Topic found in Source Code'] = df.apply(lambda x: topics_to_csv(x['Domains']), axis=1)
+    df['Website Status'] = df.apply(lambda x: website_status_to_csv(x['Domains']), axis=1)
     df.to_csv(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', index=False)
 
 
 def postprocessing_topic_results_outputfile():
-    df = pd.read_csv(f'{desktop}/Newly-Registered-Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', delimiter=',')
+    df = pd.read_csv(f'{desktop}/Newly_Registered_Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', delimiter=',')
     df.drop_duplicates(inplace=True, subset=['Domains'])
-    df.to_csv(f'{desktop}/Newly-Registered-Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', index=False)
+    df.to_csv(f'{desktop}/Newly_Registered_Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', index=False)
 
 
 # X as sublist Input by cpu number separated sublists to make big input list more processable
 # container1, container2 as container for getting domain monitoring results
 def fuzzy_operations(x, container1, container2, blacklist):
-   index = x[0]   # index of sub list
-   value = x[1]   # content of sub list
-   results_temp = []
-   print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
-   for domain in value:
-       if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
-           results_temp.append((domain[0], domain[1], today, 'Full Word Match'))
+    index = x[0]   # index of sub list
+    value = x[1]   # content of sub list
+    results_temp = []
+    print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 
-       elif jaccard(domain[1], domain[0], 2) is not None:
-           results_temp.append((domain[0], domain[1], today, 'Similarity Jaccard'))
+    for domain in value:
+        if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
+            results_temp.append((domain[0], domain[1], today, 'Full Word Match'))
 
-       elif damerau(domain[1], domain[0]) is not None:
-           results_temp.append((domain[0], domain[1], today, 'Similarity Damerau-Levenshtein'))
+        elif jaccard(domain[1], domain[0], 2) is not None:
+            results_temp.append((domain[0], domain[1], today, 'Similarity Jaccard'))
 
-       elif jaro_winkler(domain[1], domain[0]) is not None:
-           results_temp.append((domain[0], domain[1], today, 'Similarity Jaro-Winkler'))
+        elif damerau(domain[1], domain[0]) is not None:
+            results_temp.append((domain[0], domain[1], today, 'Similarity Damerau-Levenshtein'))
+
+        elif jaro_winkler(domain[1], domain[0]) is not None:
+            results_temp.append((domain[0], domain[1], today, 'Similarity Jaro-Winkler'))
 
        # elif LCS(domain[1], domain[0], 0.5) is not None:
        #     results_temp.append((domain[0], domain[1], today, 'Similarity Longest Common Substring'))
 
-       elif unconfuse(domain[0]) is not domain[0]:
-           latin_domain = unicodedata.normalize('NFKD', unconfuse(domain[0])).encode('latin-1', 'ignore').decode('latin-1')
-           if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
-               results_temp.append((domain[0], domain[1], today, 'IDN Full Word Match'))
+        elif unconfuse(domain[0]) is not domain[0]:
+            latin_domain = unicodedata.normalize('NFKD', unconfuse(domain[0])).encode('latin-1', 'ignore').decode('latin-1')
+            if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
+                results_temp.append((domain[0], domain[1], today, 'IDN Full Word Match'))
 
-           elif damerau(domain[1], latin_domain) is not None:
-               results_temp.append((domain[0], domain[1], today, 'IDN Similarity Damerau-Levenshtein'))
+            elif damerau(domain[1], latin_domain) is not None:
+                results_temp.append((domain[0], domain[1], today, 'IDN Similarity Damerau-Levenshtein'))
 
-           elif jaccard(domain[1], latin_domain, 2) is not None:
-               results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaccard'))
+            elif jaccard(domain[1], latin_domain, 2) is not None:
+                results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaccard'))
 
-           elif jaro_winkler(domain[1], latin_domain) is not None:
-               results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaro-Winkler'))
+            elif jaro_winkler(domain[1], latin_domain) is not None:
+                results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaro-Winkler'))
 
-   container1.put(results_temp)
-   container2.put(index)
-   print(FG + f'Processor Job {index} for domain monitoring is finishing\n' + S)
+    container1.put(results_temp)
+    container2.put(index)
+    print(FG + f'Processor Job {index} for domain monitoring is finishing\n' + S)
 
 
 def page_source_search_in_brand_keyword_results(n):
     thread_ex_list = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
-    print(len(thread_ex_list), 'Domain registrations detected with keywords from file keywords.txt in domain name or are similar registered\n')
 
     with ThreadPoolExecutor(n) as executor:
         results = executor.map(topic_match, thread_ex_list)
@@ -427,10 +466,25 @@ def page_source_search_in_brand_keyword_results(n):
     return topics_matches_domains
 
 
+def website_status_threading(n):
+    thread_ex_list = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
+    print(len(thread_ex_list), 'Newly registered domains detected')
+    print(*thread_ex_list, sep="\n")
+
+    with ThreadPoolExecutor(n) as executor:
+        results = executor.map(website_status, thread_ex_list)
+        for result in results:
+            if result is not None:
+                status_codes.append(result)
+
+    return status_codes
+
+
 def page_source_search_in_topic_keyword_results(n):
     if len(uniquebrands) > 0:
         thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y]
-        print(len(thread_ex_list), 'Domain registrations detected with topic keywords from file topic_keywords.txt in domain name\n')
+        print(len(thread_ex_list), 'Newly registered domains detected with topic keywords from file topic_keywords.txt in domain name')
+        print('Topic Domain Names Examples: ', thread_ex_list[1:5])
 
         dummy_u = []
 
@@ -441,13 +495,13 @@ def page_source_search_in_topic_keyword_results(n):
 
         dummy_u2 = list(filter(None, dummy_u))
 
-        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if len(x) > 1 and y in z and all(black_keyword not in z for black_keyword in blacklist)]
+        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if len(x) > 1 and y in z and all(black_keyword not in z for black_keyword in blacklist_keywords)]
 
         if len(topic_in_domainnames_results) > 0:
             print('\nMatches detected: ', topic_in_domainnames_results)
             postprocessing_topic_results_outputfile()
             write_topic_monitoring_results_to_csv(topic_in_domainnames_results)
-            print('Please check:', FY + f'{desktop}/Newly-Registered-Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, 'file for results\n')
+            print('Please check:', FY + f'{desktop}/Newly_Registered_Topic_Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, 'file for results\n')
 
         else:
             print('\nNo Matches detected: ', topic_in_domainnames_results)
@@ -466,7 +520,8 @@ if __name__=='__main__':
     create_new_csv_file_domainresults()
     create_new_csv_file_topicresults()
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     print(FR + '\nStart Domain Monitoring' + S)
     print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':', len(list_file_domains), 'Domains\n')
 
@@ -485,7 +540,7 @@ if __name__=='__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist)) for sub in sub_list]
+    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist_keywords)) for sub in sub_list]
 
     for p in processes:
         p.daemon = True
@@ -499,16 +554,19 @@ if __name__=='__main__':
 
     flatten(fuzzy_results_temp)
     write_domain_monitoring_results_to_csv()
+    website_status_threading(50)
     print(FG + 'End Domain Monitoring\n' + S)
 
-if __name__=='__main__':
-    print(FR + 'Start Page Source Searching for Topic keywords in domain monitoring results\n' + S)
+
+if __name__ == '__main__':
+    print(FR + 'Start Search task for Topic keywords in source codes of domain monitoring results\n' + S)
     page_source_search_in_brand_keyword_results(50)
     postprocessing_domain_results_outputfile()
-    print(FG + '\nEnd Page Source Searching for Topic keywords in domain monitoring results\n' + S)
+    print(FG + '\nEnd Search task for Topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
 
+
 if __name__=='__main__':
-    print(FR + f'Start Page Source Detection for brand keywords {uniquebrands} in topic domain names\n' + S)
+    print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
     page_source_search_in_topic_keyword_results(50)
-    print(FG + f'\nEnd Page Source Detection for brand keywords {uniquebrands} in topic domain names\n' + S)
+    print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
