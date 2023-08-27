@@ -112,6 +112,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
+- Work with Classes to improve code readability
 
 **Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
