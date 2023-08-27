@@ -374,7 +374,7 @@ def postprocessing_topic_results_outputfile():
 
 # X as sublist Input by cpu number separated sublists to make big input list more processable
 # container1, container2 as container for getting domain monitoring results
-def fuzzy_operations(x, container1, container2):
+def fuzzy_operations(x, container1, container2, blacklist):
    index = x[0]   # index of sub list
    value = x[1]   # content of sub list
    results_temp = []
@@ -485,7 +485,7 @@ if __name__=='__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2)) for sub in sub_list]
+    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist)) for sub in sub_list]
 
     for p in processes:
         p.daemon = True
