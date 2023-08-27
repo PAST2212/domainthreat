@@ -90,7 +90,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations on domains which neither contain your brand names in domain name nor are similar registered, but in page source code of website (used/listed on website). Some "TUI" Names are listed per default.
 
-**Troubleshooting**
+# **Troubleshooting**
 - In case of errors with modules "httpcore" or "httpx" - possible fixes:
    - pip uninstall googletrans
    - pip install --upgrade pip
