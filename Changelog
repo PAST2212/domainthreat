@@ -1,3 +1,6 @@
+v 2.11 (27.08.2023)
+- blacklist feature was not working. Fixed that
+
 v 2.1 (16.07.2023)
 - Improved Exception Handling and web scraping. Other Bug fixes. Change from jaccard unigram (n=1) to jaccard bigram (n=2) algorithm.
 
