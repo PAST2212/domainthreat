@@ -111,7 +111,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Add Possibility to make Subdomain Scans
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
-- Evaluate other Translator / translation possibilities
 - Evaluate other public newly registered domain sources beside whoisds
 
 **Additional**
