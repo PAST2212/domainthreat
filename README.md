@@ -1,7 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version: 2.11**
+**Current Version: 2.12**
 
 **New in Version 2.0**
 - Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
@@ -105,11 +105,12 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other Translator / translation possibilities
+- Evaluate other public newly registered domain sources beside whoisds
 
 **Additional**
+- If you get any errors with modules "httpcore" or "httpcore", please uninstall old translator library googletrans with command **"pip uninstall googletrans"**. 
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
 - Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
 - Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
-- Written in Python 3.7
-- Recommend python version >= 3.7 
+- Written in Python 3.10
