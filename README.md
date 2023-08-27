@@ -1,7 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version: 2.1**
+**Current Version: 2.11**
 
 **New in Version 2.0**
 - Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
