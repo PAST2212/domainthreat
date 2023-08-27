@@ -508,7 +508,6 @@ def page_source_search_in_topic_keyword_results(n):
     else:
         print('No brand names provided in unique_brand_names.txt')
 
-
 if __name__=='__main__':
     download_input_domains()
     read_input_file()
@@ -519,7 +518,6 @@ if __name__=='__main__':
     read_input_topic_file()
     create_new_csv_file_domainresults()
     create_new_csv_file_topicresults()
-
 
 if __name__ == '__main__':
     print(FR + '\nStart Domain Monitoring' + S)
@@ -557,14 +555,12 @@ if __name__ == '__main__':
     website_status_threading(50)
     print(FG + 'End Domain Monitoring\n' + S)
 
-
 if __name__ == '__main__':
     print(FR + 'Start Search task for Topic keywords in source codes of domain monitoring results\n' + S)
     page_source_search_in_brand_keyword_results(50)
     postprocessing_domain_results_outputfile()
     print(FG + '\nEnd Search task for Topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
-
 
 if __name__=='__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
