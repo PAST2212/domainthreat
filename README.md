@@ -115,7 +115,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Evaluate other public newly registered domain sources beside whoisds
 
 **Additional**
-- If you get any errors with modules "httpcore" or "httpcore", please uninstall old translator library googletrans with command **"pip uninstall googletrans"**. 
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
 - Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
 - Exception Notification "Server Connection Error" while parsing page source codes is not unusual for newly registered domains.
