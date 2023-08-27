@@ -1,3 +1,7 @@
+v 2.12 (27.08.2023)
+- Changed translator from library "pip install googletrans" to "pip install translators" with more fallback options in case of Rate limits
+- Added additional column "Website Status" in csv file to evaluate Status by DNS and Get Requests Responses
+
 v 2.11 (27.08.2023)
 - blacklist feature was not working. Fixed that
 
