@@ -47,7 +47,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - Subdomains Scans via Certificate Transparency Logs
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
+- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using different translators as fallback - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
 - MX- and A-Record lookups are included but not activated by default (Will update the functions in future).
 - Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
