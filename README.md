@@ -34,7 +34,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 <br>
 <br>
 
-**Example Screenshot: Illustration of detected subdomains of newly registered domains in version >= 2.2**
+**Example Screenshot: Illustration of detected subdomains of newly registered domains as of version >= 2.2**
 ![image](https://github.com/PAST2212/domainthreat/assets/124390875/1d353eef-1c2b-41dd-b84a-5b97b5f258a2)
 
 # **Features**
