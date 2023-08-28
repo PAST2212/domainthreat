@@ -35,7 +35,8 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 <br>
 
 **Example Screenshot: Illustration of detected subdomains of newly registered domains as of version >= 2.2**
-![image](https://github.com/PAST2212/domainthreat/assets/124390875/1d353eef-1c2b-41dd-b84a-5b97b5f258a2)
+![image](https://github.com/PAST2212/domainthreat/assets/124390875/3f3bec62-3229-42c5-a150-a1c3a0b712f4)
+
 
 # **Features**
 - Multithreading (50 workers by defaul) & Multiprocessing
