@@ -2,7 +2,7 @@
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
 **Current Version: 2.2**
-- New in this version: Subdomains Scans for newly registered Domains
+- New in this version: Subdomain Scans for newly registered Domains
 
 This is my first Project on Github.
 
