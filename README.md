@@ -34,8 +34,8 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **Example Screenshot: Illustration of detected topic keyword in domain source code of newly registered domains**
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
-
-
+<br>
+<br>
 **Example Screenshot: Illustration of detected subdomains of newly registered domains in version > 2.2**
 ![image](https://github.com/PAST2212/domainthreat/assets/124390875/1d353eef-1c2b-41dd-b84a-5b97b5f258a2)
 
