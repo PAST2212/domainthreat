@@ -1,3 +1,6 @@
+v 2.2 (28.08.2023)
+- Add Subdomain Scans of newly registered domains via Certificate Transparency Logs
+
 v 2.12 (27.08.2023)
 - Changed translator from library "pip install googletrans" to "pip install translators" with more fallback options in case of Rate limits
 - Added additional column "Website Status" in csv file to evaluate Status by DNS and Get Requests Responses
