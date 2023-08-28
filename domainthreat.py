@@ -107,7 +107,7 @@ def jaccard(keyword, domain, n_gram):
     union = set(ngram_keyword).union(ngram_domain_name)
     similarity = len(intersection) / len(union) if len(union) > 0 else 0
 
-    if similarity > 0.5:
+    if similarity > 0.6:
         return domain
 
 
