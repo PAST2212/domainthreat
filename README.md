@@ -1,7 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version: 2.12**
+**Current Version: 2.2**
 
 **New in Version 2.0**
 - Find brand impersonation websites which neither contain your brand in domain name nor are similar registered
@@ -32,8 +32,12 @@ https://www.whoisds.com/newly-registered-domains
 
 Some TLDs are not included in this public source (e.g. .de TLD). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
-**Example Screenshot:**
+**Example Screenshot: Illustration of detected topic keyword in domain source code of newly registered domains**
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
+
+
+**Example Screenshot: Illustration of detected subdomains of newly registered domains in version > 2.2**
+![image](https://github.com/PAST2212/domainthreat/assets/124390875/1d353eef-1c2b-41dd-b84a-5b97b5f258a2)
 
 # **Features**
 - Multithreading (50 workers by defaul) & Multiprocessing
@@ -41,6 +45,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - brand name searches on websites which do not contain the brand itself in domain name
 - IDN / Homoglyph Detection
 - CSV Export
+- Subdomains Scans via Certificate Transparency Logs
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using Google Translator API - english per default - beware of API rate limit). This is to cover needs of international companies and foreign-speaking markets / websites.
@@ -108,7 +113,8 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **TO DO**
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
-- Add Possibility to make Subdomain Scans
+- Add further subdomain scan techniques
+- Enhance topic keyword detection on subdomain level
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
