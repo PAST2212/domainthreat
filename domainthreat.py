@@ -13,12 +13,13 @@ import requests
 from bs4 import BeautifulSoup
 import unicodedata
 import translators as ts
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import multiprocessing
 import pandas as pd
 from colorama import Fore, Style
 import re
 from requests.exceptions import HTTPError
+import json
 
 FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
@@ -72,6 +73,9 @@ topics_matches_domains = []
 
 # Website Status
 status_codes = []
+
+# Subdomains
+subdomains = set()
 
 
 # Using Edit-based Textdistance Damerau-Levenshtein for finding look-a-like Domains
@@ -260,6 +264,30 @@ def html_tags(domain):
     return list(filter(None, hey))
 
 
+def subdomains_by_crt(domain):
+    parameters = {'q': '%.{}'.format(domain), 'output': 'json'}
+    try:
+        response = requests.get("https://crt.sh/?", params=parameters, headers=headers, timeout=10)
+        if response.raise_for_status() is None:
+            content = response.content.decode('utf-8')
+            data = json.loads(content)
+            for crt in data:
+                for domains in crt['name_value'].split('\n'):
+                    if '@' in domains:
+                        continue
+
+                    if domains not in subdomains:
+                        subdomains.add((domain, domains.lower()))
+
+    except (HTTPError, requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout, requests.exceptions.TooManyRedirects, requests.exceptions.Timeout):
+        pass
+
+    except Exception as e:
+        print('Other Error occured: ', e)
+
+    return list(filter(None, subdomains))
+
+
 def download_input_domains():
     if os.path.isfile(f'{desktop}/domain-names.txt'):
         os.remove(f'{desktop}/domain-names.txt')
@@ -282,7 +310,7 @@ def create_new_csv_file_domainresults():
     console_file_path = f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
     if not os.path.exists(console_file_path):
         print('Create Monitoring with Newly Registered Domains')
-        header = ['Domains', 'Keyword Found', 'Date', 'Detected by', 'Topic found in Source Code', 'Website Status']
+        header = ['Domains', 'Keyword Found', 'Date', 'Detected by', 'Topic found in Source Code', 'Website Status', 'Subdomains']
         with open(console_file_path, 'w') as f:
             writer = csv.writer(f)
             writer.writerow(header)
@@ -397,11 +425,29 @@ def website_status_to_csv(input_data):
         if y[0] == input_data:
             return y[1]
 
+def subdomains_to_csv(input_data):
+    subdomains_filtered = group_tuples_first_value(subdomains)
+    for y in subdomains_filtered:
+        if y[0] == input_data:
+            return y[1:]
+
+
+def group_tuples_first_value(input):
+    out = {}
+    for elem in input:
+        try:
+            out[elem[0]].extend(elem[1:])
+        except KeyError:
+            out[elem[0]] = list(elem)
+
+    return [tuple(values) for values in out.values()]
+
 
 def postprocessing_domain_results_outputfile():
     df = pd.read_csv(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', delimiter=',')
     df['Topic found in Source Code'] = df.apply(lambda x: topics_to_csv(x['Domains']), axis=1)
     df['Website Status'] = df.apply(lambda x: website_status_to_csv(x['Domains']), axis=1)
+    df['Subdomains'] = df.apply(lambda x: subdomains_to_csv(x['Domains']), axis=1)
     df.to_csv(f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv', index=False)
 
 
@@ -480,6 +526,22 @@ def website_status_threading(n):
     return status_codes
 
 
+def subdomains_threading(n):
+    try:
+        with ThreadPoolExecutor(n) as executor:
+            future_to_subdomains = [executor.submit(subdomains_by_crt, y[0]) for y in fuzzy_results if isinstance(y, tuple)]
+            for future in as_completed(future_to_subdomains):
+                try:
+                    results = future.result()
+                    return results
+
+                except Exception as e:
+                    print('Subdomain Scan error', e)
+
+    except ValueError:
+        pass
+
+
 def page_source_search_in_topic_keyword_results(n):
     if len(uniquebrands) > 0:
         thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y]
@@ -508,6 +570,7 @@ def page_source_search_in_topic_keyword_results(n):
     else:
         print('No brand names provided in unique_brand_names.txt')
 
+
 if __name__=='__main__':
     download_input_domains()
     read_input_file()
@@ -519,8 +582,9 @@ if __name__=='__main__':
     create_new_csv_file_domainresults()
     create_new_csv_file_topicresults()
 
+
 if __name__ == '__main__':
-    print(FR + '\nStart Domain Monitoring' + S)
+    print(FR + '\nStart Domain Monitoring and Subdomain Scans' + S)
     print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':', len(list_file_domains), 'Domains\n')
 
     new = [(x, y) for y in brandnames for x in list_file_domains]
@@ -553,7 +617,10 @@ if __name__ == '__main__':
     flatten(fuzzy_results_temp)
     write_domain_monitoring_results_to_csv()
     website_status_threading(50)
-    print(FG + 'End Domain Monitoring\n' + S)
+    print(FR + '\nStart Subdomain Scans' + S)
+    subdomains_threading(10)
+    print(FG + 'End Domain Monitoring and Subdomain Scans\n' + S)
+
 
 if __name__ == '__main__':
     print(FR + 'Start Search task for Topic keywords in source codes of domain monitoring results\n' + S)
@@ -561,6 +628,7 @@ if __name__ == '__main__':
     postprocessing_domain_results_outputfile()
     print(FG + '\nEnd Search task for Topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'{desktop}/Newly-Registered-Domains_Calender-Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
+
 
 if __name__=='__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
