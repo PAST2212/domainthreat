@@ -96,7 +96,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 # **Troubleshooting**
 - In case of errors with modules "httpcore" or "httpx" - possible fixes:
-   - pip uninstall googletrans
+   - pip uninstall googletrans (in case you have installed older version of domainthreat as of version <= 2.11)
    - pip install --upgrade pip
    - pip install --upgrade httpx
    - pip install --upgrade httpcore
