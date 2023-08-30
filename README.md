@@ -28,7 +28,7 @@ https://www.whoisds.com/newly-registered-domains
 
 Some TLDs are not included in this public source (e.g. .de TLD). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead. But feel free to change the source (e.g a paid source)
 
-**Example Screenshot: Illustration of detected topic keyword in domain source code of newly registered domains**
+**Example Screenshot: Illustration of detected topic keyword in source code of newly registered domains**
 ![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
 
 <br>
@@ -44,7 +44,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - brand name searches on websites which do not contain the brand itself in domain name
 - IDN / Homoglyph Detection
 - CSV Export
-- Subdomains Scans via Certificate Transparency Logs
+- Subdomains Scans via Certificate Transparency Logs. Beware of Rate Limits
 - Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
 - Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using different translators as fallback due to rate limits - english per default). This is to cover needs of international companies and foreign-speaking markets / websites.
@@ -57,7 +57,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 **1. Basic Domainmonitoring**<br>
 
 1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
-1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. holiday) in content of (translated) webpages (e.g. newtuigroup.shop) of domain monitoring results from point 1.1.<br>
+1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
 
    ==> Results are exported to Newly-Registered-Domains .csv File<br>
 
@@ -84,15 +84,17 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
 
 **Before the first run - How it Works:**
+**Basic Domainmonitoring**<br>
 1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
 2. Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
 -  e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon", e.g. blacklist "intuitive" if you want to monitor "tui" ...
 
-3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in page source codes. Default language is english for performing automated translation operations from HTML Title and Description Tag via Google Translator API.
+3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
 -  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
-4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations on domains which neither contain your brand names in domain name nor are similar registered, but in page source code of website (used/listed on website). Some "TUI" Names are listed per default.
+**Advanced Domainmonitoring**<br>
+4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes on websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default.
 
 # **Troubleshooting**
 - In case of errors with modules "httpcore" or "httpx" - possible fixes:
@@ -112,7 +114,7 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **TO DO**
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
-- Add further subdomain scan techniques
+- Add further subdomain scan techniques with less rate limit sensitivity
 - Enhance topic keyword detection on subdomain level
 - Add Possibility to enumerate user mail names
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
