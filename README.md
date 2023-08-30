@@ -84,7 +84,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
 
 **Before the first run - How it Works:**
-**Basic Domainmonitoring**<br>
 1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
 2. Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
@@ -93,7 +92,6 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
 -  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
-**Advanced Domainmonitoring**<br>
 4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes on websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default.
 
 # **Troubleshooting**
