@@ -56,6 +56,7 @@ This was the motivation for this project.<br>
 **1. Basic Domainmonitoring**<br>
 
 1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
+
 1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
 
    ==> Results are exported to Newly-Registered-Domains .csv File<br>
@@ -63,6 +64,7 @@ This was the motivation for this project.<br>
 **2. Advanced Domainmonitoring**<br>
 
 2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
+
 2.2. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1.<br>
 
    ==> Results are exported to Newly-Registered-Topic_Domains .csv File<br>
