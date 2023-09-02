@@ -109,7 +109,7 @@ This was the motivation for this project.<br>
 
 # **Notes**
 
-**Authors**
+**Author**
 - Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
 **TO DO**
