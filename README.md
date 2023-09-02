@@ -4,17 +4,16 @@
 **Current Version: 2.2**
 - New in this version: Subdomain Scans for newly registered Domains
 
-This is my first Project on Github.
-
 Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
 
+# **Motivation**
 Typical Domain Monitoring relies on brand names as input. Sometimes this is not sufficient enough to detect phishing attacks in cases where the brand names and mailing domain names are not equal.
 
 Thought experiment:
 If example company "IBM" monitors their brand "IBM", send mails via @ibmgroup.com and attacker registers the domain ibrngroup.com (m = rn) for spear phishing purposes (e.g. CEO Fraud). 
 Typical Brand (Protection) Domain Monitoring Solutions may experience difficulties because the distance between monitored brand name "IBM" and registered domain name "ibrngroup.com" is too big to classify it as a true positive and therefore makes it harder for the targeted company to take appropriate measures more proactively. This scenario is avoidable by also monitoring your mailing domain names and thus focussing more on text strings rather than brands.
 
-This was the motivation for this project.
+This was the motivation for this project.<br>
 
 # **Detection Scope**
 - full-word matching (e.g. amazon-shop.com), 
@@ -39,19 +38,23 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 
 # **Features**
-- Multithreading (50 workers by defaul) & Multiprocessing
-- False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
-- brand name searches on websites which do not contain the brand itself in domain name
+**Key & CSV Output Features**
+- Check if domain is parked or not (experimental state)
+- Subdomain enumeration via crt.sh, dnsdumpster and subdomain.center
+- Check website status by http status codes
+- Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
+- Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages by using different translators (normalized to english per default)
+  ==> This is to cover needs of international companies and foreign-speaking markets
 - IDN / Homoglyph Detection
-- CSV Export
-- Subdomains Scans via Certificate Transparency Logs. Beware of Rate Limits
-- Find domains that are identical or confusingly similar to your name/brand/mailing domain name/etc.
-- Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Keyword Searches in Page Source Codes (HTML Title Tag and HTML Description Tag and HTML Keywords Tag), even if they are in other languages (using different translators as fallback due to rate limits - english per default). This is to cover needs of international companies and foreign-speaking markets / websites.
-- MX- and A-Record lookups are included but not activated by default (Will update the functions in future).
-- Sequence-based Fuzzy Matching Algorithm Longest Common Substring is included but not activated by default.
-- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
+- Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
+**Other Features**
+- Multithreading (50 workers by default) & Multiprocessing
+- False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
+- Keyword detection in source code of newly registered domains which neither contain brands in domain names nor are similar registered 
+- Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
+- Sequence-based algorithm "Longest Common Substring" is already included but not activated by default
+- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
 
 # **Principles**
 **1. Basic Domainmonitoring**<br>
@@ -112,15 +115,14 @@ Some TLDs are not included in this public source (e.g. .de TLD). You can bypass 
 
 **TO DO**
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
-- Add further subdomain scan techniques with less rate limit sensitivity
-- Enhance topic keyword detection on subdomain level
-- Add Possibility to enumerate user mail names
+- Enhance source code keyword detection on subdomains
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
-- Work with Classes to improve code readability
+- Logo Recognition / Similarity Matching
 
 **Additional**
 - Public Source whoisds has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
 - Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
+- Recommended Python Version >= 3.6
