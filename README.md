@@ -39,8 +39,8 @@ This was the motivation for this project.<br>
 - Subdomain enumeration via crt.sh, dnsdumpster and subdomain.center
 - Check website status by http status codes
 - Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
-- Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages by using different translators (normalized to english per default)
-  ==> This is to cover needs of international companies and foreign-speaking markets
+- Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
+  ==> This is to cover needs of international companies and foreign-speaking markets<br>
 - IDN / Homoglyph / Homograph Detection
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
