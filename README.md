@@ -118,6 +118,7 @@ This was the motivation for this project.<br>
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
 - Logo Recognition / Similarity Matching
+- Change multithreading by async await in rate limit functions (e.g. subdomain enumeration)
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
