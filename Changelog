@@ -1,5 +1,12 @@
+v 3.0 (03.09.2023)
+- Add more Subdomain Scans via dnsdumpster and subdomain.center
+- Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
+- Bug Fixes in CSV Output
+- Improve Readability of code
+- Add Feature "parked domains": Check if domain is parked or not (experimental)
+
 v 2.2 (28.08.2023)
-- Add Subdomain Scans of newly registered domains via Certificate Transparency Logs
+- Add Subdomain Scans of newly registered domains via Certificate Transparency Logs (crt.sh)
 
 v 2.12 (27.08.2023)
 - Changed translator from library "pip install googletrans" to "pip install translators" with more fallback options in case of Rate limits
