@@ -36,7 +36,7 @@ This was the motivation for this project.<br>
 # **Features**
 **Key & CSV Output Features**
 - Check if domain is parked or not (experimental state)
-- Subdomain enumeration via crt.sh, dnsdumpster and subdomain.center
+- Subdomain enumeration via crt.sh, dnsdumpster and subdomain.center (beware of rate limits)
 - Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
 - Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
 - Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
