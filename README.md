@@ -1,8 +1,13 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version: 2.2**
-- New in this version: Subdomain Scans for newly registered Domains
+**Current Version: 3.0**
+- New in this version:
+  -  Add more Subdomain Scans via dnsdumpster and subdomain.center
+  -  Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
+  -  Bug Fixes in CSV Output
+  -  Improve Readability of code
+  -  Add Feature "parked domains": Check if domain is parked or not (experimental)
 
 Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
 
