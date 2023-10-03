@@ -1,3 +1,7 @@
+v 3.01 (03.10.2023)
+- Improved blacklist operation.
+- Add AsyncIO requests to bypass server side rate limits for subdomain scans at crtsh and subdomaincenter (1 request per 1.5 Secods parallelized)
+
 v 3.0 (03.09.2023)
 - Add more Subdomain Scans via dnsdumpster and subdomain.center
 - Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
