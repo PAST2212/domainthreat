@@ -1,8 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version: 3.0**
-- New in this version:
+**New in Version: 3.0**
   -  Add more Subdomain Scans via dnsdumpster and subdomain.center
   -  Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
   -  Bug Fixes in CSV Output
@@ -118,16 +117,16 @@ This was the motivation for this project.<br>
 
 **TO DO**
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
-- Enhance source code keyword detection on subdomains
+- Enhance source code keyword detection on subdomain level
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
 - Logo Recognition / Similarity Matching
-- Change multithreading by asyncio in rate limit functions (e.g. subdomain enumeration)
+- Change multithreading by asyncio in rate limit functions (e.g. subdomain enumeration) - done for crtsh and subdomaincenter
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. You are also able to use cheap paid sources for daily work for around 9$/month as I do or other public sources
 - Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
-- Recommended Python Version >= 3.6
+- Recommended Python Version >= 3.7
 - Some TLDs are not included in this public source (e.g. ".de" domains). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead.
