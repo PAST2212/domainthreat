@@ -19,6 +19,9 @@ import pandas as pd
 from colorama import Fore, Style
 import re
 import json
+import aiohttp
+import asyncio
+from aiolimiter import AsyncLimiter
 
 FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
@@ -105,6 +108,13 @@ def group_tuples_first_value(klaus):
     return [tuple(values) for values in out.values()]
 
 
+def exclude_blacklist():
+    global file_domains_exclude_blacklist
+    frog = [x for y in blacklist_keywords for x in list_file_domains if y in x]
+    file_domains_exclude_blacklist = [x for x in list_file_domains if x not in frog]
+    return file_domains_exclude_blacklist
+
+
 class StringMatching:
     def __init__(self, keyword, domain):
         self.keyword = keyword
@@ -161,6 +171,72 @@ class StringMatching:
                     longest_common_substring) is not len(
                     self.keyword) and all(black_keyword_lcs not in self.keyword for black_keyword_lcs in list_file_blacklist_lcs):
                 return self.domain
+
+
+class Subdomains:
+    @staticmethod
+    async def subdomains_by_crtsh(session: aiohttp.ClientSession, i, rate_limit):
+        domain = i['q'].replace('%.', '').strip()
+        try:
+            async with rate_limit:
+                response = await session.get('https://crt.sh/?', params=i, headers=header_subdomain_services)
+                if response.status == 200:
+                    data1 = await response.text()
+                    data = json.loads(data1)
+                    for crt in data:
+                        for domains in crt['name_value'].split('\n'):
+                            if '@' in domains:
+                                continue
+
+                            if domains not in subdomains:
+                                domains_trans = domains.lower().replace('*.', '')
+                                subdomains.add((domain, domains_trans))
+
+            return list(filter(None, subdomains))
+
+        except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
+            print('Error occured: ', e)
+
+    @staticmethod
+    async def subdomains_by_subdomaincenter(session: aiohttp.ClientSession, domain, rate_limit):
+        try:
+            async with rate_limit:
+                response = await session.get(f"https://api.subdomain.center/?domain={domain}", headers=header_subdomain_services)
+                if response.status == 200:
+                    data1 = await response.text()
+                    soup = BeautifulSoup(data1, 'lxml')
+                    subdomain_trans = re.sub(r'[\[\]"]', "", soup.find('p').get_text()).split(",")
+                    for subdomain in subdomain_trans:
+                        if subdomain != '':
+                            subdomains.add((domain, subdomain))
+
+            return list(filter(None, subdomains))
+
+        except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
+            print('Subdomain Scan Error occured in subdomaincenter: ', e)
+
+
+class AsyncIO:
+    @staticmethod
+    async def tasks_subdomains_crtsh():
+        parameters = [{'q': '%.{}'.format(y[0]), 'output': 'json'} for y in fuzzy_results if isinstance(y, tuple)]
+        rate_limit = AsyncLimiter(1, 1.5)  # no burst requests, make request every 1.5 seconds
+        async with aiohttp.ClientSession() as session:
+            tasks = [Subdomains.subdomains_by_crtsh(session, symbol, rate_limit) for symbol in parameters]
+            results = await asyncio.gather(*tasks)
+        return results
+
+    @staticmethod
+    async def tasks_subdomains_center():
+        rate_limit = AsyncLimiter(1, 1.5)  # no burst requests, make request every 1.5 seconds
+        async with aiohttp.ClientSession() as session:
+            tasks = [Subdomains.subdomains_by_subdomaincenter(session, y[0], rate_limit) for y in fuzzy_results if isinstance(y, tuple)]
+            results = await asyncio.gather(*tasks)
+        return results
+
+    @staticmethod
+    async def tasks_subdomains():
+        await asyncio.gather(AsyncIO.tasks_subdomains_center(), AsyncIO.tasks_subdomains_crtsh())
 
 
 class FeatureProcessing:
@@ -228,31 +304,6 @@ class FeatureProcessing:
                 dns.resolver.NoNameservers):
             e_mail_ready.append((self.domain, 'No'))
 
-    def subdomains_by_crt(self):
-        parameters = {'q': '%.{}'.format(self.domain), 'output': 'json'}
-        try:
-            response = requests.get("https://crt.sh/?", params=parameters, headers=header_subdomain_services)
-            if response.raise_for_status() is None:
-                content = response.content.decode('utf-8')
-                data = json.loads(content)
-                for crt in data:
-                    for domains in crt['name_value'].split('\n'):
-                        if '@' in domains:
-                            continue
-
-                        if domains not in subdomains:
-                            domains_trans = domains.lower().replace('*.', '')
-                            subdomains.add((self.domain, domains_trans))
-
-        except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-                requests.exceptions.TooManyRedirects, requests.exceptions.Timeout, requests.exceptions.SSLError):
-            pass
-
-        except Exception as e:
-            print('Other Error occured: ', e)
-
-        return list(filter(None, subdomains))
-
     def subdomains_by_hackertarget(self):
         session = requests.Session()
         try:
@@ -282,26 +333,6 @@ class FeatureProcessing:
 
         except Exception as e:
             print('Subdomain Scan Error occured in dnsdumpster: ', e)
-
-        return list(filter(None, subdomains))
-
-    def subdomains_by_subdomaincenter(self):
-        session = requests.Session()
-        try:
-            response = session.get(f"https://api.subdomain.center/?domain={self.domain}", headers=header_subdomain_services)
-            if response.raise_for_status() is None:
-                soup = BeautifulSoup(response.text, 'lxml')
-                subdomain_trans = re.sub(r'[\[\]"]', "", soup.find('p').get_text()).split(",")
-                for subdomain in subdomain_trans:
-                    if subdomain != '':
-                        subdomains.add((self.domain, subdomain))
-
-        except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError, requests.exceptions.ConnectTimeout,
-                requests.exceptions.TooManyRedirects, requests.exceptions.Timeout, requests.exceptions.SSLError):
-            pass
-
-        except Exception as e:
-            print('Subdomain Scan Error occured in subdomaincenter: ', e)
 
         return list(filter(None, subdomains))
 
@@ -635,6 +666,7 @@ class InputFiles:
             print('Please also check https://www.whoisds.com/newly-registered-domains for daily Input')
             sys.exit()
 
+
     def read_domains(self):
         if os.path.isfile(f'{desktop}/{previous_date}.txt'):
             os.rename(f'{desktop}/{previous_date}.txt', f'{desktop}/{self.file}.txt')
@@ -649,6 +681,7 @@ class InputFiles:
         except Exception as e:
             print('Something went wrong with reading domain-names.txt Input File. Please check file name', e)
             sys.exit()
+
 
     def read_user_input(self):
         file_keywords = open(f'{desktop}/User Input/{self.file}.txt', 'r', encoding='utf-8-sig')
@@ -670,14 +703,14 @@ class InputFiles:
 
 # X as sublist Input by cpu number separated sublists to make big input list more processable
 # container1, container2 as container for getting domain monitoring results
-def fuzzy_operations(x, container1, container2, blacklist):
+def fuzzy_operations(x, container1, container2):
     index = x[0]  # index of sub list
     value = x[1]  # content of sub list
     results_temp = []
     print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 
     for domain in value:
-        if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
+        if domain[1] in domain[0]:
             results_temp.append((domain[0], domain[1], today, 'Full Word Match'))
 
         elif StringMatching(domain[1], domain[0]).jaccard(n_gram=2) is not None:
@@ -695,7 +728,7 @@ def fuzzy_operations(x, container1, container2, blacklist):
         elif unconfuse(domain[0]) is not domain[0]:
             latin_domain = unicodedata.normalize('NFKD', unconfuse(domain[0])).encode('latin-1', 'ignore').decode(
                 'latin-1')
-            if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
+            if domain[1] in latin_domain:
                 results_temp.append((domain[0], domain[1], today, 'IDN Full Word Match'))
 
             elif StringMatching(domain[1], latin_domain).damerau() is not None:
@@ -716,33 +749,9 @@ class FeatureThreading:
     def __init__(self):
         self.number_workers = os.cpu_count() + 4
 
-    def subdomains_crtsh(self):
-        with ThreadPoolExecutor(self.number_workers) as executor:
-            future_to_subdomains = [executor.submit(FeatureProcessing(y[0]).subdomains_by_crt) for y in fuzzy_results if
-                                    isinstance(y, tuple)]
-            for future in as_completed(future_to_subdomains):
-                try:
-                    results = future.result()
-                    return results
-
-                except Exception as e:
-                    print(e)
-
     def subdomains_hackertarget(self):
         with ThreadPoolExecutor(self.number_workers) as executor:
             future_to_subdomains = [executor.submit(FeatureProcessing(y[0]).subdomains_by_hackertarget) for y in fuzzy_results if
-                                    isinstance(y, tuple)]
-            for future in as_completed(future_to_subdomains):
-                try:
-                    results = future.result()
-                    return results
-
-                except Exception as e:
-                    print(e)
-
-    def subdomains_subdomaincenter(self):
-        with ThreadPoolExecutor(self.number_workers) as executor:
-            future_to_subdomains = [executor.submit(FeatureProcessing(y[0]).subdomains_by_subdomaincenter) for y in fuzzy_results if
                                     isinstance(y, tuple)]
             for future in as_completed(future_to_subdomains):
                 try:
@@ -802,10 +811,11 @@ class FeatureThreading:
 
 def sourcecode_matcher_advanced_monitoring(n):
     if len(uniquebrands) > 0:
-        thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y]
+        thread_ex_list = [y for x in list_topics for y in file_domains_exclude_blacklist if x in y]
         print(len(thread_ex_list),
               'Newly registered domains detected with topic keywords from file topic_keywords.txt in domain name')
         print('Example Domains: ', thread_ex_list[1:5], '\n')
+        print(thread_ex_list)
 
         dummy_u = []
 
@@ -822,6 +832,7 @@ def sourcecode_matcher_advanced_monitoring(n):
 
         if len(topic_in_domainnames_results) > 0:
             print('\nMatches detected: ', topic_in_domainnames_results)
+            CSVFile().create_advanced_monitoring_file()
             CSVFile().postprocessing_advanced_monitoring()
             CSVFile().write_advanced_monitoring_results(topic_in_domainnames_results)
             print('Please check:',
@@ -856,15 +867,15 @@ if __name__ == '__main__':
     InputFiles('unique_brand_names').read_user_input()
     InputFiles('blacklist_keywords').read_user_input()
     InputFiles('topic_keywords').read_user_input()
+    exclude_blacklist()
     CSVFile().create_basic_monitoring_file()
-    CSVFile().create_advanced_monitoring_file()
+
 
 if __name__ == '__main__':
     print(FR + '\nStart Basic Domain Monitoring and Feature Scans' + S)
-    print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':',
-          len(list_file_domains), 'Domains\n')
+    print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':', len(file_domains_exclude_blacklist), 'Domains\n')
 
-    new = [(x, y) for y in brandnames for x in list_file_domains]
+    new = [(x, y) for y in brandnames for x in file_domains_exclude_blacklist]
 
 
     def split(domain_input_list, n):
@@ -900,15 +911,15 @@ if __name__ == '__main__':
     FeatureThreading().spf_record()
     FeatureThreading().dmarc_record()
     print(FG + 'End E-Mail Availability Scans\n' + S)
-    print(FR + '\nStart Subdomain & Status Scans' + S)
-    FeatureThreading().subdomains_crtsh()
-    FeatureThreading().subdomains_subdomaincenter()
+    print(FR + '\nStart Subdomain & Parked Status Scans' + S)
+    asyncio.run(AsyncIO.tasks_subdomains())
     FeatureThreading().subdomains_hackertarget()
     FeatureThreading().parked_domains()
     print(FG + 'End Basic Domain Monitoring and Feature Scans\n' + S)
     ex_list = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
     print(*ex_list, sep="\n")
     print(FY + f'{len(ex_list)} Newly registered domains detected\n' + S)
+
 
 if __name__ == '__main__':
     print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results\n' + S)
@@ -919,8 +930,8 @@ if __name__ == '__main__':
           FY + f'{desktop}/Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S,
           ' file for results\n')
 
+
 if __name__ == '__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
     sourcecode_matcher_advanced_monitoring(50)
     print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names' + S)
-
