@@ -55,7 +55,6 @@ This was the motivation for this project.<br>
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - Keyword detection in source code of newly registered domains which neither contain brands in domain names nor are similar registered 
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Sequence-based algorithm "Longest Common Substring" is already included but not activated by default
 - Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
 
 # **Principles**
@@ -118,8 +117,8 @@ This was the motivation for this project.<br>
 - Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
 **TO DO**
-- Add additional fuzzy matching algorithms to increase true positive rate / accurancy.
-- Enhance source code keyword detection on subdomain level
+- Add additional fuzzy matching algorithms to increase true positive rate / accurancy (Sequence-based algorithm "Longest Common Substring" is already included but not activated by default)
+- Enhance source code keyword detection on subdomain level 
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
 - Evaluate other public newly registered domain sources beside whoisds
 - Logo Recognition / Similarity Matching
