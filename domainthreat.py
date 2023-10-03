@@ -815,7 +815,6 @@ def sourcecode_matcher_advanced_monitoring(n):
         print(len(thread_ex_list),
               'Newly registered domains detected with topic keywords from file topic_keywords.txt in domain name')
         print('Example Domains: ', thread_ex_list[1:5], '\n')
-        print(thread_ex_list)
 
         dummy_u = []
 
@@ -826,9 +825,7 @@ def sourcecode_matcher_advanced_monitoring(n):
 
         dummy_u2 = list(filter(None, dummy_u))
 
-        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if
-                                        len(x) > 1 and y in z and all(
-                                            black_keyword not in z for black_keyword in blacklist_keywords)]
+        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if len(x) > 1 and y in z]
 
         if len(topic_in_domainnames_results) > 0:
             print('\nMatches detected: ', topic_in_domainnames_results)
@@ -891,7 +888,7 @@ if __name__ == '__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist_keywords)) for sub
+    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2)) for sub
                  in sub_list]
 
     for p in processes:
@@ -935,3 +932,4 @@ if __name__ == '__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
     sourcecode_matcher_advanced_monitoring(50)
     print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names' + S)
+    
