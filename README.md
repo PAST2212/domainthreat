@@ -1,6 +1,8 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
+**Current Version 3.01**
+
 **New in Version: 3.0**
   -  Add more Subdomain Scans via dnsdumpster and subdomain.center
   -  Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
