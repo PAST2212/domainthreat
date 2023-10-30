@@ -1,3 +1,6 @@
+v 3.02 (30.10.2023)
+- some bug fixes
+
 v 3.01 (03.10.2023)
 - Improved blacklist operation.
 - Add AsyncIO requests to bypass server side rate limits for subdomain scans at crtsh and subdomaincenter (1 request per 1.5 Secods parallelized)
