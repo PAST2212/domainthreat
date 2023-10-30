@@ -195,8 +195,15 @@ class Subdomains:
             return list(filter(None, subdomains))
 
         except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print('Error occured: ', e)
+            print('Subdomain Scan error occurred in crtsh: ', e)
 
+        except aiohttp.ClientConnectorError as e:
+            print('Server Connection Error via crt.sh Subdomain Scan: ', e)
+
+        except Exception as e:
+            print('Other Error occured with crt.sh Subdomain Scan: ', e)
+
+    
     @staticmethod
     async def subdomains_by_subdomaincenter(session: aiohttp.ClientSession, domain, rate_limit):
         try:
@@ -213,8 +220,13 @@ class Subdomains:
             return list(filter(None, subdomains))
 
         except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print('Subdomain Scan Error occured in subdomaincenter: ', e)
+            print('Subdomain Scan error occurred in subdomain center: ', e)
 
+        except aiohttp.ClientConnectorError as e:
+            print('Server Connection Error via subdomain center Subdomain Scan: ', e)
+
+        except Exception as e:
+            print('Other Error occured with subdomain center Subdomain Scan: ', e)
 
 class AsyncIO:
     @staticmethod
