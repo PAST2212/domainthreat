@@ -11,3 +11,4 @@ translators>=5.8.3
 aiohttp>=3.8.5
 aiolimiter>=1.1.0
 asyncio>=3.4.3
+deep-translator>=1.11.4
