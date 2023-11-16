@@ -120,12 +120,12 @@ This was the motivation for this project.<br>
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy (Sequence-based algorithm "Longest Common Substring" is already included but not activated by default)
 - Enhance source code keyword detection on subdomain level 
 - Add Possibility to parse Arguments (e.g. workers for multithreading)
-- Logo Recognition / Similarity Matching
+- AI based Logo Detection by Object Detection
 - Change multithreading by asyncio in rate limit functions (e.g. subdomain enumeration) - done for crtsh and subdomaincenter
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000.
-- Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate. Change them if you want to match your particular (company) needs
+- Thresholds are intentional tolerant by default (possible high false positive rate) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate (reduce occurrence of false negatives). Change them if you want to match your particular (company) needs
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
 - Recommended Python Version >= 3.7
