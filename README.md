@@ -29,13 +29,8 @@ This was the motivation for this project.<br>
 - IDN Detection / look-alike Domains based on partial word matching (e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' AND "ya" instead of "ay" AND Number "1" instead of Letter "l")
 
 
-**Example Screenshot: Illustration of detected topic keyword in source code of newly registered domains**
-![image](https://user-images.githubusercontent.com/124390875/219737268-0767db9d-0b9d-4a7e-9fba-83b1bf8e3636.png)
-
-<br>
-
-**Example Screenshot: Illustration of detected subdomains of newly registered domains as of version >= 2.2**
-![image](https://github.com/PAST2212/domainthreat/assets/124390875/3f3bec62-3229-42c5-a150-a1c3a0b712f4)
+**Example Screenshot: Illustration of detected topic keyword 'tech' in source code of newly registered domain 'microsoftintegration[.]com' and detected subdomains**
+![image](https://github.com/PAST2212/domainthreat/assets/124390875/b9d27c1c-a366-49bf-8c69-666681f87041)
 
 
 # **Features**
