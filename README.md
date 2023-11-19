@@ -66,7 +66,7 @@ This was the motivation for this project.<br>
 2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 
 2.2. Keywords from file topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the languages_advanced_monitoring.txt file. Please see supported_languages.txt for currently supported languages. Copy / Paste the demanded languages from supported_languages.txt to languages_advanced_monitoring.txt file if you want to.<br>
-==> Results from 2.1. will be enhanced by translated keywords from topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find additionally german registerd     domains like "urlaub.com"<br>
+==> Results from 2.1. will be enhanced by translated keywords from topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd     domains like "urlaub.com"<br>
 
 2.3. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1. and from 2.2. (if any lamguages are provided)<br>
 
