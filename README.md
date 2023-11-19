@@ -50,7 +50,8 @@ This was the motivation for this project.<br>
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - Keyword detection in source code of newly registered domains which neither contain brands in domain names nor are similar registered 
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
-- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to<br>
+- Possibility to change pre-defined thresholds of fuzzy-matching algorithms if you want to
+- Different translation operations to increase recall rate<br>
 
 # **Principles**
 **1. Basic Domainmonitoring**<br>
