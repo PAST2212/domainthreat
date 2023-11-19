@@ -1,3 +1,9 @@
+v 3.10 (19.11.2023)
+- bug fixes and other minor fixes
+- Adjustment at blacklist
+- Add translations for advanced domain monitoring operation
+- Multi Threading CPU based
+
 v 3.02 (30.10.2023)
 - some bug fixes
 
