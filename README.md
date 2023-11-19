@@ -65,7 +65,10 @@ This was the motivation for this project.<br>
 
 2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 
-2.2. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1.<br>
+2.2. Keywords from file topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the languages_advanced_monitoring.txt file. Please see supported_languages.txt for currently supported languages. Copy / Paste the demanded languages from supported_languages.txt to languages_advanced_monitoring.txt file if you want to.
+==> Results from 2.1. will be enhanced by translated keywords from topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find additionally german registerd domains like "urlaub.com"<br>
+
+2.3. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in content of webpages of monitoring results from point 2.1. and from 2.2. (if any lamguages are provided)<br>
 
    ==> Results are exported to Advanced_Monitoring_Results_Calender_Week_ .csv File<br>
 
@@ -93,7 +96,7 @@ This was the motivation for this project.<br>
 3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
 -  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
-4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes on websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default.
+4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes on websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default. 
 
 # **Troubleshooting**
 - In case of errors with modules "httpcore" or "httpx" - possible fixes:
