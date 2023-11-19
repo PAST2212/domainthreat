@@ -1,0 +1,15 @@
+croatian
+czech
+danish
+dutch
+estonian
+finnish
+french
+german
+italian
+polish
+portuguese
+romanian
+spanish
+swedish
+turkish
