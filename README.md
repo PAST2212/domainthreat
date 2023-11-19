@@ -65,7 +65,7 @@ This was the motivation for this project.<br>
 
 2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 
-2.2. Keywords from file topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the "User Input/languages_advanced_monitoring.txt" file. Please see supported_languages.txt for currently supported languages. Copy / Paste the demanded languages from supported_languages.txt to "User Input/languages_advanced_monitoring.txt" file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
+2.2. Keywords from file topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the "User Input/languages_advanced_monitoring.txt" file. Please see supported_languages.txt for supported languages at this moment. Copy / Paste the demanded languages from supported_languages.txt to "User Input/languages_advanced_monitoring.txt" file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
 
 ==> Results from 2.1. will be enhanced by translated keywords from topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd     domains like "urlaub.com"<br>
 
