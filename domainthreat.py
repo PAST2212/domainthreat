@@ -22,6 +22,7 @@ import json
 import aiohttp
 import asyncio
 from aiolimiter import AsyncLimiter
+from deep_translator import MyMemoryTranslator
 
 FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
@@ -88,13 +89,25 @@ e_mail_ready = []
 # Parked Domains
 parked_domains = []
 
+# Advanced Domain Monitoring Domain Name Search in different languages
+languages = []
+flatten_languages = []
 
-def flatten(sublist):
+
+def flatten_fuzzy_results(sublist):
     for i in sublist:
         if type(i) != type([1]):
             fuzzy_results.append(i)
         else:
-            flatten(i)
+            flatten_fuzzy_results(i)
+
+
+def flatten_translations(sublist):
+    for i in sublist:
+        if type(i) != type([1]):
+            flatten_languages.append(i)
+        else:
+            flatten_translations(i)
 
 
 def group_tuples_first_value(klaus):
@@ -108,6 +121,7 @@ def group_tuples_first_value(klaus):
     return [tuple(values) for values in out.values()]
 
 
+# function excludes domains from feed. Not activated by default. Blacklist matching is made at full text and similarity matching step instead
 def exclude_blacklist():
     global file_domains_exclude_blacklist
     frog = [x for y in blacklist_keywords for x in list_file_domains if y in x]
@@ -203,7 +217,7 @@ class Subdomains:
         except Exception as e:
             print('Other Error occured with crt.sh Subdomain Scan: ', e)
 
-    
+
     @staticmethod
     async def subdomains_by_subdomaincenter(session: aiohttp.ClientSession, domain, rate_limit):
         try:
@@ -227,6 +241,7 @@ class Subdomains:
 
         except Exception as e:
             print('Other Error occured with subdomain center Subdomain Scan: ', e)
+
 
 class AsyncIO:
     @staticmethod
@@ -356,8 +371,9 @@ class FeatureProcessing:
                            'This domain has been registered via IONOS and is not yet connected to a website',
                            'Parked Domain name on Hostinger DNS system']
 
+        request_session = requests.Session()
         try:
-            response = requests.get(domains, headers=headers, allow_redirects=True, timeout=(5, 30))
+            response = request_session.get(domains, headers=headers, allow_redirects=True, timeout=(5, 30))
             if response.raise_for_status() is None:
                 soup = BeautifulSoup(response.text, 'lxml')
                 try:
@@ -368,7 +384,7 @@ class FeatureProcessing:
                         redirect_url = hidden_redirect_1.split("=")[-1]
                         if tldextract.extract(redirect_url).registered_domain == '':
                             transformed_url = domains + "/" + hidden_redirect_1.split("=")[-1]
-                            transformed_response = requests.get(transformed_url, headers=headers, allow_redirects=True,
+                            transformed_response = request_session.get(transformed_url, headers=headers, allow_redirects=True,
                                                                 timeout=(5, 30))
                             hidden_redirect_soup = BeautifulSoup(transformed_response.text, 'lxml')
                             for k in parked_keywords:
@@ -378,7 +394,7 @@ class FeatureProcessing:
                                     parked_domains.append((self.domain, 'No'))
                         else:
                             transformed_url = hidden_redirect_1.split("=")[-1]
-                            transformed_response = requests.get(transformed_url, headers=headers, allow_redirects=True,
+                            transformed_response = request_session.get(transformed_url, headers=headers, allow_redirects=True,
                                                                 timeout=(5, 30))
                             hidden_redirect_soup = BeautifulSoup(transformed_response.text, 'lxml')
                             for k in parked_keywords:
@@ -393,6 +409,7 @@ class FeatureProcessing:
                                 parked_domains.append((self.domain, 'Yes'))
                             else:
                                 parked_domains.append((self.domain, 'No'))
+
                 except:
                     for k in parked_keywords:
                         if k.lower() in str(soup.html).lower():
@@ -550,7 +567,9 @@ class FeaturesCSV:
     @staticmethod
     def subdomains(klaus):
         subdomains_filtered = group_tuples_first_value(subdomains)
-        for y in subdomains_filtered:
+        subdomains_filtered_1 = [tuple(dict.fromkeys(k)) for k in subdomains_filtered if
+                                 len(tuple(dict.fromkeys(k))) > 1]
+        for y in subdomains_filtered_1:
             if y[0] == klaus:
                 return y[1:]
 
@@ -659,6 +678,7 @@ class InputFiles:
         self.black = 'blacklist_keywords'
         self.lcs = 'blacklist_lcs'
         self.topic = 'topic_keywords'
+        self.languages = 'languages_advanced_monitoring'
 
     def download_domains(self):
         if os.path.isfile(f'{desktop}/{self.file}.txt'):
@@ -710,28 +730,30 @@ class InputFiles:
                     list_file_blacklist_lcs.append(domain)
                 elif self.file == self.topic:
                     list_topics.append(domain)
+                elif self.file == self.languages:
+                    languages.append(domain)
         file_keywords.close()
 
 
 # X as sublist Input by cpu number separated sublists to make big input list more processable
 # container1, container2 as container for getting domain monitoring results
-def fuzzy_operations(x, container1, container2):
+def fuzzy_operations(x, container1, container2, blacklist):
     index = x[0]  # index of sub list
     value = x[1]  # content of sub list
     results_temp = []
     print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 
     for domain in value:
-        if domain[1] in domain[0]:
+        if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Full Word Match'))
 
-        elif StringMatching(domain[1], domain[0]).jaccard(n_gram=2) is not None:
+        elif StringMatching(domain[1], domain[0]).jaccard(n_gram=2) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Jaccard'))
 
-        elif StringMatching(domain[1], domain[0]).damerau() is not None:
+        elif StringMatching(domain[1], domain[0]).damerau() is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Damerau-Levenshtein'))
 
-        elif StringMatching(domain[1], domain[0]).jaro_winkler() is not None:
+        elif StringMatching(domain[1], domain[0]).jaro_winkler() is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Jaro-Winkler'))
 
         # elif StringMatching(domain[1], domain[0]).lcs(keywordthreshold=0.5) is not None:
@@ -740,16 +762,16 @@ def fuzzy_operations(x, container1, container2):
         elif unconfuse(domain[0]) is not domain[0]:
             latin_domain = unicodedata.normalize('NFKD', unconfuse(domain[0])).encode('latin-1', 'ignore').decode(
                 'latin-1')
-            if domain[1] in latin_domain:
+            if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Full Word Match'))
 
-            elif StringMatching(domain[1], latin_domain).damerau() is not None:
+            elif StringMatching(domain[1], latin_domain).damerau() is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Damerau-Levenshtein'))
 
-            elif StringMatching(domain[1], latin_domain).jaccard(n_gram=2) is not None:
+            elif StringMatching(domain[1], latin_domain).jaccard(n_gram=2) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaccard'))
 
-            elif StringMatching(domain[1], latin_domain).jaro_winkler() is not None:
+            elif StringMatching(domain[1], latin_domain).jaro_winkler() is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaro-Winkler'))
 
     container1.put(results_temp)
@@ -759,7 +781,7 @@ def fuzzy_operations(x, container1, container2):
 
 class FeatureThreading:
     def __init__(self):
-        self.number_workers = os.cpu_count() + 4
+        self.number_workers = min(16, os.cpu_count() + 2)
 
     def subdomains_hackertarget(self):
         with ThreadPoolExecutor(self.number_workers) as executor:
@@ -822,11 +844,24 @@ class FeatureThreading:
 
 
 def sourcecode_matcher_advanced_monitoring(n):
+    try:
+        translate_topics = [MyMemoryTranslator('english', lang).translate_batch(list_topics) for lang in languages]
+        flatten_translations(translate_topics)
+        latin_syntax = [(unicodedata.normalize('NFKD', lang).encode('latin-1', 'ignore').decode('latin-1'), lang) for lang in flatten_languages]
+        latin_filtered = list(set(filter(None, [re.sub(r"[^a-z]", "", i[1].lower()) for i in latin_syntax if i[0] == i[1]])))
+        joined_topic_keywords = latin_filtered + list_topics
+    except Exception as e:
+        print('Something went wrong with Translation of topic keywords', e)
+        joined_topic_keywords = []
+
     if len(uniquebrands) > 0:
-        thread_ex_list = [y for x in list_topics for y in file_domains_exclude_blacklist if x in y]
-        print(len(thread_ex_list),
-              'Newly registered domains detected with topic keywords from file topic_keywords.txt in domain name')
-        print('Example Domains: ', thread_ex_list[1:5], '\n')
+        if len(joined_topic_keywords) > len(list_topics):
+            thread_ex_list = [y for x in joined_topic_keywords for y in list_file_domains if x in y.split('.')[0]]
+        else:
+            thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y.split('.')[0]]
+
+        print(len(thread_ex_list), 'Newly registered domains detected with topic keywords from file topic_keywords.txt in domain name')
+        print('Example Domains: ', thread_ex_list[1:8], '\n')
 
         dummy_u = []
 
@@ -837,7 +872,7 @@ def sourcecode_matcher_advanced_monitoring(n):
 
         dummy_u2 = list(filter(None, dummy_u))
 
-        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if len(x) > 1 and y in z]
+        topic_in_domainnames_results = [(x[0], y, today) for y in uniquebrands for x in dummy_u2 for z in x[1:] if len(x) > 1 and y in z and all(black_keyword not in z for black_keyword in blacklist_keywords)]
 
         if len(topic_in_domainnames_results) > 0:
             print('\nMatches detected: ', topic_in_domainnames_results)
@@ -876,15 +911,16 @@ if __name__ == '__main__':
     InputFiles('unique_brand_names').read_user_input()
     InputFiles('blacklist_keywords').read_user_input()
     InputFiles('topic_keywords').read_user_input()
-    exclude_blacklist()
+    InputFiles('languages_advanced_monitoring').read_user_input()
+    #exclude_blacklist()
     CSVFile().create_basic_monitoring_file()
 
 
 if __name__ == '__main__':
     print(FR + '\nStart Basic Domain Monitoring and Feature Scans' + S)
-    print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':', len(file_domains_exclude_blacklist), 'Domains\n')
+    print('Quantity of Newly Registered or Updated Domains from', daterange.strftime('%d-%m-%y') + ':', len(list_file_domains), 'Domains\n')
 
-    new = [(x, y) for y in brandnames for x in file_domains_exclude_blacklist]
+    new = [(x, y) for y in brandnames for x in list_file_domains]
 
 
     def split(domain_input_list, n):
@@ -900,7 +936,7 @@ if __name__ == '__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2)) for sub
+    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist_keywords)) for sub
                  in sub_list]
 
     for p in processes:
@@ -913,7 +949,7 @@ if __name__ == '__main__':
         p.join()
         p.close()
 
-    flatten(fuzzy_results_temp)
+    flatten_fuzzy_results(fuzzy_results_temp)
     CSVFile().write_basic_monitoring_results()
     print(FR + '\nStart E-Mail Availability Scans' + S)
     FeatureThreading().mx_record()
@@ -921,6 +957,8 @@ if __name__ == '__main__':
     FeatureThreading().dmarc_record()
     print(FG + 'End E-Mail Availability Scans\n' + S)
     print(FR + '\nStart Subdomain & Parked Status Scans' + S)
+    if sys.platform == 'win32':
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(AsyncIO.tasks_subdomains())
     FeatureThreading().subdomains_hackertarget()
     FeatureThreading().parked_domains()
@@ -932,16 +970,14 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results\n' + S)
-    sourcecode_matcher_basic_monitoring(50)
+    sourcecode_matcher_basic_monitoring(min(16, os.cpu_count() + 2))
     CSVFile().postprocessing_basic_monitoring()
     print(FG + '\nEnd Search task for topic keywords in source codes of domain monitoring results\n' + S)
-    print('Please check:',
-          FY + f'{desktop}/Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S,
-          ' file for results\n')
+    print('Please check:', FY + f'{desktop}/Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
 
 
 if __name__ == '__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
-    sourcecode_matcher_advanced_monitoring(50)
+    sourcecode_matcher_advanced_monitoring(min(16, os.cpu_count() + 2))
     print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names' + S)
     
