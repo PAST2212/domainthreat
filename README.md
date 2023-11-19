@@ -46,7 +46,7 @@ This was the motivation for this project.<br>
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
 **Other Features**
-- Multithreading (50 workers by default) & Multiprocessing
+- Multithreading (CPU core based) & Multiprocessing
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - Keyword detection in source code of newly registered domains which neither contain brands in domain names nor are similar registered 
 - Mix of Edit-based and Token-based textdistance algorithms to increase result quality by considering degree of freedom in choosing variations of domain names from attacker side
