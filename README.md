@@ -1,7 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version 3.1**
+**Current Version 3.10**
 
 **New in Version: 3.0**
   -  Add more Subdomain Scans via dnsdumpster and subdomain.center
