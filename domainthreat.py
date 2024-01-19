@@ -135,14 +135,14 @@ class StringMatching:
         self.domain = domain
 
     def damerau(self):
-        domain_name = tldextract.extract(self.domain).domain
+        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         damerau = textdistance.damerau_levenshtein(self.keyword, domain_name)
 
         if 4 <= len(self.keyword) <= 6:
             if damerau <= 1:
                 return self.domain
 
-        elif 6 <= len(self.keyword) <= 9:
+        elif 6 < len(self.keyword) <= 9:
             if damerau <= 2:
                 return self.domain
 
@@ -151,7 +151,7 @@ class StringMatching:
                 return self.domain
 
     def jaccard(self, n_gram):
-        domain_letter_weight = '#' + tldextract.extract(self.domain).domain + '#'
+        domain_letter_weight = '#' + tldextract.extract(self.domain, include_psl_private_domains=True).domain + '#'
         keyword_letter_weight = '#' + self.keyword + '#'
         ngram_keyword = [keyword_letter_weight[i:i + n_gram] for i in range(len(keyword_letter_weight) - n_gram + 1)]
         ngram_domain_name = [domain_letter_weight[i:i + n_gram] for i in range(len(domain_letter_weight) - n_gram + 1)]
@@ -163,7 +163,7 @@ class StringMatching:
             return self.domain
 
     def jaro_winkler(self):
-        domain_name = tldextract.extract(self.domain).domain
+        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         winkler = textdistance.jaro_winkler.normalized_similarity(self.keyword, domain_name)
         if winkler >= 0.9:
             return self.domain
