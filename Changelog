@@ -1,3 +1,6 @@
+v 3.11 (19.01.2024)
+- Support private TLDs / domains: https://publicsuffix.org/list/public_suffix_list.dat
+
 v 3.10 (19.11.2023)
 - bug fixes and other minor fixes
 - Adjustment at blacklist
