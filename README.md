@@ -1,7 +1,7 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version 3.11**
+**Current Version 3.12**
 
 **New in Version: 3.0**
   -  Add more Subdomain Scans via dnsdumpster and subdomain.center
@@ -36,13 +36,14 @@ This was the motivation for this project.<br>
 # **Features**
 **Key & CSV Output Features**
 - Check if domain is parked or not (experimental state)
-- Subdomain enumeration via crt.sh, dnsdumpster and subdomain.center (beware of rate limits)
+- Subdomain enumeration
+- Unicode domain names (IDN) / Homoglyph / Homograph Detection
+- Variety of domain fuzzing / similarity algorithms
 - Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
 - Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
 - Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
 
   ==> This is to cover needs of international companies and foreign-speaking markets<br>
-- IDN / Homoglyph / Homograph Detection
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
 **Other Features**
@@ -82,6 +83,7 @@ This was the motivation for this project.<br>
 - pip install -r requirements.txt
 
 **How to run:**
+Running program in standard mode:
 - python3 domainthreat.py
 
 **How to update:**
