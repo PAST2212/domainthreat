@@ -82,7 +82,7 @@ This was the motivation for this project.<br>
 - cd domainthreat
 - pip install -r requirements.txt
 
-**How to run:**
+**How to run:**<br>
 Running program in standard mode:
 - python3 domainthreat.py
 
