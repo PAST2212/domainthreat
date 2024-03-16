@@ -1,7 +1,9 @@
 import os
+import argparse
 import base64
 import datetime
 import sys
+import time
 import zipfile
 from io import BytesIO
 import textdistance
@@ -35,7 +37,7 @@ previous_date = daterange.strftime('20%y-%m-%d')
 # Generic Header for making Page Source Requests
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
-    'Pragma': 'no-cache', 'Cache-Control': 'no-cache'}
+    'Pragma': 'no-cache', 'Cache-Control': 'no-cache', 'Accept-Language': 'en-US,en;q=0.9'}
 
 header_subdomain_services = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36'}
 
@@ -93,6 +95,10 @@ parked_domains = []
 languages = []
 flatten_languages = []
 
+# Arguments
+number_threads = []
+thresholds = {}
+
 
 def flatten_fuzzy_results(sublist):
     for i in sublist:
@@ -134,43 +140,44 @@ class StringMatching:
         self.keyword = keyword
         self.domain = domain
 
-    def damerau(self):
+    def damerau(self, similarity_value):
         domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         damerau = textdistance.damerau_levenshtein(self.keyword, domain_name)
 
-        if 4 <= len(self.keyword) <= 6:
-            if damerau <= 1:
+        if similarity_value[0] <= len(self.keyword) <= similarity_value[1]:
+            if damerau <= similarity_value[2]:
                 return self.domain
 
-        elif 6 < len(self.keyword) <= 9:
-            if damerau <= 2:
+        elif similarity_value[3] < len(self.keyword) <= similarity_value[4]:
+            if damerau <= similarity_value[5]:
                 return self.domain
 
-        elif len(self.keyword) >= 10:
-            if damerau <= 3:
+        elif len(self.keyword) >= similarity_value[6]:
+            if damerau <= similarity_value[7]:
                 return self.domain
 
-    def jaccard(self, n_gram):
-        domain_letter_weight = '#' + tldextract.extract(self.domain, include_psl_private_domains=True).domain + '#'
-        keyword_letter_weight = '#' + self.keyword + '#'
+    def jaccard(self, n_gram, similarity_value):
+        domain_letter_weight = tldextract.extract(self.domain, include_psl_private_domains=True).domain
+        keyword_letter_weight = self.keyword
         ngram_keyword = [keyword_letter_weight[i:i + n_gram] for i in range(len(keyword_letter_weight) - n_gram + 1)]
         ngram_domain_name = [domain_letter_weight[i:i + n_gram] for i in range(len(domain_letter_weight) - n_gram + 1)]
         intersection = set(ngram_keyword).intersection(ngram_domain_name)
         union = set(ngram_keyword).union(ngram_domain_name)
         similarity = len(intersection) / len(union) if len(union) > 0 else 0
 
-        if similarity > 0.5:
+        if similarity >= similarity_value:
             return self.domain
 
-    def jaro_winkler(self):
+    def jaro_winkler(self, similarity_value):
         domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         winkler = textdistance.jaro_winkler.normalized_similarity(self.keyword, domain_name)
-        if winkler >= 0.9:
+
+        if winkler >= similarity_value:
             return self.domain
 
     # LCS only starts to work for brand names or strings with length greater than 8
     def lcs(self, keywordthreshold):
-        domain_name = tldextract.extract(self.domain).domain
+        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         if len(self.keyword) > 8:
             longest_common_substring = ""
             max_length = 0
@@ -737,7 +744,7 @@ class InputFiles:
 
 # X as sublist Input by cpu number separated sublists to make big input list more processable
 # container1, container2 as container for getting domain monitoring results
-def fuzzy_operations(x, container1, container2, blacklist):
+def fuzzy_operations(x, container1, container2, blacklist, similarity_range):
     index = x[0]  # index of sub list
     value = x[1]  # content of sub list
     results_temp = []
@@ -747,13 +754,13 @@ def fuzzy_operations(x, container1, container2, blacklist):
         if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Full Word Match'))
 
-        elif StringMatching(domain[1], domain[0]).jaccard(n_gram=2) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
+        elif StringMatching(domain[1], domain[0]).jaccard(n_gram=2, similarity_value=similarity_range['jaccard']) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Jaccard'))
 
-        elif StringMatching(domain[1], domain[0]).damerau() is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
+        elif StringMatching(domain[1], domain[0]).damerau(similarity_value=similarity_range['damerau']) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Damerau-Levenshtein'))
 
-        elif StringMatching(domain[1], domain[0]).jaro_winkler() is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
+        elif StringMatching(domain[1], domain[0]).jaro_winkler(similarity_value=similarity_range['jaro_winkler']) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
             results_temp.append((domain[0], domain[1], today, 'Similarity Jaro-Winkler'))
 
         # elif StringMatching(domain[1], domain[0]).lcs(keywordthreshold=0.5) is not None:
@@ -765,13 +772,13 @@ def fuzzy_operations(x, container1, container2, blacklist):
             if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Full Word Match'))
 
-            elif StringMatching(domain[1], latin_domain).damerau() is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
+            elif StringMatching(domain[1], latin_domain).damerau(similarity_value=similarity_range['damerau']) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Damerau-Levenshtein'))
 
-            elif StringMatching(domain[1], latin_domain).jaccard(n_gram=2) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
+            elif StringMatching(domain[1], latin_domain).jaccard(n_gram=2, similarity_value=similarity_range['jaccard']) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaccard'))
 
-            elif StringMatching(domain[1], latin_domain).jaro_winkler() is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
+            elif StringMatching(domain[1], latin_domain).jaro_winkler(similarity_value=similarity_range['jaro_winkler']) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], today, 'IDN Similarity Jaro-Winkler'))
 
     container1.put(results_temp)
@@ -781,7 +788,7 @@ def fuzzy_operations(x, container1, container2, blacklist):
 
 class FeatureThreading:
     def __init__(self):
-        self.number_workers = min(16, os.cpu_count() + 2)
+        self.number_workers = number_threads[0]
 
     def subdomains_hackertarget(self):
         with ThreadPoolExecutor(self.number_workers) as executor:
@@ -905,6 +912,57 @@ def sourcecode_matcher_basic_monitoring(n):
 
 
 if __name__ == '__main__':
+    print(FG + """
+    #              Domainthreat v3.12                     #
+    #                   PAST2212                          #
+    #   linkedin.com/in/patrick-steinhoff-168892222       #
+    """ + S)
+    threads_standard = min(16, os.cpu_count() + 2)
+    parser = argparse.ArgumentParser(usage='domainthreat.py [OPTIONS]', formatter_class=lambda prog: argparse.HelpFormatter(prog, width=150, max_help_position=100))
+
+    parser.add_argument('-s', '--similarity', type=str, default='standard', metavar='SIMILARITY MODE', help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" threshold range. A tradeoff between both states is running per default.')
+    parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default threads number is CPU based and per default: {threads_standard}')
+
+    if len(sys.argv[1:]) == 0:
+        parser.print_help()
+
+    args = parser.parse_args()
+
+    def arg_threads():
+        if args.threads > threads_standard:
+            number_threads.append(args.threads)
+        else:
+            number_threads.append(threads_standard)
+
+    def arg_thresholds():
+        if args.similarity == 'standard':
+            thresholds['damerau'] = [4, 6, 1, 6, 9, 2, 10, 2]
+            thresholds['jaccard'] = 0.50
+            thresholds['jaro_winkler'] = 0.85
+
+        elif args.similarity.lower() == 'close':
+            thresholds['damerau'] = [4, 6, 1, 6, 9, 1, 10, 2]
+            thresholds['jaccard'] = 0.60
+            thresholds['jaro_winkler'] = 0.9
+
+        elif args.similarity.lower() == 'wide':
+            thresholds['damerau'] = [4, 6, 1, 6, 9, 2, 10, 3]
+            thresholds['jaccard'] = 0.45
+            thresholds['jaro_winkler'] = 0.80
+
+        else:
+            parser.error('Similarity Argument is not supported. Please use "-s close" OR "-s wide" as input argument.\n'
+                         'In case of leaving this similarity input argument blank: A tradeoff mode between both states is running per default')
+
+    arg_threads()
+    arg_thresholds()
+
+    print('\nNumber of Threads: ', FG + str(number_threads[0]) + S)
+    print('Selected Similarity Mode: ', FG + args.similarity + S)
+    time.sleep(5)
+
+
+if __name__ == '__main__':
     InputFiles('domain-names').download_domains()
     InputFiles('domain-names').read_domains()
     InputFiles("keywords").read_user_input()
@@ -936,7 +994,7 @@ if __name__ == '__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist_keywords)) for sub
+    processes = [multiprocessing.Process(target=fuzzy_operations, args=(sub, que_1, que_2, blacklist_keywords, thresholds)) for sub
                  in sub_list]
 
     for p in processes:
@@ -970,7 +1028,7 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results\n' + S)
-    sourcecode_matcher_basic_monitoring(min(16, os.cpu_count() + 2))
+    sourcecode_matcher_basic_monitoring(number_threads[0])
     CSVFile().postprocessing_basic_monitoring()
     print(FG + '\nEnd Search task for topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'{desktop}/Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
@@ -978,6 +1036,6 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
-    sourcecode_matcher_advanced_monitoring(min(16, os.cpu_count() + 2))
+    sourcecode_matcher_advanced_monitoring(number_threads[0])
     print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names' + S)
     
