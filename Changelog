@@ -1,3 +1,6 @@
+v 3.12 (16.03.2024)
+- Add parse arguments for threads and similarity detection mode
+
 v 3.11 (19.01.2024)
 - Support private TLDs / domains: https://publicsuffix.org/list/public_suffix_list.dat
 
