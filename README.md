@@ -82,9 +82,21 @@ This was the motivation for this project.<br>
 - cd domainthreat
 - pip install -r requirements.txt
 
-**How to run:**<br>
-Running program in standard mode:
+**How to run:**
+<br>
+--similarity : Selection of similarity mode of homograph, typosquatting detection algorithms with options "close" OR "wide".
+==> close: Less false positives and (potentially) more false negatives
+==> wide: More false positives and (potentially) less false negatives
+==> Default: Tradeoff between both mode options.
+<br>
+--threads : Number of Threads
+==> Default: Number of Threads is based on CPU cores
+<br>
+Running program in standard mode (CPU cores + default similarity mode):
 - python3 domainthreat.py
+<br>
+Running program in wide similarity mode with 50 threads
+- python3 domainthreat.py --similarity wide --threads 50
 
 **How to update:**
 - cd domainthreat
@@ -127,7 +139,7 @@ Running program in standard mode:
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there.
-- Thresholds are intentional tolerant by default (possible high false positive rate and therefore lower precision) in order to consider degree of freedom in choosing variations of domain names from attacker side more accurate (reduce occurrence of false negatives and therefore better recall rate). Change them if you want to match your particular (company) needs. I can recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
+- Thresholds for similarity modes (wide, standard, close) have been selected carefully. The "wide" range has a possible high false positive rate (and therefore lower precision rate) in order to consider degree of freedom in registering different variations of domain names more accurately (reduce occurrence of false negatives and therefore better recall rate). Change the thresholds over the different modes if you want to match your needs better. I can strongly recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
 - Recommended Python Version >= 3.7
