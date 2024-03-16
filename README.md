@@ -95,7 +95,7 @@ Running program in standard mode (CPU cores + default similarity mode):
 
 Running program in wide similarity mode with 50 threads:
 - "python3 domainthreat.py --similarity wide --threads 50"
-- ![image](https://github.com/PAST2212/domainthreat/assets/124390875/44e60e02-5f49-49b0-8eca-5829e809118e)
+![image](https://github.com/PAST2212/domainthreat/assets/124390875/44e60e02-5f49-49b0-8eca-5829e809118e)
 
 
 **How to update:**
