@@ -82,21 +82,21 @@ This was the motivation for this project.<br>
 - cd domainthreat
 - pip install -r requirements.txt
 
-**How to run:**
-<br>
+**How to run:** <br>
+
 --similarity : Selection of similarity mode of homograph, typosquatting detection algorithms with options "close" OR "wide".
-==> close: Less false positives and (potentially) more false negatives
-==> wide: More false positives and (potentially) less false negatives
-==> Default: Tradeoff between both mode options.
-<br>
+- close: Less false positives and (potentially) more false negatives
+- wide: More false positives and (potentially) less false negatives
+- Default: Tradeoff between both mode options.<br>
+
 --threads : Number of Threads
-==> Default: Number of Threads is based on CPU cores
-<br>
+- Default: Number of Threads is based on CPU cores <br>
+
 Running program in standard mode (CPU cores + default similarity mode):
-- python3 domainthreat.py
-<br>
-Running program in wide similarity mode with 50 threads
-- python3 domainthreat.py --similarity wide --threads 50
+- "python3 domainthreat.py" <br>
+
+Running program in wide similarity mode with 50 threads:
+- "python3 domainthreat.py --similarity wide --threads 50"
 
 **How to update:**
 - cd domainthreat
