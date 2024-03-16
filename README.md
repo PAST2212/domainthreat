@@ -3,13 +3,6 @@
 
 **Current Version 3.12**
 
-**New in Version: 3.0**
-  -  Add more Subdomain Scans via dnsdumpster and subdomain.center
-  -  Add Feature "Email Availability": Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
-  -  Bug Fixes in CSV Output
-  -  Improve Readability of code
-  -  Add Feature "parked domains": Check if domain is parked or not (experimental)
-
 Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
 
 # **Motivation**
@@ -43,7 +36,7 @@ This was the motivation for this project.<br>
 - Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
 - Check if domain is ready for receiving mails or ready for sending mails
 - Check if domain is parked or not (experimental state)
-- Keyword detection in (english translated) in website source codes - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
+- Keyword detection in (english translated) website source codes - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
 
   ==> This is to cover needs of international companies and foreign-speaking markets<br>
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
