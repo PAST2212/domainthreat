@@ -35,13 +35,15 @@ This was the motivation for this project.<br>
 
 # **Features**
 **Key & CSV Output Features**
-- Check if domain is parked or not (experimental state)
 - Subdomain enumeration
 - Unicode domain names (IDN) / Homoglyph / Homograph Detection
 - Variety of domain fuzzing / similarity algorithms
+- Automated Website Translations
+- Support of a variety of different languages
 - Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
-- Check if domain is ready for receiving mails (by mx record) or ready for sending mails (by SPF record and dmarc record)
-- Keyword detection in (english translated) source codes of newly registered domains via HTML Title, Description and HTML Keywords Tag - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
+- Check if domain is ready for receiving mails or ready for sending mails
+- Check if domain is parked or not (experimental state)
+- Keyword detection in (english translated) in website source codes - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
 
   ==> This is to cover needs of international companies and foreign-speaking markets<br>
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
@@ -49,8 +51,7 @@ This was the motivation for this project.<br>
 **Other Features**
 - Multithreading (CPU core based) & Multiprocessing
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
-- Keyword detection in source code of newly registered domains which neither contain brands in domain names nor are similar registered 
-- Different translation operations to increase recall rate<br>
+- Keyword detection in websites which neither contain brands in domain names nor are similar registered<br>
 
 # **Principles**
 **1. Basic Domainmonitoring**<br>
