@@ -33,7 +33,7 @@ This was the motivation for this project.<br>
 - Automated Website Translations
 - Support of a variety of different languages <br>
 
-<br>- Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match
+- Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match <br>
 - Source Code Match: Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
   ==> This is to cover needs of international companies and foreign-speaking markets
 - Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
