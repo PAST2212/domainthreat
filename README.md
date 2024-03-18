@@ -28,17 +28,18 @@ This was the motivation for this project.<br>
 
 # **Features**
 **Key & CSV Output Features**
-- Subdomain enumeration
 - Unicode domain names (IDN) / Homoglyph / Homograph Detection
 - Variety of domain fuzzing / similarity algorithms
 - Automated Website Translations
-- Support of a variety of different languages
-- Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
-- Check if domain is ready for receiving mails or ready for sending mails
-- Check if domain is parked or not (experimental state)
-- Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
+- Support of a variety of different languages<br>
 
-  ==> This is to cover needs of international companies and foreign-speaking markets<br>
+- Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match
+- - Source Code Match: Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
+  ==> This is to cover needs of international companies and foreign-speaking markets
+- Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
+- Parked: Check if domain is parked or not for 2XX or 3XX Status Code domains (experimental state)
+- Subdomains: Subdomain Scan
+- E-Mail Availability: Check if domain is ready for receiving mails and/or ready for sending mails
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
 **Other Features**
