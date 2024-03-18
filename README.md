@@ -32,8 +32,8 @@ This was the motivation for this project.<br>
 - Variety of domain fuzzing / similarity algorithms
 - Automated Website Translations
 - Support of a variety of different languages <br>
-**
-- Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match
+
+- Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match <br>
 - Source Code Match: Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
   ==> This is to cover needs of international companies and foreign-speaking markets
 - Website Status: Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
