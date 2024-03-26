@@ -37,7 +37,7 @@ This was the motivation for this project.<br>
 - Source Code Match: Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
   ==> This is to cover needs of international companies and foreign-speaking markets
 - Website Status: Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
-- Parked: Check if domain is parked or not for 2XX or 3XX Status Code domains (experimental state)
+- Parked: Check if domain is parked for 2XX or 3XX Status Code domains (experimental state)
 - Subdomains: Subdomain Scan
 - E-Mail Availability: Check if domain is ready for receiving mails and/or ready for sending mails
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
