@@ -129,6 +129,7 @@ Running program in wide similarity mode with 50 threads:
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy (Sequence-based algorithm "Longest Common Substring" is already included but not activated by default)
 - Enhance source code keyword detection on subdomain level
 - AI based Logo Detection by Object Detection
+- PEP8 compliance & Refactoring
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there. Use them instead if you feel to it.
