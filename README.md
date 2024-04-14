@@ -50,23 +50,23 @@ This was the motivation for this project.<br>
 # **Principles**
 **1. Basic Domainmonitoring**<br>
 
-1.1. Keywords from file keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
+1.1. Keywords from file domainthreat/data/userdata/keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
 
-1.2. Keywords from file topic_keywords.txt are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
+1.2. Keywords from file domainthreat/data/userdata/topic_keywords.txt are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
 
-   ==> Results are exported to Newly_Registered_Domains_Calender_Week_ .csv File<br>
+   ==> Results are exported to Newly_Registered_Domains_Calender_Week_ .csv File into Project Root Directory<br>
 
 **2. Advanced Domainmonitoring**<br>
 
-2.1. Keywords from file topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
+2.1. Keywords from file domainthreat/data/userdata/topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 
-2.2. Keywords from file topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the "User Input/languages_advanced_monitoring.txt" file. Please see supported_languages.txt for supported languages at this moment. Copy / Paste the demanded languages from supported_languages.txt to "User Input/languages_advanced_monitoring.txt" file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
+2.2. Keywords from file domainthreat/data/userdata/topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the domainthreat/data/userdata/languages_advanced_monitoring.txt file. Please see supported_languages.txt for supported languages at this moment. Copy / Paste the demanded languages from supported_languages.txt to domainthreat/data/userdata/languages_advanced_monitoring.txt file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
 
-==> Results from 2.1. will be enhanced by translated keywords from topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd     domains like "sea-urlaub.com"<br>
+==> Results from 2.1. will be enhanced by translated keywords from domainthreat/data/userdata/topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd domains like "sea-urlaub.com"<br>
 
-2.3. Keywords from file unique_brand_names.txt are used to find these keywords (e.g. tui) in webpages of monitoring results from point 2.1. (e.g. usa-holiday.net) and from 2.2. (e.g. sea-urlaub.com) (if any supported languages are provided)<br>
+2.3. Keywords from file domainthreat/data/userdata/unique_brand_names.txt are used to find these keywords (e.g. tui) in webpages of monitoring results from point 2.1. (e.g. usa-holiday.net) and from 2.2. (e.g. sea-urlaub.com) (if any supported languages are provided)<br>
 
-   ==> Results are exported to Advanced_Monitoring_Results_Calender_Week_ .csv File<br>
+   ==> Results are exported to Advanced_Monitoring_Results_Calender_Week_ .csv File into Project Root Directory<br>
 
 # **Instructions**
 
@@ -99,15 +99,15 @@ Running program in wide similarity mode with 50 threads:
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
 
 **Before the first run - How it Works:**
-1. Put your brand names or mailing domain names into this TXT file "User Input/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
+1. Put your brand names or mailing domain names into this TXT file "domainthreat/data/userdata/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
 
-2. Put common word collisions into this TXT file "User Input/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
+2. Put common word collisions into this TXT file "domainthreat/data/userdata/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
 -  e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon", e.g. blacklist "intuitive" if you want to monitor "tui" ...
 
-3. Put commonly used words into this TXT file "User Input/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default and **normalized** language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
+3. Put commonly used words into this TXT file "domainthreat/data/userdata/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default and **normalized** language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
 -  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
 
-4. Put your brand names into this TXT file "User Input/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes on websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default. 
+4. Put your brand names into this TXT file "domainthreat/data/userdata/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes of websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default. 
 
 # **Troubleshooting**
 - In case of errors with modules "httpcore" or "httpx" - possible fixes:
@@ -129,7 +129,7 @@ Running program in wide similarity mode with 50 threads:
 - Add additional fuzzy matching algorithms to increase true positive rate / accurancy (Sequence-based algorithm "Longest Common Substring" is already included but not activated by default)
 - Enhance source code keyword detection on subdomain level
 - AI based Logo Detection by Object Detection
-- PEP8 compliance & Refactoring
+- PEP8 compliance
 
 **Additional**
 - Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there. Use them instead if you feel to it.
