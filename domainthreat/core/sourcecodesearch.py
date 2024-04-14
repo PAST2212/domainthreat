@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
+from concurrent.futures import ThreadPoolExecutor
 from deep_translator import MyMemoryTranslator
 import translators as ts
 import unicodedata
 import re
-from core.utilities import SmoothingResults
-from core.files import ManageFiles
-from core.webscraper import HtmlContent
-from core.utilities import Helper
-from concurrent.futures import ThreadPoolExecutor
+from .utilities import SmoothingResults
+from .files import ManageFiles
+from .webscraper import HtmlContent
+from .utilities import Helper
 
 
 class BasicMonitoring:
