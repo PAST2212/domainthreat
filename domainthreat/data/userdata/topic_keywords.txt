@@ -1,0 +1,9 @@
+holiday
+vacation
+travel
+journey
+hotel
+booking
+cruise
+resort
+tourism
