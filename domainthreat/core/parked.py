@@ -4,7 +4,7 @@ import tldextract
 import requests
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
-from core.webscraper import HtmlContent
+from .webscraper import HtmlContent
 
 class ScanerParkedState:
     def __init__(self):
