@@ -50,21 +50,21 @@ This was the motivation for this project.<br>
 # **Principles**
 **1. Basic Domainmonitoring**<br>
 
-1.1. Keywords from file domainthreat/data/userdata/keywords.txt (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
+1.1. Keywords from file "domainthreat/data/userdata/keywords.txt" (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
 
-1.2. Keywords from file domainthreat/data/userdata/topic_keywords.txt are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
+1.2. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
 
    ==> Results are exported to Newly_Registered_Domains_Calender_Week_ .csv File into Project Root Directory<br>
 
 **2. Advanced Domainmonitoring**<br>
 
-2.1. Keywords from file domainthreat/data/userdata/topic_keywords.txt (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
+2.1. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
 
-2.2. Keywords from file domainthreat/data/userdata/topic_keywords.txt (e.g. holiday) are automatically translated into the languages which are provided by the User in the domainthreat/data/userdata/languages_advanced_monitoring.txt file. Please see supported_languages.txt for supported languages at this moment. Copy / Paste the demanded languages from supported_languages.txt to domainthreat/data/userdata/languages_advanced_monitoring.txt file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
+2.2. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" (e.g. holiday) are automatically translated into the languages which are provided by the User in the "domainthreat/data/userdata/languages_advanced_monitoring.txt" file. Please see "supported_languages.txt" for supported languages at this moment. Copy / Paste the demanded languages from "supported_languages.txt" to "domainthreat/data/userdata/languages_advanced_monitoring.txt" file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
 
-==> Results from 2.1. will be enhanced by translated keywords from domainthreat/data/userdata/topic-keywords.txt file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd domains like "sea-urlaub.com"<br>
+==> Results from 2.1. will be enhanced by translated keywords from "domainthreat/data/userdata/topic-keywords.txt" file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd domains like "sea-urlaub.com"<br>
 
-2.3. Keywords from file domainthreat/data/userdata/unique_brand_names.txt are used to find these keywords (e.g. tui) in webpages of monitoring results from point 2.1. (e.g. usa-holiday.net) and from 2.2. (e.g. sea-urlaub.com) (if any supported languages are provided)<br>
+2.3. Keywords from file "domainthreat/data/userdata/unique_brand_names.txt" are used to find these keywords (e.g. tui) in webpages of monitoring results from point 2.1. (e.g. usa-holiday.net) and from 2.2. (e.g. sea-urlaub.com) (if any supported languages are provided)<br>
 
    ==> Results are exported to Advanced_Monitoring_Results_Calender_Week_ .csv File into Project Root Directory<br>
 
