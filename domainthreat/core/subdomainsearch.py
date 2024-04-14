@@ -2,10 +2,10 @@
 
 import aiohttp
 import asyncio
-from recon.crtsh import ScanerCrtsh
-from recon.subdomaincenter import ScanerSubdomainCenter
-from recon.rapiddns import ScanerRapidDns
-from recon.dnsdumpster import ScanerDnsDumpster
+from domainthreat.recon.crtsh import ScanerCrtsh
+from domainthreat.recon.subdomaincenter import ScanerSubdomainCenter
+from domainthreat.recon.rapiddns import ScanerRapidDns
+from domainthreat.recon.dnsdumpster import ScanerDnsDumpster
 
 class ScanerSubdomains:
     def __init__(self):
