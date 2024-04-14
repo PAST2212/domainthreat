@@ -6,7 +6,7 @@ import asyncio
 from bs4 import BeautifulSoup
 import json
 import re
-from core.webscraper import HtmlContent
+from domainthreat.core.webscraper import HtmlContent
 
 class ScanerSubdomainCenter:
     def __init__(self) -> None:
