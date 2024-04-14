@@ -5,7 +5,7 @@ from aiolimiter import AsyncLimiter
 import asyncio
 from bs4 import BeautifulSoup
 import json
-from core.webscraper import HtmlContent
+from domainthreat.core.webscraper import HtmlContent
 
 class ScanerRapidDns:
     def __init__(self) -> None:
