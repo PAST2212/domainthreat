@@ -98,7 +98,7 @@ Running program in wide similarity mode with 50 threads:
 - git pull
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
   
-  ==> Make sure to make a backup of your userdata folder
+  ==> Make sure to make a backup of your userdata folder before update
 
 **Before the first run - How it Works:**
 1. Put your brand names or mailing domain names into this TXT file "domainthreat/data/userdata/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
