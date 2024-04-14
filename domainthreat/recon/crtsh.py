@@ -4,7 +4,7 @@ import aiohttp
 from aiolimiter import AsyncLimiter
 import asyncio
 import json
-from core.webscraper import HtmlContent
+from domainthreat.core.webscraper import HtmlContent
 
 class ScanerCrtsh:
     def __init__(self) -> None:
