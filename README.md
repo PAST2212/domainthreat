@@ -97,6 +97,7 @@ Running program in wide similarity mode with 50 threads:
 - cd domainthreat
 - git pull
 - In case of a Merge Error: Try "git reset --hard" before "git pull"
+  
   ==> Make sure to make a backup of your userdata folder
 
 **Before the first run - How it Works:**
