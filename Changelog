@@ -1,3 +1,6 @@
+v 3.13 (14.04.2024):
+- Refactor project for better readability
+
 v 3.12 (16.03.2024)
 - Add parse arguments for threads and similarity detection mode
 
