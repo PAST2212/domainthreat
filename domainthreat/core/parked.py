@@ -7,11 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from .webscraper import HtmlContent
 
 class ScanerParkedState:
-    def __init__(self):
-        self.resolver_timeout = 5
-        self.resolver_lifetime = 5
-        self.resolver_nameservers = ['8.8.8.8']
-
+    
     @staticmethod
     def _parked(domain) -> tuple:
         domains = 'http://' + domain
