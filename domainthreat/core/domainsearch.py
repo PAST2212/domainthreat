@@ -52,7 +52,7 @@ class ScanerDomains:
                 return self.domain
 
 
-    def jaccard(self, n_gram:int, similarity_value) -> str:
+    def jaccard(self, n_gram: int, similarity_value: float) -> str:
         domain_letter_weight = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         keyword_letter_weight = self.keyword
         ngram_keyword = [keyword_letter_weight[i:i + n_gram] for i in range(len(keyword_letter_weight) - n_gram + 1)]
@@ -64,7 +64,7 @@ class ScanerDomains:
         if similarity >= similarity_value:
             return self.domain
 
-    def jaro_winkler(self, similarity_value):
+    def jaro_winkler(self, similarity_value: float) -> str:
         domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
         winkler = textdistance.jaro_winkler.normalized_similarity(self.keyword, domain_name)
 
