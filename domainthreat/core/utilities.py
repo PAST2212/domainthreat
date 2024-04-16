@@ -8,7 +8,7 @@ class SmoothingResults:
         self.out = []
 
     @staticmethod
-    def group_tuples_first_value(klaus: set) -> list:
+    def group_tuples_first_value(klaus) -> list:
         out = {}
         for elem in klaus:
             try:
