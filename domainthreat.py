@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-from colorama import Fore, Style
-import argparse
-import multiprocessing
 import asyncio
 import datetime
 import sys
 import time
 import os
+from colorama import Fore, Style
+import argparse
+import multiprocessing
 from domainthreat.core.domainsearch import ScanerDomains
 from domainthreat.core.files import ManageFiles
 from domainthreat.core.sourcecodesearch import BasicMonitoring
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     threads_standard = min(16, os.cpu_count() + 2)
     parser = argparse.ArgumentParser(usage='domainthreat.py [OPTIONS]', formatter_class=lambda prog: argparse.HelpFormatter(prog, width=150, max_help_position=100))
 
-    parser.add_argument('-s', '--similarity', type=str, default='standard', metavar='SIMILARITY MODE', help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" threshold range. A tradeoff between both states is running per default.')
+    parser.add_argument('-s', '--similarity', type=str, default='close', metavar='SIMILARITY MODE', help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" OR "medium" threshold range. Mode "close" is running per default.')
     parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default threads number is CPU based and per default: {threads_standard}')
 
     if len(sys.argv[1:]) == 0:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
             number_threads.append(threads_standard)
 
     def arg_thresholds():
-        if args.similarity == 'standard':
+        if args.similarity.lower() == 'medium':
             thresholds['damerau'] = [4, 6, 1, 6, 9, 2, 10, 2]
             thresholds['jaccard'] = 0.50
             thresholds['jaro_winkler'] = 0.85
@@ -73,8 +73,8 @@ if __name__ == '__main__':
             thresholds['jaro_winkler'] = 0.80
 
         else:
-            parser.error('Similarity Argument is not supported. Please use "-s close" OR "-s wide" as input argument.\n'
-                         'In case of leaving this similarity input argument blank: A tradeoff mode between both states is running per default')
+            parser.error('Similarity Argument is not supported. Please use "-s close" OR "-s wide" OR "-s medium" as input argument.\n'
+                         'In case of leaving this similarity input argument blank: "close" mode is running per default')
 
     arg_threads()
     arg_thresholds()
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     subdomains = ScanerSubdomains().get_results(iterables=domain_results)
     print(FG + 'End Subdomain & Basic Domain Monitoring Scan\n' + S)
 
-    print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results\n' + S)
+    print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results' + S)
     # tuple(str, str, str)
     source_code_basic = BasicMonitoring().get_results(number_workers=number_threads, iterables=domain_results)
     for values in source_code_basic:
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         topics_matches_domains.append((values[0], values[1]))
     # (self, results, source, website_status, park_domain, subdomain, emailready)
     ManageFiles().postprocessing_basic_monitoring(iterables=domain_results, source=topics_matches_domains, website_status=status_codes, park_domain=parked_domains, subdomain=subdomains, email_info=e_mail_ready)
-    print(FG + '\nEnd Search task for topic keywords in source codes of domain monitoring results\n' + S)
+    print(FG + 'End Search task for topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
 
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)

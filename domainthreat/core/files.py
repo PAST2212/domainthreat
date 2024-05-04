@@ -54,6 +54,7 @@ class ManageFiles:
             request = requests.get(domain_file)
             zipfiles = zipfile.ZipFile(BytesIO(request.content))
             zipfiles.extractall(DOMAIN_FILE_DIRECTORY)
+            zipfiles.close()
 
         except Exception as e:
             print(f'Something went wrong with downloading domain .zip file. Please check download link {domain_file}\n', e)
