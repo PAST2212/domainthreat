@@ -38,7 +38,7 @@ class SmoothingResults:
 
 class FeaturesToCSV:
     @staticmethod
-    def topics_and_status(klaus: list, features:list) -> str:
+    def topics_and_status(klaus: list, features: list) -> str:
         for y in features:
             if y[0] == klaus:
                 return y[1]
@@ -62,6 +62,7 @@ class FeaturesToCSV:
                 else:
                     return 'No'
 
+
 class Helper:
     @staticmethod
     def get_previous_date():
@@ -79,6 +80,3 @@ class Helper:
         split_domaininput = [domain_input_list[i * a + min(i, b):(i + 1) * a + min(i + 1, b)] for i in range(n)]
         split_domaininput_order = [[i, v] for i, v in enumerate(split_domaininput)]
         return split_domaininput_order
-
-
-

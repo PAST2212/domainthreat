@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
-import aiohttp
-from aiolimiter import AsyncLimiter
+
 import asyncio
-from bs4 import BeautifulSoup
 import json
+import aiohttp
+from bs4 import BeautifulSoup
+from aiolimiter import AsyncLimiter
 from domainthreat.core.webscraper import HtmlContent
+
 
 class ScanerDnsDumpster:
     def __init__(self) -> None:
@@ -48,8 +50,8 @@ class ScanerDnsDumpster:
         except Exception as e:
             print(f'Dnsdumpster Unusual Error via Subdomainscan for: {domain}', e)
 
-    async def tasks_dnsdumpster(self, fuzzy_results:list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 5) # One Reqeust every 10 Seconds
+    async def tasks_dnsdumpster(self, fuzzy_results: list, session: aiohttp.ClientSession):
+        rate_limit = AsyncLimiter(1, 10)    # One Reqeust every 10 Seconds
         tasks = [self.dnsdumpster(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 

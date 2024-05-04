@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 from .webscraper import HtmlContent
 
+
 class ScanerParkedState:
     
     @staticmethod

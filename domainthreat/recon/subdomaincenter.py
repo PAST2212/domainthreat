@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-import aiohttp
-from aiolimiter import AsyncLimiter
 import asyncio
-from bs4 import BeautifulSoup
 import json
 import re
+from bs4 import BeautifulSoup
+import aiohttp
+from aiolimiter import AsyncLimiter
 from domainthreat.core.webscraper import HtmlContent
+
 
 class ScanerSubdomainCenter:
     def __init__(self) -> None:
@@ -33,15 +34,11 @@ class ScanerSubdomainCenter:
         except Exception as e:
             print(f'Subdomaincenter Unusual Error via Subdomainscan for: {domain}', e)
 
-    async def tasks_subdomaincenter(self, fuzzy_results:list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 5)  # no burst requests, make request every 1.5 seconds
+    async def tasks_subdomaincenter(self, fuzzy_results: list, session: aiohttp.ClientSession):
+        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 1.5 seconds
         tasks = [self.subdomaincenter(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 
     async def get_results(self, fuzzy_results, session: aiohttp.ClientSession):
         await self.tasks_subdomaincenter(fuzzy_results, session)
         return self.results
-
-
-
-

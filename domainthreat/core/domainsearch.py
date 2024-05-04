@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
+import unicodedata
 import tldextract
 import textdistance
-import unicodedata
+from colorama import Fore, Style
 from .utilities import Helper
 from .punycoder import unconfuse
 from .files import ManageFiles
-from colorama import Fore, Style
 
 
 class ScanerDomains:

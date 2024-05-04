@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
+import unicodedata
+import re
 from concurrent.futures import ThreadPoolExecutor
 from deep_translator import MyMemoryTranslator
 import translators as ts
-import unicodedata
-import re
 from .utilities import SmoothingResults
 from .files import ManageFiles
 from .webscraper import HtmlContent
@@ -14,7 +14,7 @@ from .utilities import Helper
 class BasicMonitoring:
 
     @staticmethod
-    def _translator(transl:str) -> str:
+    def _translator(transl: str) -> str:
         transle = re.sub(r"\.", "", transl)
         try:
             bing = ts.translate_text(transle, 'bing')
@@ -45,7 +45,6 @@ class BasicMonitoring:
             except Exception as e:
                 print(f'Something went wrong at Translation at HTML Tag: {tag}', e)
 
-
     # Return Topic Match if matched - Create and Merge Lists per scrapped HTML Tag
     def _matcher(self, domain: str) -> tuple:
         fetch_status_content = HtmlContent().fetch_items(domain)
@@ -56,7 +55,7 @@ class BasicMonitoring:
         else:
             return domain, 'No Matches', http_status
 
-    def _multithreading_basic(self, numberthreads: list, iterables:list) -> list:
+    def _multithreading_basic(self, numberthreads: list, iterables: list) -> list:
         iterables_output = []
         with ThreadPoolExecutor(numberthreads[0]) as executor:
             results = executor.map(self._matcher, iterables)
@@ -65,7 +64,7 @@ class BasicMonitoring:
                     iterables_output.append(result)
         return iterables_output
 
-    def get_results(self, number_workers: list, iterables:list) -> list:
+    def get_results(self, number_workers: list, iterables: list) -> list:
         topics_matches_domains = self._multithreading_basic(number_workers, iterables)
 
         return list(filter(None, topics_matches_domains))
@@ -74,7 +73,7 @@ class BasicMonitoring:
 class AdvancedMonitoring:
 
     @staticmethod
-    def _multithreading_advanced(numberthreads:list, iterables:list) -> list:
+    def _multithreading_advanced(numberthreads: list, iterables: list) -> list:
         iterables_output = []
         with ThreadPoolExecutor(numberthreads[0]) as executor:
             results = executor.map(HtmlContent().fetch_items, iterables)
@@ -117,6 +116,7 @@ class AdvancedMonitoring:
 
             try:
                 print('Example Domains: ', thread_ex_list[1:8], '\n')
+
             except:
                 pass
 
@@ -141,5 +141,3 @@ class AdvancedMonitoring:
             ManageFiles().postprocessing_advanced_monitoring()
         else:
             print('\nNo Matches detected: ', results)
-
-

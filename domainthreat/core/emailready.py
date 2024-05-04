@@ -3,6 +3,7 @@
 import dns.resolver
 from concurrent.futures import ThreadPoolExecutor
 
+
 class ScanerEmailReady:
     def __init__(self):
         self.resolver_timeout = 5
@@ -69,7 +70,7 @@ class ScanerEmailReady:
             return domain, 'No'
 
 
-    def _multithreading_spf(self, numberthreads: list, iterables:list) -> list:
+    def _multithreading_spf(self, numberthreads: list, iterables: list) -> list:
         iterables_output = []
         with ThreadPoolExecutor(numberthreads[0]) as executor:
             results = executor.map(self._spf_record, iterables)
@@ -77,7 +78,7 @@ class ScanerEmailReady:
                 iterables_output.append(result)
         return iterables_output
 
-    def _multithreading_dmarc(self, numberthreads: list, iterables:list) -> list:
+    def _multithreading_dmarc(self, numberthreads: list, iterables: list) -> list:
         iterables_output = []
         with ThreadPoolExecutor(numberthreads[0]) as executor:
             results = executor.map(self._dmarc_record, iterables)
@@ -85,7 +86,7 @@ class ScanerEmailReady:
                 iterables_output.append(result)
         return iterables_output
 
-    def _multithreading_mx(self, numberthreads: list, iterables:list) -> list:
+    def _multithreading_mx(self, numberthreads: list, iterables: list) -> list:
         iterables_output = []
         with ThreadPoolExecutor(numberthreads[0]) as executor:
             results = executor.map(self._mx_record, iterables)
@@ -93,7 +94,7 @@ class ScanerEmailReady:
                 iterables_output.append(result)
         return iterables_output
 
-    def get_results(self, number_workers: list, iterables:list) -> list:
+    def get_results(self, number_workers: list, iterables: list) -> list:
         mx = self._multithreading_mx(number_workers, iterables)
         dmarc = self._multithreading_dmarc(number_workers, iterables)
         spf = self._multithreading_spf(number_workers, iterables)
@@ -101,7 +102,3 @@ class ScanerEmailReady:
         email_ready = mx + dmarc + spf
 
         return list(filter(None, email_ready))
-
-
-
-

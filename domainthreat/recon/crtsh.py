@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-import aiohttp
-from aiolimiter import AsyncLimiter
 import asyncio
 import json
+import aiohttp
+from aiolimiter import AsyncLimiter
 from domainthreat.core.webscraper import HtmlContent
+
 
 class ScanerCrtsh:
     def __init__(self) -> None:
@@ -37,16 +38,12 @@ class ScanerCrtsh:
             print(f'Crt.sh Unusual Error via Subdomainscan for: {domain}', e)
 
 
-    async def tasks_subdomains_crtsh(self, fuzzy_results:list, session: aiohttp.ClientSession):
+    async def tasks_subdomains_crtsh(self, fuzzy_results: list, session: aiohttp.ClientSession):
         parameters = [{'q': '%.{}'.format(y), 'output': 'json'} for y in fuzzy_results]
-        rate_limit = AsyncLimiter(1, 5)  # no burst requests, make request every 3 seconds
+        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 3 seconds
         tasks = [self.crtsh(session, symbol, rate_limit) for symbol in parameters]
         await asyncio.gather(*tasks)
 
     async def get_results(self, fuzzy_results: list, session: aiohttp.ClientSession):
         await self.tasks_subdomains_crtsh(fuzzy_results, session)
         return self.results
-
-
-
-

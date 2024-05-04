@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
+import asyncio
+import json
+from bs4 import BeautifulSoup
 import aiohttp
 from aiolimiter import AsyncLimiter
-import asyncio
-from bs4 import BeautifulSoup
-import json
 from domainthreat.core.webscraper import HtmlContent
+
 
 class ScanerRapidDns:
     def __init__(self) -> None:
@@ -39,15 +40,11 @@ class ScanerRapidDns:
         except Exception as e:
             print(f'Rapiddns Unusual Error via Subdomainscan for: {domain}', e)
 
-    async def tasks_rapiddns(self, fuzzy_results:list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 5)  # no burst requests, make request every 3 seconds
+    async def tasks_rapiddns(self, fuzzy_results: list, session: aiohttp.ClientSession):
+        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 3 seconds
         tasks = [self.rapiddns(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 
     async def get_results(self, fuzzy_results, session: aiohttp.ClientSession):
         await self.tasks_rapiddns(fuzzy_results, session)
         return self.results
-
-
-
-
