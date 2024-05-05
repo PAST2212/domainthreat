@@ -114,11 +114,8 @@ class AdvancedMonitoring:
                 print(len(thread_ex_list),
                       f'Newly registered domains detected with topic keywords based on file topic_keywords.txt in domain name')
 
-            try:
-                print('Example Domains: ', thread_ex_list[1:8], '\n')
 
-            except:
-                pass
+            print('Example Domains: ', thread_ex_list[1:8], '\n')
 
             html_content_temp = self._multithreading_advanced(numberthreads=nthreads, iterables=thread_ex_list)
 
