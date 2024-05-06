@@ -75,4 +75,5 @@ class ScanerParkedState:
 
     def get_results(self, number_workers: list, iterables: list) -> list:
         parked = self._multithreading_parked(number_workers, iterables)
-        return list(filter(None, parked))
+
+        return list(filter(lambda item: item is not None, parked))

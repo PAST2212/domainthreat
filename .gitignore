@@ -5,4 +5,3 @@ __pycache__
 *.idea
 *.pyc
 venv
-domain-names.txt

@@ -20,11 +20,10 @@ class HtmlContent:
         if keywords is not None:
             hey.append(keywords['content'].replace('\n', '').lower().strip())
 
-        return list(filter(None, hey))
+        return list(filter(lambda item: item is not None, hey))
 
     def fetch_items(self, domain: str) -> tuple:
-        meta_tags = []
-        meta_tags.append(domain)
+        meta_tags = [domain]
         domains = 'http://' + domain
         request_session = requests.Session()
         try:

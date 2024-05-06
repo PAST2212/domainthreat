@@ -67,7 +67,7 @@ class BasicMonitoring:
     def get_results(self, number_workers: list, iterables: list) -> list:
         topics_matches_domains = self._multithreading_basic(number_workers, iterables)
 
-        return list(filter(None, topics_matches_domains))
+        return list(filter(lambda item: item is not None, topics_matches_domains))
 
 
 class AdvancedMonitoring:
@@ -81,7 +81,7 @@ class AdvancedMonitoring:
                 if result is not None and len(result[0]) > 1:
                     iterables_output.append(result[0])
 
-        return list(filter(None, iterables_output))
+        return list(filter(lambda item: item is not None, iterables_output))
 
 
     def _matcher(self, nthreads: list) -> list:
@@ -95,9 +95,10 @@ class AdvancedMonitoring:
             translate_topics = [MyMemoryTranslator('english', lang).translate_batch(list_topics) for lang in languages]
             flatten_languages = SmoothingResults().get_flatten_list(translate_topics)
             latin_syntax = [(unicodedata.normalize('NFKD', lang).encode('latin-1', 'ignore').decode('latin-1'), lang) for lang in flatten_languages]
-            latin_translated = list(set(filter(None, [re.sub(r"[^a-z]", "", i[1].lower()) for i in latin_syntax if i[0] == i[1]])))
-            print('Translated Keywords: ', latin_translated)
-            joined_topic_keywords = latin_translated + list_topics
+            latin_translated = list(filter(lambda item: item is not None, [re.sub(r"[^a-z]", "", i[1].lower()) for i in latin_syntax if i[0] == i[1]]))
+            latin_translated_deduplicated = list(set(latin_translated))
+            print('Translated Keywords: ', latin_translated_deduplicated)
+            joined_topic_keywords = latin_translated_deduplicated + list_topics
 
         except Exception as e:
             print('Something went wrong with Translation of topic keywords: ', e)
@@ -119,7 +120,7 @@ class AdvancedMonitoring:
 
             html_content_temp = self._multithreading_advanced(numberthreads=nthreads, iterables=thread_ex_list)
 
-            html_content = list(filter(None, html_content_temp))
+            html_content = list(filter(lambda item: item is not None, html_content_temp))
 
             topic_in_domainname_results = [(x[0], y, Helper.get_today()) for y in uniquebrands for x in html_content for z in x[1:] if len(x) > 1 and y in z and all(black_keyword not in z for black_keyword in blacklist_keywords)]
 

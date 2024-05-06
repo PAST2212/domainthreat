@@ -101,4 +101,4 @@ class ScanerEmailReady:
 
         email_ready = mx + dmarc + spf
 
-        return list(filter(None, email_ready))
+        return list(filter(lambda item: item is not None, email_ready))

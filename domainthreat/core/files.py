@@ -20,6 +20,7 @@ DATA_DIRECORY = Path(__file__).parents[1] / 'data'
 USER_DATA_DIRECTORY = DATA_DIRECORY / 'userdata'
 DOMAIN_FILE_DIRECTORY = DATA_DIRECORY / 'domainfile'
 
+
 class ManageFiles:
     def __init__(self):
         self.advanced_file = f'Advanced_Monitoring_Results_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
@@ -33,7 +34,7 @@ class ManageFiles:
         self.domain_filename = 'domain-names'
         self.previous_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('20%y-%m-%d')
         self.domains = 'Domains'
-        self.csvcolumn_keyword= 'Keyword Found'
+        self.csvcolumn_keyword = 'Keyword Found'
         self.date = 'Monitoring Date'
         self.detected = 'Detected by'
         self.sourcecode = 'Source Code Match'
@@ -136,7 +137,7 @@ class ManageFiles:
             for k in iterables:
                 writer.writerow([k[0], k[1], k[2]])
 
-    def postprocessing_basic_monitoring(self, iterables: list, source:list, website_status:list, park_domain:list, subdomain:set, email_info:list) -> None:
+    def postprocessing_basic_monitoring(self, iterables: list, source: list, website_status: list, park_domain: list, subdomain: set, email_info: list) -> None:
         try:
             df = pd.read_csv(self.basic_file, delimiter=',')
             df[self.sourcecode] = df.apply(lambda x: FeaturesToCSV().topics_and_status(x['Domains'], features=source) if x['Domains'] in iterables else x[self.sourcecode], axis=1)
