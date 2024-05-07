@@ -43,7 +43,7 @@ This was the motivation for this project.<br>
 - Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
 
 **Other Features**
-- Multithreading (CPU core based) & Multiprocessing
+- Multithreading (CPU core based) & Multiprocessing & Async Requests
 - False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
 - Keyword detection in websites which neither contain brands in domain names nor are similar registered<br>
 
@@ -77,15 +77,15 @@ This was the motivation for this project.<br>
 
 **How to run:** <br>
 
---similarity : Selection of similarity mode of homograph, typosquatting detection algorithms with options "close" OR "wide".
-- close: Less false positives and (potentially) more false negatives
+--similarity : Selection of similarity mode of homograph, typosquatting detection algorithms with options "close" OR "wide" OR "medium".
+- close: Less false positives and (potentially) more false negatives (per default)
 - wide: More false positives and (potentially) less false negatives
-- Default: Tradeoff between both mode options.<br>
+- medium: Tradeoff between both mode options close and wide.<br>
 
 --threads : Number of Threads
 - Default: Number of Threads is based on CPU cores <br>
 
-Running program in standard mode (CPU cores + default similarity mode):
+Running program per default (CPU core based + close similarity mode as default mode):
 - "python3 domainthreat.py" <br>
 
 Running program in wide similarity mode with 50 threads:
@@ -134,8 +134,8 @@ Running program in wide similarity mode with 50 threads:
 - PEP8 compliance
 
 **Additional**
-- Used public source whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there. Use them instead if you feel to it.
-- Thresholds for similarity modes (wide, standard, close) have been selected carefully. The "wide" range has a possible high false positive rate (and therefore lower precision rate) in order to consider degree of freedom in registering different variations of domain names more accurately (reduce occurrence of false negatives and therefore better recall rate). Change the thresholds over the different modes if you want to match your needs better. I can strongly recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
+- Public source for newly registered domains whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there. Use them instead if you feel to it.
+- Thresholds for similarity modes (wide, medium, close) have been selected carefully. The "wide" range has a possible high false positive rate (and therefore lower precision rate) in order to consider degree of freedom in registering different variations of domain names more accurately (reduce occurrence of false negatives and therefore better recall rate). Change the thresholds over the different modes if you want to match your needs better. I can strongly recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
 - Recommended Python Version >= 3.8
