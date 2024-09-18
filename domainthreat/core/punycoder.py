@@ -1978,15 +1978,6 @@ CONFUSABLES: Dict[str, str] = {
 }
 
 
-# Check if a character is valid for use in an IDN according to IDNA2008.
-def is_valid_idn_char(char: str) -> bool:
-    try:
-        idna.encode(char)
-        return True
-    except idna.IDNAError:
-        return False
-
-
 # Convert a punycode domain to its Unicode form and replace confusable characters.
 def unconfuse(domain: str) -> str:
     if domain.startswith('xn--') or domain.startswith('*.xn--'):
