@@ -1,24 +1,49 @@
 #!/usr/bin/env python3
 
+# pylint: disable=missing-docstring
+# pylint: disable=line-too-long
+
 import random
+import warnings
 import requests
 import tldextract
 from bs4 import BeautifulSoup
+from bs4 import MarkupResemblesLocatorWarning
+from bs4 import XMLParsedAsHTMLWarning
+
+warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
 
 class HtmlContent:
     @staticmethod
     def _get_tags(soup_object) -> list:
         hey = []
-        title = soup_object.find('title')
-        description = soup_object.find('meta', attrs={'name': 'description'})
-        keywords = soup_object.find('meta', attrs={'name': 'keywords'})
-        if title is not None:
-            hey.append(title.get_text().replace('\n', '').lower().strip())
-        if description is not None:
-            hey.append(description['content'].replace('\n', '').lower().strip())
-        if keywords is not None:
-            hey.append(keywords['content'].replace('\n', '').lower().strip())
+        try:
+            title = soup_object.find('title')
+            og_title = soup_object.find('meta', attrs={'property': 'og:title'})
+            description = soup_object.find('meta', attrs={'name': 'description'})
+            og_description = soup_object.find('meta', attrs={'property': 'og:description'})
+            keywords = soup_object.find('meta', attrs={'name': 'keywords'})
+            og_keywords = soup_object.find('meta', attrs={'property': 'og:keywords'})
+            if title or og_title is not None:
+                if title and title.get_text() is not None:
+                    hey.append(title.get_text().replace('\n', '').lower().strip())
+                elif og_title and og_title.get('content') is not None:
+                    hey.append(og_title.get('content').replace('\n', '').lower().strip())
+            if description or og_description is not None:
+                if description and description.get('content') is not None:
+                    hey.append(description.get('content').replace('\n', '').lower().strip())
+                elif og_description and og_description.get('content') is not None:
+                    hey.append(og_description.get('content').replace('\n', '').lower().strip())
+            if keywords or og_keywords is not None:
+                if keywords and keywords.get('content') is not None:
+                    hey.append(keywords.get('content').replace('\n', '').lower().strip())
+                elif og_keywords and og_keywords.get('content') is not None:
+                    hey.append(og_keywords.get('content').replace('\n', '').lower().strip())
+
+        except Exception as e:
+            print(f'Parsing Webpage Error: {e}')
 
         return list(filter(lambda item: item is not None, hey))
 
@@ -26,6 +51,7 @@ class HtmlContent:
         meta_tags = [domain]
         domains = 'http://' + domain
         request_session = requests.Session()
+        status_codes = ''
         try:
             response = request_session.get(domains, headers=self.get_header(), allow_redirects=True, timeout=(5, 30))
             if response.raise_for_status() is None:

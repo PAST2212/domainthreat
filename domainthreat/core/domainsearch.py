@@ -4,9 +4,9 @@ import unicodedata
 import tldextract
 import textdistance
 from colorama import Fore, Style
-from .utilities import Helper
-from .punycoder import unconfuse
-from .files import ManageFiles
+from domainthreat.core.utilities import Helper
+from domainthreat.core.punycoder import unconfuse
+from domainthreat.core.files import ManageFiles
 
 
 class ScanerDomains:
@@ -14,9 +14,9 @@ class ScanerDomains:
         self.keyword = keyword
         self.domain = domain
 
-    def damerau(self, similarity_value: list) -> str:
+    def damerau(self, similarity_value: list[int], domain_extract: tldextract.tldextract.TLDExtract) -> str:
         # Based on / Inspired by (c) Everton Gomede, PhD
-        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
+        domain_name = domain_extract(self.domain).domain
         len_s1 = len(self.keyword)
         len_s2 = len(domain_name)
         d = [[0] * (len_s2 + 1) for _ in range(len_s1 + 1)]
@@ -51,9 +51,8 @@ class ScanerDomains:
             if damerau_distance <= similarity_value[7]:
                 return self.domain
 
-
-    def jaccard(self, n_gram: int, similarity_value: float) -> str:
-        domain_letter_weight = tldextract.extract(self.domain, include_psl_private_domains=True).domain
+    def jaccard(self, n_gram: int, similarity_value: float, domain_extract: tldextract.tldextract.TLDExtract) -> str:
+        domain_letter_weight = domain_extract(self.domain).domain
         keyword_letter_weight = self.keyword
         ngram_keyword = [keyword_letter_weight[i:i + n_gram] for i in range(len(keyword_letter_weight) - n_gram + 1)]
         ngram_domain_name = [domain_letter_weight[i:i + n_gram] for i in range(len(domain_letter_weight) - n_gram + 1)]
@@ -64,8 +63,8 @@ class ScanerDomains:
         if similarity >= similarity_value:
             return self.domain
 
-    def jaro_winkler(self, similarity_value: float) -> str:
-        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
+    def jaro_winkler(self, similarity_value: float, domain_extract: tldextract.tldextract.TLDExtract) -> str:
+        domain_name = domain_extract(self.domain).domain
         winkler = textdistance.jaro_winkler.normalized_similarity(self.keyword, domain_name)
 
         if winkler >= similarity_value:
@@ -73,8 +72,8 @@ class ScanerDomains:
 
     # LCS only starts to work for brand names or strings with length greater than 8
     # Not activated by default
-    def lcs(self, keywordthreshold) -> str:
-        domain_name = tldextract.extract(self.domain, include_psl_private_domains=True).domain
+    def lcs(self, keywordthreshold, domain_extract: tldextract.tldextract.TLDExtract) -> str:
+        domain_name = domain_extract(self.domain).domain
         if len(self.keyword) > 8:
             longest_common_substring = ""
             max_length = 0
@@ -93,7 +92,7 @@ class ScanerDomains:
     # X as sublist Input by cpu number separated sublists to make big input list more processable
     # container1, container2 as container for getting domain monitoring results
     @staticmethod
-    def get_results(x, container1, container2, blacklist, similarity_range):
+    def get_results(x, container1, container2, blacklist, similarity_range, domain_extract):
         FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
         index = x[0]  # index of sub list
@@ -106,16 +105,16 @@ class ScanerDomains:
                 results_temp.append((domain[0], domain[1], Helper.get_today(), 'Full Word Match'))
 
             elif ScanerDomains(domain[1], domain[0]).jaccard(n_gram=2, similarity_value=similarity_range[
-                'jaccard']) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
+                'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Jaccard'))
 
             elif ScanerDomains(domain[1], domain[0]).damerau(
-                    similarity_value=similarity_range['damerau']) is not None and all(
+                    similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(
                     black_keyword not in domain[0] for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Damerau-Levenshtein'))
 
             elif ScanerDomains(domain[1], domain[0]).jaro_winkler(
-                    similarity_value=similarity_range['jaro_winkler']) is not None and all(
+                    similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(
                     black_keyword not in domain[0] for black_keyword in blacklist):
                 results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Jaro-Winkler'))
 
@@ -126,17 +125,17 @@ class ScanerDomains:
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Full Word Match'))
 
                 elif ScanerDomains(domain[1], latin_domain).damerau(
-                        similarity_value=similarity_range['damerau']) is not None and all(
+                        similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(
                         black_keyword not in latin_domain for black_keyword in blacklist):
                     results_temp.append(
                         (domain[0], domain[1], Helper.get_today(), 'IDN Similarity Damerau-Levenshtein'))
 
                 elif ScanerDomains(domain[1], latin_domain).jaccard(n_gram=2, similarity_value=similarity_range[
-                    'jaccard']) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
+                    'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaccard'))
 
                 elif ScanerDomains(domain[1], latin_domain).jaro_winkler(
-                        similarity_value=similarity_range['jaro_winkler']) is not None and all(
+                        similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(
                         black_keyword not in latin_domain for black_keyword in blacklist):
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaro-Winkler'))
 

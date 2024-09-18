@@ -8,6 +8,8 @@ import aiohttp
 from aiolimiter import AsyncLimiter
 from domainthreat.core.webscraper import HtmlContent
 
+# not activated because rate limits make it not appropriate to crawl subdomains from this source
+
 
 class ScanerSubdomainCenter:
     def __init__(self) -> None:
@@ -35,7 +37,7 @@ class ScanerSubdomainCenter:
             print(f'Subdomaincenter Unusual Error via Subdomainscan for: {domain}', e)
 
     async def tasks_subdomaincenter(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 1.5 seconds
+        rate_limit = AsyncLimiter(1, 5)
         tasks = [self.subdomaincenter(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 

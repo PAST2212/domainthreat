@@ -37,10 +37,9 @@ class ScanerCrtsh:
         except Exception as e:
             print(f'Crt.sh Unusual Error via Subdomainscan for: {domain}', e)
 
-
     async def tasks_subdomains_crtsh(self, fuzzy_results: list, session: aiohttp.ClientSession):
         parameters = [{'q': '%.{}'.format(y), 'output': 'json'} for y in fuzzy_results]
-        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 3 seconds
+        rate_limit = AsyncLimiter(1, 5)
         tasks = [self.crtsh(session, symbol, rate_limit) for symbol in parameters]
         await asyncio.gather(*tasks)
 

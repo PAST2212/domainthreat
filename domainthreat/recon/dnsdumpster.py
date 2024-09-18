@@ -51,7 +51,7 @@ class ScanerDnsDumpster:
             print(f'Dnsdumpster Unusual Error via Subdomainscan for: {domain}', e)
 
     async def tasks_dnsdumpster(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 10)    # One Reqeust every 10 Seconds
+        rate_limit = AsyncLimiter(1, 5)
         tasks = [self.dnsdumpster(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 

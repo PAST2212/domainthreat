@@ -41,7 +41,7 @@ class ScanerRapidDns:
             print(f'Rapiddns Unusual Error via Subdomainscan for: {domain}', e)
 
     async def tasks_rapiddns(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 10)  # no burst requests, make request every 3 seconds
+        rate_limit = AsyncLimiter(1, 5)
         tasks = [self.rapiddns(session, y, rate_limit) for y in fuzzy_results]
         await asyncio.gather(*tasks)
 

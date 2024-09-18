@@ -7,6 +7,7 @@ import time
 import os
 from colorama import Fore, Style
 import argparse
+import tldextract
 import multiprocessing
 from domainthreat.core.domainsearch import ScanerDomains
 from domainthreat.core.files import ManageFiles
@@ -21,6 +22,11 @@ from domainthreat.core.subdomainsearch import ScanerSubdomains
 
 
 if __name__ == '__main__':
+
+    # initialize once, otherwise tld suffix list will be requested in every multiprocessor
+    domain_extract = tldextract.TLDExtract(include_psl_private_domains=True)
+    domain_extract('google.com')
+
     FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
     if sys.platform == 'win32':
@@ -105,11 +111,10 @@ if __name__ == '__main__':
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=ScanerDomains.get_results, args=(sub, que_1, que_2, blacklist_keywords, thresholds)) for sub
+    processes = [multiprocessing.Process(target=ScanerDomains.get_results, args=(sub, que_1, que_2, blacklist_keywords, thresholds, domain_extract)) for sub
                  in sub_list]
 
     for p in processes:
-        p.daemon = True
         p.start()
 
     fuzzy_results_temp = [[que_1.get(), que_2.get()] for p in processes]
@@ -127,21 +132,21 @@ if __name__ == '__main__':
     e_mail_ready = ScanerEmailReady().get_results(number_workers=number_threads, iterables=domain_results)
     parked_domains = ScanerParkedState().get_results(number_workers=number_threads, iterables=domain_results)
     print(FG + 'End E-Mail Ready & Parked State Scan\n' + S)
-    print(FR + f'\nStart Subdomain Scan: This can take some time {FY}-at least {len(domain_results)*5} Seconds- {FR}due to time-shifted async requests across different data sources to not exceed IP based rate limits' + S)
+    print(FR + f'\nStart Subdomain Scan: This can take some time {FY}-at least {len(domain_results)*5} Seconds- {FR}to not exceed IP based rate limits' + S)
     subdomains = ScanerSubdomains().get_results(iterables=domain_results)
-    print(FG + 'End Subdomain & Basic Domain Monitoring Scan\n' + S)
+    print(FG + 'End Subdomain Scan\n' + S)
+    print(FG + 'End Basic Domain Monitoring Scan\n' + S)
 
     print(FR + 'Start Search task for topic keywords in source codes of domain monitoring results' + S)
-    # tuple(str, str, str)
     source_code_basic = BasicMonitoring().get_results(number_workers=number_threads, iterables=domain_results)
     for values in source_code_basic:
         status_codes.append((values[0], values[2]))
         topics_matches_domains.append((values[0], values[1]))
-    # (self, results, source, website_status, park_domain, subdomain, emailready)
+
     ManageFiles().postprocessing_basic_monitoring(iterables=domain_results, source=topics_matches_domains, website_status=status_codes, park_domain=parked_domains, subdomain=subdomains, email_info=e_mail_ready)
     print(FG + 'End Search task for topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
 
-    print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names\n' + S)
+    print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands}\n' + S)
     AdvancedMonitoring().get_results(number_workers=number_threads)
-    print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands} in topic domain names' + S)
+    print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands}' + S)

@@ -5,10 +5,10 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from deep_translator import MyMemoryTranslator
 import translators as ts
-from .utilities import SmoothingResults
-from .files import ManageFiles
-from .webscraper import HtmlContent
-from .utilities import Helper
+from domainthreat.core.utilities import SmoothingResults
+from domainthreat.core.files import ManageFiles
+from domainthreat.core.webscraper import HtmlContent
+from domainthreat.core.utilities import Helper
 
 
 class BasicMonitoring:
@@ -83,7 +83,6 @@ class AdvancedMonitoring:
 
         return list(filter(lambda item: item is not None, iterables_output))
 
-
     def _matcher(self, nthreads: list) -> list:
         languages = ManageFiles().get_languages()
         list_topics = ManageFiles().get_topic_keywords()
@@ -115,7 +114,7 @@ class AdvancedMonitoring:
                 print(len(thread_ex_list),
                       f'Newly registered domains detected with topic keywords based on file topic_keywords.txt in domain name')
 
-
+            thread_ex_list = list(set(thread_ex_list))
             print('Example Domains: ', thread_ex_list[1:8], '\n')
 
             html_content_temp = self._multithreading_advanced(numberthreads=nthreads, iterables=thread_ex_list)
