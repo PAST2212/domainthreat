@@ -1,5 +1,6 @@
 v 3.14 (18.09.2024):
 - General Improvements, some (minor) bug fixes
+- Improved IDN Detection. Bigger coverage on confusingly, similar looking and no-latin characters
 
 v 3.13 (14.04.2024):
 - Refactor project for better readability
