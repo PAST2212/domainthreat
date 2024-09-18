@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import unicodedata
 import tldextract
 import textdistance
 from colorama import Fore, Style
 from domainthreat.core.utilities import Helper
 from domainthreat.core.punycoder import unconfuse
+from domainthreat.core.punycoder import normalize_domain
 from domainthreat.core.files import ManageFiles
 
 
@@ -119,24 +119,23 @@ class ScanerDomains:
                 results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Jaro-Winkler'))
 
             elif unconfuse(domain[0]) is not domain[0]:
-                latin_domain = unicodedata.normalize('NFKD', unconfuse(domain[0])).encode('latin-1', 'ignore').decode(
-                    'latin-1')
-                if domain[1] in latin_domain and all(black_keyword not in latin_domain for black_keyword in blacklist):
+                ascii_domain = normalize_domain(domain[0])
+                if domain[1] in ascii_domain and all(black_keyword not in ascii_domain for black_keyword in blacklist):
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Full Word Match'))
 
-                elif ScanerDomains(domain[1], latin_domain).damerau(
+                elif ScanerDomains(domain[1], ascii_domain).damerau(
                         similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(
-                        black_keyword not in latin_domain for black_keyword in blacklist):
+                        black_keyword not in ascii_domain for black_keyword in blacklist):
                     results_temp.append(
                         (domain[0], domain[1], Helper.get_today(), 'IDN Similarity Damerau-Levenshtein'))
 
-                elif ScanerDomains(domain[1], latin_domain).jaccard(n_gram=2, similarity_value=similarity_range[
-                    'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in latin_domain for black_keyword in blacklist):
+                elif ScanerDomains(domain[1], ascii_domain).jaccard(n_gram=2, similarity_value=similarity_range[
+                    'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in ascii_domain for black_keyword in blacklist):
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaccard'))
 
-                elif ScanerDomains(domain[1], latin_domain).jaro_winkler(
+                elif ScanerDomains(domain[1], ascii_domain).jaro_winkler(
                         similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(
-                        black_keyword not in latin_domain for black_keyword in blacklist):
+                        black_keyword not in ascii_domain for black_keyword in blacklist):
                     results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaro-Winkler'))
 
         container1.put(results_temp)

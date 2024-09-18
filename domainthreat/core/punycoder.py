@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-# Source: https://github.com/x0rz/phishing_catcher/blob/master/confusables.py
-
 import idna
+import unicodedata
+from typing import Dict
 
-confusables = {
+CONFUSABLES: Dict[str, str] = {
     u'\u2460': '1',
     u'\u2780': '1',
     u'\U0001D7D0': '2',
@@ -1825,25 +1825,188 @@ confusables = {
     u'\u02D7': '-',
     u'\u2212': '-',
     u'\u2796': '-',
-    u'\u2CBA': '-'
+    u'\u2CBA': '-',
+    'ą': 'a',  # Polish
+    'ă': 'a',  # Romanian, Vietnamese
+    'ã': 'a',  # Portuguese
+    'ă': 'a',  # Vietnamese
+    'ả': 'a',  # Vietnamese
+    'ạ': 'a',  # Vietnamese
+    'ḉ': 'c',  # Used in some languages
+    'ć': 'c',  # Polish, Serbian, Croatian
+    'ĉ': 'c',  # Esperanto
+    'č': 'c',  # Czech, Slovak, Slovenian, Croatian
+    'ç': 'c',  # French, Portuguese, Turkish
+    'ď': 'd',  # Czech, Slovak
+    'đ': 'd',  # Vietnamese, Serbian, Croatian
+    'ę': 'e',  # Polish, Lithuanian
+    'ě': 'e',  # Czech
+    'ė': 'e',  # Lithuanian
+    'ẽ': 'e',  # Vietnamese
+    'ể': 'e',  # Vietnamese
+    'ệ': 'e',  # Vietnamese
+    'ğ': 'g',  # Turkish
+    'ģ': 'g',  # Latvian
+    'ġ': 'g',  # Maltese
+    'ĥ': 'h',  # Esperanto
+    'ħ': 'h',  # Maltese
+    'ı': 'i',  # Turkish (dotless i)
+    'į': 'i',  # Lithuanian
+    'ī': 'i',  # Latvian, Maori
+    'ĩ': 'i',  # Vietnamese
+    'ỉ': 'i',  # Vietnamese
+    'ị': 'i',  # Vietnamese
+    'ķ': 'k',  # Latvian
+    'ĺ': 'l',  # Slovak
+    'ļ': 'l',  # Latvian
+    'ľ': 'l',  # Slovak
+    'ł': 'l',  # Polish
+    'ñ': 'n',  # Spanish
+    'ń': 'n',  # Polish
+    'ņ': 'n',  # Latvian
+    'ň': 'n',  # Czech, Slovak
+    'ơ': 'o',  # Vietnamese
+    'ő': 'o',  # Hungarian
+    'ø': 'o',  # Danish, Norwegian
+    'ǫ': 'o',  # Polish
+    'ō': 'o',  # Maori
+    'ợ': 'o',  # Vietnamese
+    'ở': 'o',  # Vietnamese
+    'ồ': 'o',  # Vietnamese
+    'ố': 'o',  # Vietnamese
+    'ộ': 'o',  # Vietnamese
+    'ŕ': 'r',  # Slovak
+    'ř': 'r',  # Czech
+    'ś': 's',  # Polish
+    'ş': 's',  # Turkish
+    'š': 's',  # Czech, Slovak, Slovenian, Croatian
+    'ș': 's',  # Romanian
+    'ţ': 't',  # Romanian (obsolete)
+    'ť': 't',  # Czech, Slovak
+    'ț': 't',  # Romanian
+    'ư': 'u',  # Vietnamese
+    'ů': 'u',  # Czech
+    'ű': 'u',  # Hungarian
+    'ũ': 'u',  # Vietnamese
+    'ų': 'u',  # Lithuanian
+    'ū': 'u',  # Latvian, Lithuanian
+    'ừ': 'u',  # Vietnamese
+    'ứ': 'u',  # Vietnamese
+    'ử': 'u',  # Vietnamese
+    'ự': 'u',  # Vietnamese
+    'ý': 'y',  # Czech, Slovak, Vietnamese
+    'ÿ': 'y',  # French
+    'ỳ': 'y',  # Vietnamese
+    'ỷ': 'y',  # Vietnamese
+    'ỹ': 'y',  # Vietnamese
+    'ỵ': 'y',  # Vietnamese
+    'ź': 'z',  # Polish
+    'ż': 'z',  # Polish
+    'ž': 'z',  # Czech, Slovak, Slovenian, Croatian
+    # Chinese characters (Hanzi) and Japanese Kanji
+    '卜': 'l',  # Bu (Chinese), Boku (Japanese)
+    '力': 'j',  # Li (Chinese), Ryoku (Japanese)
+    '刀': 'j',  # Dao (Chinese), Tou (Japanese)
+    '匕': 'b',  # Bi (Chinese), Hi (Japanese)
+    '口': 'o',  # Kou (Chinese), Kuchi (Japanese)
+    '囗': 'o',  # Wei (Chinese), Kuchi (Japanese)
+    '小': 'i',  # Xiao (Chinese), Shou (Japanese)
+    '山': 'w',  # Shan (Chinese), San (Japanese)
+    '川': 'lll',  # Chuan (Chinese), Sen (Japanese)
+    '巾': 'n',  # Jin (Chinese), Kin (Japanese)
+    '彡': 'w',  # Shan (Chinese), San (Japanese)
+    '彳': 'i',  # Chi (Chinese), Teki (Japanese)
+    '扌': 'f',  # Shou (Chinese), Te-hen (Japanese)
+    '氵': 'j',  # Shui (Chinese), Sanzui (Japanese)
+    '犭': 'j',  # Quan (Chinese), Kemono-hen (Japanese)
+    '车': 'a',  # Che (Chinese), Sha (Japanese)
+    '门': 'n',  # Men (Chinese), Mon (Japanese)
+    '飞': 'f',  # Fei (Chinese), Hi (Japanese)
+    # Japanese Katakana
+    'ー': '-',  # Chouon (long vowel mark)
+    'ァ': 'a',  # Small A
+    'ア': 'a',  # A
+    'カ': 'h',  # Ka
+    'ガ': 'h',  # Ga
+    'キ': 'f',  # Ki
+    'ク': 'j',  # Ku
+    'コ': 'j',  # Ko
+    'ゴ': 'j',  # Go
+    'ッ': 'o',  # Small Tsu
+    'ツ': 'y',  # Tsu
+    'ト': 'r',  # To
+    'ナ': 'f',  # Na
+    'ニ': 'i',  # Ni
+    'ノ': 'j',  # No
+    'ハ': 'h',  # Ha
+    'バ': 'h',  # Ba
+    'ヒ': 'h',  # Hi
+    'ビ': 'h',  # Bi
+    'ピ': 'h',  # Pi
+    'フ': 'v',  # Fu
+    'ブ': 'v',  # Bu
+    'ヘ': 'x',  # He
+    'ベ': 'x',  # Be
+    'マ': 'n',  # Ma
+    'ミ': 'i',  # Mi
+    'ム': 'u',  # Mu
+    'メ': 'x',  # Me
+    'ヤ': 'v',  # Ya
+    'ユ': 'u',  # Yu
+    'ラ': 'f',  # Ra
+    'リ': 'u',  # Ri
+    'ル': 'u',  # Ru
+    'レ': 'k',  # Re
+    'ロ': 'o',  # Ro
+    'ン': 'v',  # N
+    # Japanese Hiragana (fewer confusables, but some notable ones)
+    'が': 't',  # Ga
+    'き': 'e',  # Ki
+    'ぎ': 'e',  # Gi
+    'こ': 's',  # Ko
+    'ご': 's',  # Go
+    'す': 't',  # Su
+    'せ': 'e',  # Se
+    'の': 'o',  # No
+    'は': 'l',  # Ha
+    'ほ': 'l',  # Ho
+    'ま': 'a',  # Ma
+    'も': 't',  # Mo
+    'り': 'v',  # Ri
+    'る': 's',  # Ru
+    'を': 'z',  # Wo
 }
 
+
+# Check if a character is valid for use in an IDN according to IDNA2008.
+def is_valid_idn_char(char: str) -> bool:
+    try:
+        idna.encode(char)
+        return True
+    except idna.IDNAError:
+        return False
+
+
+# Convert a punycode domain to its Unicode form and replace confusable characters.
 def unconfuse(domain: str) -> str:
     if domain.startswith('xn--') or domain.startswith('*.xn--'):
         try:
-            domain_new = domain.encode('idna').decode('idna')
+            # Try to decode using the built-in idna encoding
+            domain_unicode = domain.encode('idna').decode('idna')
         except UnicodeError:
-            domain_new = idna.decode(domain)
-        except Exception:
-            pass
-        unconfused = ''
-        for i in range(len(domain_new)):
-            if domain_new[i] in confusables:
-                unconfused += confusables[domain_new[i]]
-            else:
-                unconfused += domain_new[i]
+            try:
+                # If that fails, try the idna library
+                domain_unicode = idna.decode(domain)
+            except Exception:
+                # If both methods fail, return the original domain
+                return domain
 
-        return unconfused
+        return ''.join(CONFUSABLES.get(char, char) for char in domain_unicode)
 
-    else:
-        return domain
+    return domain
+
+
+# Normalize a domain name by unconfusing it and converting to ASCII.
+def normalize_domain(domain: str) -> str:
+    unconfused = unconfuse(domain)
+    return unicodedata.normalize('NFKD', unconfused).encode('ascii', 'ignore').decode('ascii')
