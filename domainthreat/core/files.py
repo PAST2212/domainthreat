@@ -8,7 +8,6 @@ import datetime
 import csv
 from io import BytesIO
 import zipfile
-import time
 import requests
 import pandas as pd
 from domainthreat.core.utilities import FeaturesToCSV
@@ -112,7 +111,7 @@ class ManageFiles:
 
     def get_new_github_domains(self) -> list[str]:
         current_domains = self.read_github_domains(self.current_github_filename)
-        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains will be considered as "Newly Registered or Updated Domains" since there is no previous file downloaded to compare against.')
+        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as "Newly Registered or Updated Domains", since there is no previous file downloaded to compare against.')
 
         previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
         if previous_file_path.exists():

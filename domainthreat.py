@@ -133,10 +133,10 @@ if __name__ == '__main__':
     fuzzy_results = SmoothingResults().get_flatten_list(fuzzy_results_temp)
     domain_results = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
     file_manager.write_domain_output_file(fuzzy_results)
-    print('Please check:', FY + f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv' + S, ' file for only domain data results\n')
     file_manager.write_csv_basic_monitoring(fuzzy_results)
     print(*domain_results, sep="\n")
-    print(FY + f'{len(domain_results)} Newly registered domains detected\n' + S)
+    print(FY + f'{len(domain_results)} wewly registered domains detected' + S)
+    print('Please check:', FY + f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv' + S, f'file for these {len(domain_results)} newly registered domain results only (without additional features like subdomains)\n')
     print(FR + '\nStart E-Mail Ready & Parked State Scan' + S)
     e_mail_ready = ScanerEmailReady().get_results(number_workers=number_threads, iterables=domain_results)
     parked_domains = ScanerParkedState().get_results(number_workers=number_threads, iterables=domain_results)

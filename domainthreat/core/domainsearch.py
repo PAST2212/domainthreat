@@ -88,7 +88,6 @@ class ScanerDomains:
                     self.keyword) and all(black_keyword_lcs not in self.keyword for black_keyword_lcs in ManageFiles().get_blacklist_lcs()):
                 return self.domain
 
-
     @staticmethod
     def get_results(x, container1, container2, blacklist, similarity_range, domain_extract):
         FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
@@ -96,6 +95,7 @@ class ScanerDomains:
         index = x[0]
         value = x[1]
         results_temp = []
+        print(value)
         print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 
         for domain in value:
