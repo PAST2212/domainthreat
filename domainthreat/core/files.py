@@ -72,10 +72,11 @@ class ManageFiles:
             with domain_file_path.open('r', encoding='utf-8-sig') as file:
                 for domain in file:
                     list_file_domains.append(domain.replace("\n", "").lower().strip())
-                return list_file_domains
 
         except IOError as e:
             print(f'Something went wrong with reading Whoisds Domain File. Please check file {domain_file_path}', e)
+
+        return list_file_domains
 
     # Project: https://github.com/xRuffKez/NRD
     def download_github_domains(self) -> None:
@@ -104,10 +105,11 @@ class ManageFiles:
                 for domain in file:
                     if domain and not domain.startswith('#'):
                         github_domains.add(domain.replace("\n", "").lower().strip())
-                return github_domains
 
         except IOError as e:
             print(f'Error reading Domain File. Please check: {domain_file_path}', e)
+
+        return github_domains
 
     def get_new_github_domains(self) -> list[str]:
         current_domains = self.read_github_domains(self.current_github_filename)
