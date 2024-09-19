@@ -95,7 +95,6 @@ class ScanerDomains:
         index = x[0]
         value = x[1]
         results_temp = []
-        print(value)
         print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 
         for domain in value:
