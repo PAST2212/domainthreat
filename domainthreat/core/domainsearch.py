@@ -15,7 +15,6 @@ class ScanerDomains:
         self.domain = domain
 
     def damerau(self, similarity_value: list[int], domain_extract: tldextract.tldextract.TLDExtract) -> str:
-        # Based on / Inspired by (c) Everton Gomede, PhD
         domain_name = domain_extract(self.domain).domain
         len_s1 = len(self.keyword)
         len_s2 = len(domain_name)
@@ -89,14 +88,13 @@ class ScanerDomains:
                     self.keyword) and all(black_keyword_lcs not in self.keyword for black_keyword_lcs in ManageFiles().get_blacklist_lcs()):
                 return self.domain
 
-    # X as sublist Input by cpu number separated sublists to make big input list more processable
-    # container1, container2 as container for getting domain monitoring results
+
     @staticmethod
     def get_results(x, container1, container2, blacklist, similarity_range, domain_extract):
         FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
 
-        index = x[0]  # index of sub list
-        value = x[1]  # content of sub list
+        index = x[0]
+        value = x[1]
         results_temp = []
         print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
 

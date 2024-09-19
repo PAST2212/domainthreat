@@ -25,11 +25,9 @@ class ScanerEmailReady:
                 else:
                     return domain, 'No'
 
-
         except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
                 dns.resolver.NoNameservers):
             return domain, 'No'
-
 
     def _spf_record(self, domain: str) -> tuple:
         resolver = dns.resolver.Resolver()
@@ -68,7 +66,6 @@ class ScanerEmailReady:
         except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
                 dns.resolver.NoNameservers):
             return domain, 'No'
-
 
     def _multithreading_spf(self, numberthreads: list, iterables: list) -> list:
         iterables_output = []

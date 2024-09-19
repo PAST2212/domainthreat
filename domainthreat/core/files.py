@@ -8,12 +8,10 @@ import datetime
 import csv
 from io import BytesIO
 import zipfile
+import time
 import requests
 import pandas as pd
-from .utilities import FeaturesToCSV
-
-# Daterange of Newly Registered Domains Input from Source whoisds.com.
-# Paramater "days=1" means newest feed from today up to maximum oldest feed of newly registered domains "days=4" with free access
+from domainthreat.core.utilities import FeaturesToCSV
 
 DATA_DIRECORY = Path(__file__).parents[1] / 'data'
 
@@ -25,13 +23,14 @@ class ManageFiles:
     def __init__(self):
         self.advanced_file = f'Advanced_Monitoring_Results_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
         self.basic_file = f'Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
+        self.domain_output_file = f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv'
         self.keywords = 'keywords'
         self.unique = 'unique_brand_names'
         self.black = 'blacklist_keywords'
         self.lcs = 'blacklist_lcs'
         self.topic = 'topic_keywords'
         self.languages = 'languages_advanced_monitoring'
-        self.domain_filename = 'domain-names'
+        self.whoids_filename = f'whoisds_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
         self.previous_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('20%y-%m-%d')
         self.domains = 'Domains'
         self.csvcolumn_keyword = 'Keyword Found'
@@ -42,44 +41,91 @@ class ManageFiles:
         self.subdomains = 'Subdomains'
         self.email = 'Email Availability'
         self.parked = 'Parked Domains'
+        self.current_github_filename = f'github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
+        self.previous_github_filename = 'previous_github_domains.txt'
 
-    def download_domains(self) -> None:
-        if os.path.isfile(f'{DOMAIN_FILE_DIRECTORY}/{self.domain_filename}.txt'):
-            os.remove(f'{DOMAIN_FILE_DIRECTORY}/{self.domain_filename}.txt')
+    def download_whoisds_domains(self) -> None:
+        domain_file_path = DOMAIN_FILE_DIRECTORY / self.whoids_filename
+        if domain_file_path.exists():
+            domain_file_path.unlink()
 
         previous_date_formated = self.previous_date + '.zip'
         this_new = base64.b64encode(previous_date_formated.encode('ascii'))
-        domain_file = 'https://whoisds.com//whois-database/newly-registered-domains/{}/nrd'.format(this_new.decode('ascii'))
-
+        whoisds_link = 'https://whoisds.com//whois-database/newly-registered-domains/{}/nrd'.format(this_new.decode('ascii'))
         try:
-            request = requests.get(domain_file)
+            request = requests.get(whoisds_link)
             zipfiles = zipfile.ZipFile(BytesIO(request.content))
             zipfiles.extractall(DOMAIN_FILE_DIRECTORY)
             zipfiles.close()
+            print(f"Whoisds Domain file downloaded successfully to {domain_file_path}")
 
-        except Exception as e:
-            print(f'Something went wrong with downloading domain .zip file. Please check download link {domain_file}\n', e)
-            print('Please check https://www.whoisds.com/newly-registered-domains for availability of daily input files')
-            sys.exit()
+        except requests.RequestException as e:
+            print(f'Error downloading Whoisds domain file. Please check: {whoisds_link}\n', e)
 
-    def read_domains(self) -> list:
+    def read_whoisds_domains(self) -> list[str]:
+        download_file_path = DOMAIN_FILE_DIRECTORY / 'domain-names.txt'
+        domain_file_path = DOMAIN_FILE_DIRECTORY / self.whoids_filename
+        if download_file_path.exists():
+            os.rename(f'{DOMAIN_FILE_DIRECTORY}/domain-names.txt', domain_file_path)
+
         list_file_domains = []
-        if os.path.isfile(f'{DOMAIN_FILE_DIRECTORY}/{self.previous_date}.txt'):
-            os.rename(f'{DOMAIN_FILE_DIRECTORY}/{self.previous_date}.txt', f'{DOMAIN_FILE_DIRECTORY}/{self.domain_filename}.txt')
-
         try:
-            file_domains = open(f'{DOMAIN_FILE_DIRECTORY}/{self.domain_filename}.txt', 'r', encoding='utf-8-sig')
-            for my_domains in file_domains:
-                domain = my_domains.replace("\n", "").lower().strip()
-                list_file_domains.append(domain)
-            file_domains.close()
+            with domain_file_path.open('r', encoding='utf-8-sig') as file:
+                for domain in file:
+                    list_file_domains.append(domain.replace("\n", "").lower().strip())
+                return list_file_domains
 
-        except Exception as e:
-            print(f'Something went wrong with reading Domain File. Please check file {DOMAIN_FILE_DIRECTORY}/{self.domain_filename}.txt', e)
-            sys.exit()
+        except IOError as e:
+            print(f'Something went wrong with reading Whoisds Domain File. Please check file {domain_file_path}', e)
 
-        return list_file_domains
+    # Project: https://github.com/xRuffKez/NRD
+    def download_github_domains(self) -> None:
+        domain_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
+        if not domain_file_path.exists():
+            github_url = 'https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/nrd-14day.txt'
+            try:
+                response = requests.get(github_url)
+                response.raise_for_status()
+                with domain_file_path.open('wb') as file:
+                    file.write(response.content)
+                print(f"Github Domain file downloaded successfully to {domain_file_path}")
 
+            except requests.RequestException as e:
+                print(f'Error downloading Github domain file. Please check: {github_url}\n', e)
+
+        else:
+            domain_file_path.unlink()
+
+    @staticmethod
+    def read_github_domains(filename: str) -> set[str]:
+        domain_file_path = DOMAIN_FILE_DIRECTORY / filename
+        github_domains = set()
+        try:
+            with domain_file_path.open('r', encoding='utf-8-sig') as file:
+                for domain in file:
+                    if domain and not domain.startswith('#'):
+                        github_domains.add(domain.replace("\n", "").lower().strip())
+                return github_domains
+
+        except IOError as e:
+            print(f'Error reading Domain File. Please check: {domain_file_path}', e)
+
+    def get_new_github_domains(self) -> list[str]:
+        current_domains = self.read_github_domains(self.current_github_filename)
+        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains will be considered as "Newly Registered or Updated Domains" since there is no previous file downloaded to compare against.')
+
+        previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
+        if previous_file_path.exists():
+            previous_domains = self.read_github_domains(self.previous_github_filename)
+            new_domains = list(current_domains - previous_domains)
+            previous_file_path.unlink()
+        else:
+            new_domains = list(current_domains)
+
+        current_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
+        current_file_path.rename(previous_file_path)
+
+        return new_domains
 
     def user_data(self, file: str) -> list:
         try:
@@ -116,6 +162,14 @@ class ManageFiles:
                 writer = csv.writer(f)
                 writer.writerow(header)
 
+    def create_domain_output_file(self) -> None:
+        console_file_path = self.domain_output_file
+        if not os.path.exists(console_file_path):
+            header = [self.domains, self.csvcolumn_keyword, self.date, self.detected]
+            with open(console_file_path, 'w') as f:
+                writer = csv.writer(f)
+                writer.writerow(header)
+
     def create_csv_advanced_monitoring(self) -> None:
         console_file_path = self.advanced_file
         if not os.path.exists(console_file_path):
@@ -126,6 +180,13 @@ class ManageFiles:
 
     def write_csv_basic_monitoring(self, iterables: list) -> None:
         with open(self.basic_file, mode='a', newline='') as f:
+            writer = csv.writer(f, delimiter=',')
+            for k in iterables:
+                if isinstance(k, tuple):
+                    writer.writerow([k[0], k[1], k[2], k[3]])
+
+    def write_domain_output_file(self, iterables: list) -> None:
+        with open(self.domain_output_file, mode='a', newline='') as f:
             writer = csv.writer(f, delimiter=',')
             for k in iterables:
                 if isinstance(k, tuple):
@@ -176,5 +237,8 @@ class ManageFiles:
     def get_blacklist_lcs(self):
         return self.user_data(self.lcs)
 
-    def get_domainfile(self):
-        return self.read_domains()
+    def get_whoisds_domainfile(self):
+        return self.read_whoisds_domains()
+
+    def get_github_domainfile(self):
+        return self.get_new_github_domains()

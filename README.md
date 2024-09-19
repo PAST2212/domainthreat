@@ -1,7 +1,10 @@
 # domainthreat
 **Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version 3.14**
+**Current Version 3.20**
+New in Version 3.20:
+- Added new Feed for Daily updated registered domains from this project: https://github.com/xRuffKez/NRD. The provided 14-Day-Lists (Domains registered within the past 14 days) will be converted to daily feed once it will be downloaded for the first time.
+- Stronger IDN Detection Scope
 
 Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
 
@@ -40,7 +43,8 @@ This was the motivation for this project.<br>
 - Parked: Check if domain is parked for 2XX or 3XX Status Code domains (experimental state)
 - Subdomains: Subdomain Scan
 - E-Mail Availability: Check if domain is ready for receiving mails and/or ready for sending mails
-- Daily CSV export into a calender week based CSV file (can be filtered by dates)<br>
+- Daily CSV export into a calender week based CSV file including all features (e.g. subdomains)
+- Daily CSV export for the monitored domain results only without additional features included (e.g. subdomains)<br>
 
 **Other Features**
 - Multithreading (CPU core based) & Multiprocessing & Async Requests
@@ -134,9 +138,9 @@ Running program in wide similarity mode with 50 threads:
 - PEP8 compliance
 
 **Additional**
-- Public source for newly registered domains whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 100.000. There are other sources out there. Use them instead if you feel to it.
+- Public source for newly registered domains whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 70.000. I have added a new feed for daily updated, registered domains from this project: https://github.com/xRuffKez/NRDThere. Beside this there are other sources out there. Use them instead if you feel to it.
 - Thresholds for similarity modes (wide, medium, close) have been selected carefully. The "wide" range has a possible high false positive rate (and therefore lower precision rate) in order to consider degree of freedom in registering different variations of domain names more accurately (reduce occurrence of false negatives and therefore better recall rate). Change the thresholds over the different modes if you want to match your needs better. I can strongly recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
 - A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
 - Written in Python 3.10
 - Recommended Python Version >= 3.8
-- Some TLDs are not included in this public source (e.g. ".de" domains). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead.
+- Some TLDs are not (consistently) included in this public source (e.g. ".de" domains). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead.

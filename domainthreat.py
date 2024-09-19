@@ -48,7 +48,7 @@ if __name__ == '__main__':
     threads_standard = min(16, os.cpu_count() + 2)
     parser = argparse.ArgumentParser(usage='domainthreat.py [OPTIONS]', formatter_class=lambda prog: argparse.HelpFormatter(prog, width=150, max_help_position=100))
 
-    parser.add_argument('-s', '--similarity', type=str, default='close', metavar='SIMILARITY MODE', help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" OR "medium" threshold range. Mode "close" is running per default.')
+    parser.add_argument('-s', '--similarity', type=str, default='close', metavar='SIMILARITY MODE', choices=['close', 'medium', 'wide'], help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" OR "medium" threshold range. Mode "close" is running per default.')
     parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default threads number is CPU based and per default: {threads_standard}')
 
     if len(sys.argv[1:]) == 0:
@@ -87,21 +87,28 @@ if __name__ == '__main__':
 
     print('\nNumber of Threads: ', FG + str(number_threads[0]) + S)
     print('Selected Similarity Mode: ', FG + args.similarity + S)
-    time.sleep(5)
+    time.sleep(4)
 
-    print(FR + '\nStart Loading userdata' + S)
-    ManageFiles().download_domains()
+    print(FR + '\nStart Downloading & Processing Domain Data Feeds' + S)
+    file_manager = ManageFiles()
+    file_manager.download_whoisds_domains()
+    file_manager.download_github_domains()
 
-    list_file_domains = ManageFiles().get_domainfile()
-    brandnames = ManageFiles().get_keywords()
-    uniquebrands = ManageFiles().get_unique_brands()
-    blacklist_keywords = ManageFiles().get_blacklist_keywords()
-    list_topics = ManageFiles().get_topic_keywords()
-    languages = ManageFiles().get_languages()
-    ManageFiles().create_csv_basic_monitoring()
+    whoisds_domains = file_manager.get_whoisds_domainfile()
+    github_domains = file_manager.get_github_domainfile()
+
+    list_file_domains = list(set(whoisds_domains + github_domains))
+
+    brandnames = file_manager.get_keywords()
+    uniquebrands = file_manager.get_unique_brands()
+    blacklist_keywords = file_manager.get_blacklist_keywords()
+    list_topics = file_manager.get_topic_keywords()
+    languages = file_manager.get_languages()
+    file_manager.create_csv_basic_monitoring()
+    file_manager.create_domain_output_file()
 
     print(FR + '\nStart Basic Domain Monitoring and Feature Scans' + S)
-    print('Quantity of Newly Registered or Updated Domains from', (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('%d-%m-%y') + ':', len(list_file_domains), 'Domains\n')
+    print('Quantity of Newly Registered or Updated Domains from', (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('%d.%m.%y') + ':', len(list_file_domains), 'Domains\n')
 
     domaindata_transform = [(x, y) for y in brandnames for x in list_file_domains]
 
@@ -125,7 +132,9 @@ if __name__ == '__main__':
 
     fuzzy_results = SmoothingResults().get_flatten_list(fuzzy_results_temp)
     domain_results = [y[0] for y in fuzzy_results if isinstance(y, tuple)]
-    ManageFiles().write_csv_basic_monitoring(fuzzy_results)
+    file_manager.write_domain_output_file(fuzzy_results)
+    print('Please check:', FY + f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv' + S, ' file for only domain data results\n')
+    file_manager.write_csv_basic_monitoring(fuzzy_results)
     print(*domain_results, sep="\n")
     print(FY + f'{len(domain_results)} Newly registered domains detected\n' + S)
     print(FR + '\nStart E-Mail Ready & Parked State Scan' + S)
@@ -143,7 +152,7 @@ if __name__ == '__main__':
         status_codes.append((values[0], values[2]))
         topics_matches_domains.append((values[0], values[1]))
 
-    ManageFiles().postprocessing_basic_monitoring(iterables=domain_results, source=topics_matches_domains, website_status=status_codes, park_domain=parked_domains, subdomain=subdomains, email_info=e_mail_ready)
+    file_manager.postprocessing_basic_monitoring(iterables=domain_results, source=topics_matches_domains, website_status=status_codes, park_domain=parked_domains, subdomain=subdomains, email_info=e_mail_ready)
     print(FG + 'End Search task for topic keywords in source codes of domain monitoring results\n' + S)
     print('Please check:', FY + f'Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv' + S, ' file for results\n')
 

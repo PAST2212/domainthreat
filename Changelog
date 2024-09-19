@@ -1,3 +1,7 @@
+v 3.20 (19.09.2024):
+- Added new Feed for Daily updated registered domains from this project: https://github.com/xRuffKez/NRD.
+- The provided 14-Day-Lists from this feed (Domains registered within the past 14 days) will be converted to daily feed once it will be downloaded for the first time.
+
 v 3.14 (18.09.2024):
 - General Improvements, some (minor) bug fixes
 - Improved IDN Detection. Bigger coverage on confusingly, similar looking and no-latin characters

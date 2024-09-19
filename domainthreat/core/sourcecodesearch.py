@@ -87,7 +87,7 @@ class AdvancedMonitoring:
         languages = ManageFiles().get_languages()
         list_topics = ManageFiles().get_topic_keywords()
         uniquebrands = ManageFiles().get_unique_brands()
-        list_file_domains = ManageFiles().get_domainfile()
+        list_file_domains = ManageFiles().get_whoisds_domainfile()
         blacklist_keywords = ManageFiles().get_blacklist_keywords()
 
         try:
