@@ -82,7 +82,7 @@ class ManageFiles:
     def download_github_domains(self) -> None:
         domain_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
         if not domain_file_path.exists():
-            github_url = 'https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/nrd-14day.txt'
+            github_url = 'https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/lists/14-day/domains-only/nrd-14day.txt'
             try:
                 response = requests.get(github_url)
                 response.raise_for_status()
@@ -113,7 +113,7 @@ class ManageFiles:
 
     def get_new_github_domains(self) -> list[str]:
         current_domains = self.read_github_domains(self.current_github_filename)
-        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as "Newly Registered or Updated Domains", since there is no previous file downloaded to compare against.')
+        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as "Newly Registered or Updated Domains", since there is no "previous_github_domains.txt" file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.')
 
         previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
         if previous_file_path.exists():
