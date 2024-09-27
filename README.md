@@ -28,9 +28,9 @@ Traditional domain monitoring often relies solely on brand names, which may not 
 - Various domain fuzzing / similarity algorithms
 - Automated website translations
 - Support for multiple languages
-- Daily CSV exports (calendar week based and monitored domain results only)
+- Daily CSV exports (calendar week based included additional feature coloumns and monitored domain results only)
 
-### CSV Output Columns
+### CSV Output Columns / Additional Features
 - Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match
 - Source Code Match: Keyword detection in websites (supports multiple languages)
 - Website Status: HTTP status codes
@@ -47,14 +47,22 @@ Traditional domain monitoring often relies solely on brand names, which may not 
 
 ### 1. Basic Domain Monitoring
 1.1. Full-word and similar-word domain name detection using keywords from `keywords.txt`
+
 1.2. Keyword detection in source code using `topic_keywords.txt`
+
+Results are exported to `Newly_Registered_Domains_Calender_Week_.csv` file in the project root directory.
+Domain Results only are exprted to `domain_results_.csv`file in the project root directory.
 
 ### 2. Advanced Domain Monitoring
 2.1. Full-word domain name detection using keywords from `topic_keywords.txt`
-2.2. (Optional) Automated `topic_keywords.txt` keyword translation based on user-provided languages using `languages_advanced_monitoring.txt` 
-- File `supported_languages.txt` gives an overview of currently supported languages for `languages_advanced_monitoring.txt` 
-- Full-word domain name detection using keywords AND translated keywords from `topic_keywords.txt`
+
+2.2. (Optional) Automated `topic_keywords.txt` keyword translation based on user-provided languages using `languages_advanced_monitoring.txt`
+   - File `supported_languages.txt` gives an overview of currently supported languages for `languages_advanced_monitoring.txt`
+   - Full-word domain name detection using keywords AND translated keywords from `topic_keywords.txt`
+
 2.3. Brand name detection in source code using `unique_brand_names.txt`
+
+Results are exported to `Advanced_Monitoring_Results_Calender_Week_.csv` file in the project root directory.
 
 ## Installation
 
