@@ -50,7 +50,8 @@ Traditional domain monitoring often relies solely on brand names, which may not 
 
 1.2. Keyword detection in source code using `topic_keywords.txt`
 
-Results are exported to `Newly_Registered_Domains_Calender_Week_.csv` file in the project root directory.
+Results are exported to `Newly_Registered_Domains_Calender_Week_.csv` file in the project root directory. 
+
 Domain Results only are exprted to `domain_results_.csv`file in the project root directory.
 
 ### 2. Advanced Domain Monitoring
@@ -79,7 +80,7 @@ Basic usage (default setting):
 python3 domainthreat.py
 ```
 
-Advanced usage:
+Advanced usage (example command):
 ```bash
 python3 domainthreat.py --similarity wide --threads 50
 ```
@@ -109,9 +110,9 @@ git pull
 ## Configuration
 
 1. Add brand names or mailing domain names to `domainthreat/data/userdata/keywords.txt`
-2. Add common word collisions to `domainthreat/data/userdata/blacklist_keywords.txt`
-3. Add industry-, company-, product-related keywords to `domainthreat/data/userdata/topic_keywords.txt`
-4. Add brand names to `domainthreat/data/userdata/unique_brand_names.txt`
+2. (Optional) Add common word collisions to `domainthreat/data/userdata/blacklist_keywords.txt`
+3. (Optional) Add industry-, company-, product-related keywords to `domainthreat/data/userdata/topic_keywords.txt`
+4. (Optional) Add brand names to `domainthreat/data/userdata/unique_brand_names.txt`
 
 ## Changelog
 
