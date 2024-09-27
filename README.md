@@ -1,146 +1,128 @@
 # domainthreat
-**Daily Domain Monitoring for Brands and Mailing Domain Names**
 
-**Current Version 3.20**
-New in Version 3.20:
-- Added new Feed for Daily updated registered domains from this project: https://github.com/xRuffKez/NRD. The provided 14-Day-Lists (Domains registered within the past 14 days) will be converted to daily feed once it will be downloaded for the first time.
+Daily Domain Monitoring for Brands and Mailing Domain Names
+
+**Current Version:** 3.20
+
+## What's New in Version 3.20
+- Added new feed for daily updated registered domains from [NRD project](https://github.com/xRuffKez/NRD). The provided 14-Day-Lists will be converted to a daily feed upon first download.
 - Stronger IDN Detection Scope
 
-Here you can find a Domain Monitoring tool. You can monitor your company brands (e.g. "amazon"), your mailing domains (e.g. "companygroup) or other words.
+## Motivation
 
-# **Motivation**
-Typical Domain Monitoring relies on brand names as input. Sometimes this is not sufficient enough to detect phishing attacks in cases where the brand names and mailing domain names are not equal.
+Traditional domain monitoring often relies solely on brand names, which may not be sufficient to detect all phishing attacks, especially when brand names and mailing domain names differ. This project aims to address this gap by monitoring both brand names and mailing domains, focusing on text strings rather than just brands.
 
-Thought experiment:
-If example company "IBM" monitors their brand "IBM", send mails via @ibmgroup.com and attacker registers the domain ibrngroup.com (m = rn) for spear phishing purposes (e.g. CEO Fraud). 
-Typical Brand (Protection) Domain Monitoring Solutions may experience difficulties because the distance between monitored brand name "IBM" and registered domain name "ibrngroup.com" is too big to classify it as a true positive and therefore makes it harder for the targeted company to take appropriate measures more proactively. This scenario is avoidable by also monitoring your mailing domain names and thus focussing more on text strings rather than brands.
+## Detection Scope
+- Full-word matching (e.g., amazon-shop.com)
+- Regular typosquatting cases (e.g., ammazon.com)
+- Look-alikes / phishing / CEO-Fraud domains (e.g., arnazon.com)
+- IDN Detection / look-alike domains based on full word matching (e.g., 𝗉ay𝞀al.com)
+- IDN Detection / look-alike domains based on partial word matching (e.g., 𝗉ya𝞀a1.com)
 
-This was the motivation for this project.<br>
+![Detection Example](https://github.com/PAST2212/domainthreat/assets/124390875/b9d27c1c-a366-49bf-8c69-666681f87041)
 
-# **Detection Scope**
-- full-word matching (e.g. amazon-shop.com), 
-- regular typo squatting cases (e.g. ammazon.com), 
-- typical look-alikes / phishing / so called CEO-Fraud domains (e.g. arnazon.com (rn = m),
-- IDN Detection / look-alike Domains based on full word matching (e.g. 𝗉ay𝞀al.com - greek letter RHO '𝞀' instead of latin letter 'p'),
-- IDN Detection / look-alike Domains based on partial word matching (e.g. 𝗉ya𝞀a1.com - greek letter RHO '𝞀' instead of latin letter 'p' AND "ya" instead of "ay" AND Number "1" instead of Letter "l")
+## Features
 
-
-**Example Screenshot: Illustration of detected topic keyword 'tech' in source code of newly registered domain 'microsoftintegration[.]com' and detected subdomains**
-![image](https://github.com/PAST2212/domainthreat/assets/124390875/b9d27c1c-a366-49bf-8c69-666681f87041)
-
-
-# **Features**
-**Key Features & CSV Output Columns**
+### Key Features
 - Unicode domain names (IDN) / Homoglyph / Homograph Detection
-- Variety of domain fuzzing / similarity algorithms
-- Automated Website Translations
-- Support of a variety of different languages
+- Various domain fuzzing / similarity algorithms
+- Automated website translations
+- Support for multiple languages
+- Daily CSV exports (calendar week based and monitored domain results only)
 
+### CSV Output Columns
 - Detected By: Full Keyword Match or Similar/Fuzzy Keyword Match
-- Source Code Match: Keyword detection in websites - even if they are in other languages (e.g. chinese) by using different translators (normalized to english per default)<br>
-  ==> This is to cover needs of international companies and foreign-speaking markets
-- Website Status: Check website status by http status codes: HTTPError for a 4XX client error or 5XX server error response code
-- Parked: Check if domain is parked for 2XX or 3XX Status Code domains (experimental state)
-- Subdomains: Subdomain Scan
-- E-Mail Availability: Check if domain is ready for receiving mails and/or ready for sending mails
-- Daily CSV export into a calender week based CSV file including all features (e.g. subdomains)
-- Daily CSV export for the monitored domain results only without additional features included (e.g. subdomains)<br>
+- Source Code Match: Keyword detection in websites (supports multiple languages)
+- Website Status: HTTP status codes
+- Parked: Check if domain is parked (experimental)
+- Subdomains: Subdomain scan
+- E-Mail Availability: Check domain readiness for receiving/sending emails
 
-**Other Features**
-- Multithreading (CPU core based) & Multiprocessing & Async Requests
-- False Positive Reduction Instruments (e.g. self defined Blacklists, Thresholds depending on string lenght)
-- Keyword detection in websites which neither contain brands in domain names nor are similar registered<br>
+### Other Features
+- Multithreading (CPU core based), Multiprocessing & Async Requests
+- False Positive Reduction Instruments
+- Keyword detection in websites without brand names in domain
 
-# **Principles**
-**1. Basic Domainmonitoring**<br>
+## Principles
 
-1.1. Keywords from file "domainthreat/data/userdata/keywords.txt" (e.g. tuigroup) are used to make full-word detection (e.g. newtuigroup.shop) and similar-word detection (e.g. tuiqroup.com (g=q)) on newly registered domain names.<br>
+### 1. Basic Domain Monitoring
+1.1. Full-word and similar-word domain name detection using keywords from `keywords.txt`
+1.2. Keyword detection in source code using `topic_keywords.txt`
 
-1.2. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" are used to find these keywords (e.g. travel) in source code of (translated) webpages (e.g. dulichtui.com) of domain monitoring results from point 1.1.<br>
+### 2. Advanced Domain Monitoring
+2.1. Full-word domain name detection using keywords from `topic_keywords.txt`
+2.2. (Optional) Automated `topic_keywords.txt` keyword translation based on user-provided languages using `languages_advanced_monitoring.txt` 
+- File `supported_languages.txt` gives an overview of currently supported languages for `languages_advanced_monitoring.txt` 
+- Full-word domain name detection using keywords AND translated keywords from `topic_keywords.txt`
+2.3. Brand name detection in source code using `unique_brand_names.txt`
 
-   ==> Results are exported to Newly_Registered_Domains_Calender_Week_ .csv File into Project Root Directory<br>
+## Installation
 
-**2. Advanced Domainmonitoring**<br>
+```bash
+git clone https://github.com/PAST2212/domainthreat.git
+cd domainthreat
+pip install -r requirements.txt
+```
 
-2.1. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" (e.g. holiday) are used to make full-word detection (e.g. usa-holiday.net) on newly registered domain names.<br>
+## Usage
 
-2.2. Keywords from file "domainthreat/data/userdata/topic_keywords.txt" (e.g. holiday) are automatically translated into the languages which are provided by the User in the "domainthreat/data/userdata/languages_advanced_monitoring.txt" file. Please see "supported_languages.txt" for supported languages at this moment. Copy / Paste the demanded languages from "supported_languages.txt" to "domainthreat/data/userdata/languages_advanced_monitoring.txt" file if you want to (empty per default). Punycode domains are not supported by these translations at the moment. <br>
+Basic usage (default setting):
+```bash
+python3 domainthreat.py
+```
 
-==> Results from 2.1. will be enhanced by translated keywords from "domainthreat/data/userdata/topic-keywords.txt" file. For example "urlaub" is the german word for "holiday". The program will now find in addition german registerd domains like "sea-urlaub.com"<br>
+Advanced usage:
+```bash
+python3 domainthreat.py --similarity wide --threads 50
+```
 
-2.3. Keywords from file "domainthreat/data/userdata/unique_brand_names.txt" are used to find these keywords (e.g. tui) in webpages of monitoring results from point 2.1. (e.g. usa-holiday.net) and from 2.2. (e.g. sea-urlaub.com) (if any supported languages are provided)<br>
+Options:
+- `--similarity`: Select similarity mode (close, wide, medium)
+  - close: Less false positives and (potentially) more false negatives (per default)
+  - wide: More false positives and (potentially) less false negatives 
+  - medium: Tradeoff between both mode options close and wide.
+- `--threads`: Number of threads (default: CPU core-based)
 
-   ==> Results are exported to Advanced_Monitoring_Results_Calender_Week_ .csv File into Project Root Directory<br>
+## Updating
 
-# **Instructions**
+```bash
+cd domainthreat
+git pull
+```
 
-**How to install:**
-- git clone https://github.com/PAST2212/domainthreat.git
-- cd domainthreat
-- pip install -r requirements.txt
+If you encounter a merge error:
+```bash
+git reset --hard
+git pull
+```
 
-**How to run:** <br>
+**Note:** Backup your userdata folder before updating.
 
---similarity : Selection of similarity mode of homograph, typosquatting detection algorithms with options "close" OR "wide" OR "medium".
-- close: Less false positives and (potentially) more false negatives (per default)
-- wide: More false positives and (potentially) less false negatives
-- medium: Tradeoff between both mode options close and wide.<br>
+## Configuration
 
---threads : Number of Threads
-- Default: Number of Threads is based on CPU cores <br>
+1. Add brand names or mailing domain names to `domainthreat/data/userdata/keywords.txt`
+2. Add common word collisions to `domainthreat/data/userdata/blacklist_keywords.txt`
+3. Add industry-, company-, product-related keywords to `domainthreat/data/userdata/topic_keywords.txt`
+4. Add brand names to `domainthreat/data/userdata/unique_brand_names.txt`
 
-Running program per default (CPU core based + close similarity mode as default mode):
-- "python3 domainthreat.py" <br>
+## Changelog
 
-Running program in wide similarity mode with 50 threads:
-- "python3 domainthreat.py --similarity wide --threads 50"
-![image](https://github.com/PAST2212/domainthreat/assets/124390875/44e60e02-5f49-49b0-8eca-5829e809118e)
+For updates, please see the [Changelog](https://github.com/PAST2212/domainthreat/blob/main/Changelog).
 
+## Notes
 
-**How to update:**
-- cd domainthreat
-- git pull
-- In case of a Merge Error: Try "git reset --hard" before "git pull"
-  
-  ==> Make sure to make a backup of your userdata folder before update
+### Author
+Patrick Steinhoff - [LinkedIn](https://www.linkedin.com/in/patrick-steinhoff-168892222/)
 
-**Before the first run - How it Works:**
-1. Put your brand names or mailing domain names into this TXT file "domainthreat/data/userdata/keywords.txt" line per line for monitoring operations (without the TLD). Some "TUI" Names are listed per default.
-
-2. Put common word collisions into this TXT file "domainthreat/data/userdata/blacklist_keywords.txt" line per line you want to exclude from the results to reduce false positives.
--  e.g. blacklist "lotto" if you monitor keyword "otto", e.g. blacklist "amazonas" if you want to monitor "amazon", e.g. blacklist "intuitive" if you want to monitor "tui" ...
-
-3. Put commonly used words into this TXT file "domainthreat/data/userdata/topic_keywords.txt" line per line that are describing your brands, industry, brand names, products on websites. These keywords will be used for searching / matching in source codes of webistes. Default and **normalized** language is english for performing automated translation operations from HTML Title, Description and Keywords Tag via different translators.
--  e.g. Keyword "fashion" for a fashion company, e.g. "sneaker" for shoe company, e.g. "Zero Sugar" for Coca Cola Inc., e.g. "travel" for travel company...
-
-4. Put your brand names into this TXT file "domainthreat/data/userdata/unique_brand_names.txt" line per line for monitoring operations (e.g. "tui"). These keywords will be used for searching / matching in sources codes of websites which neither contain your brand names in domain name nor are similar registered to them (e.g. usa-holiday.net). Some "TUI" Names are listed per default. 
-
-# **Troubleshooting**
-- In case of errors with modules "httpcore" or "httpx" - possible fixes:
-   - pip uninstall googletrans (in case you have installed older version of domainthreat as of version <= 2.11)
-   - pip install --upgrade pip
-   - pip install --upgrade httpx
-   - pip install --upgrade httpcore
-
-# **Changelog**
-- Please see Changelog for Updates:
-- https://github.com/PAST2212/domainthreat/blob/main/Changelog
-
-# **Notes**
-
-**Author**
-- Patrick Steinhoff (https://www.linkedin.com/in/patrick-steinhoff-168892222/)
-
-**TO DO**
-- Add additional fuzzy matching algorithms to increase true positive rate / accurancy (Sequence-based algorithm "Longest Common Substring" is already included but not activated by default)
+### To-Do
+- Add additional fuzzy matching algorithms
 - Enhance source code keyword detection on subdomain level
-- AI based Logo Detection by Object Detection
-- PEP8 compliance
+- AI-based Logo Detection by Object Detection
+- Implement PEP8 compliance
 
-**Additional**
-- Public source for newly registered domains whoisds (https://www.whoisds.com/newly-registered-domains) has capped quantity of daily registrations to 70.000. I have added a new feed for daily updated, registered domains from this project: https://github.com/xRuffKez/NRDThere. Beside this there are other sources out there. Use them instead if you feel to it.
-- Thresholds for similarity modes (wide, medium, close) have been selected carefully. The "wide" range has a possible high false positive rate (and therefore lower precision rate) in order to consider degree of freedom in registering different variations of domain names more accurately (reduce occurrence of false negatives and therefore better recall rate). Change the thresholds over the different modes if you want to match your needs better. I can strongly recommend this article go get a better understanding of recall-precision tradeoff: https://towardsdatascience.com/precision-vs-recall-evaluating-model-performance-in-credit-card-fraud-detection-bb24958b2723 
-- A perfect supplement to this wonderful project: https://github.com/elceef/dnstwist
-- Written in Python 3.10
-- Recommended Python Version >= 3.8
-- Some TLDs are not (consistently) included in this public source (e.g. ".de" domains). You can bypass it by using my other project https://github.com/PAST2212/certthreat that uses CERT Transparency Logs as Input instead.
+### Additional Information
+- Public source for newly registered domains (whoisds) is capped at 70,000 daily registrations. New Source [NRD project](https://github.com/xRuffKez/NRD) was added.
+- Thresholds for similarity modes can be adjusted to match specific needs.
+- Recommended Python version: >= 3.8 (Written in Python 3.10)
+- Some TLDs (e.g., ".de" domains) may not be consistently included in the public source. You can use [certthreat](https://github.com/PAST2212/certthreat) to bypass this issue.
+- A perfect supplement to this project [dnstwist](https://github.com/elceef/dnstwist)
