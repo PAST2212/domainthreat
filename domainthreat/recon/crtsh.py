@@ -3,46 +3,56 @@
 import asyncio
 import json
 import aiohttp
-from aiolimiter import AsyncLimiter
-from domainthreat.core.webscraper import HtmlContent
 
 
 class ScanerCrtsh:
     def __init__(self) -> None:
-        self.results: set = set()
+        self.results: set[tuple[str, str]] = set()
 
-    async def crtsh(self, session: aiohttp.ClientSession, request_input, rate_limit):
-        domain = request_input['q'].replace('%.', '').strip()
+    @staticmethod
+    async def _scrape_subdomains(session: aiohttp.ClientSession, domain: str):
+        params = {
+            'q': f'%.{domain}',
+            'output': 'json'
+        }
+
         try:
-            async with rate_limit:
-                response = await session.get('https://crt.sh/?', params=request_input, headers=HtmlContent.get_header())
+            async with session.get('https://crt.sh/', params=params) as response:
                 if response.status == 200:
-                    data1 = await response.text()
-                    data = json.loads(data1)
-                    for crt in data:
-                        for domains in crt['name_value'].split('\n'):
-                            if '@' in domains:
+                    data = await response.text()
+                    certificates = json.loads(data)
+
+                    subdomains = set()
+                    for cert in certificates:
+                        for subdomain in cert['name_value'].split('\n'):
+                            # Skip email addresses
+                            if '@' in subdomain:
                                 continue
 
-                            if domains not in self.results:
-                                domains_trans = domains.lower().replace('*.', '')
-                                self.results.add((domain, domains_trans))
+                            subdomain = subdomain.lower().replace('*.', '')
+                            if subdomain:
+                                subdomains.add((domain, subdomain))
 
-        except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print(f'Crt.sh Error via Subdomainscan for: {domain}', e)
+                    return subdomains
+                else:
+                    print(f"Crt.sh returned status {response.status} for {domain}")
 
-        except (aiohttp.ClientConnectorError, aiohttp.ServerConnectionError) as e:
-            print(f'Crt.sh Connection Error via Subdomainscan for: {domain}', e)
-
+        except asyncio.TimeoutError:
+            print(f"Timeout scanning {domain} on crt.sh")
+        except json.JSONDecodeError:
+            print(f"Invalid JSON response from crt.sh for {domain}")
+        except (aiohttp.ClientError, aiohttp.ServerConnectionError) as e:
+            print(f"Connection error scanning {domain} on crt.sh: {str(e)}")
         except Exception as e:
-            print(f'Crt.sh Unusual Error via Subdomainscan for: {domain}', e)
+            print(f"Unexpected error scanning {domain} on crt.sh: {str(e)}")
 
-    async def tasks_subdomains_crtsh(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        parameters = [{'q': '%.{}'.format(y), 'output': 'json'} for y in fuzzy_results]
-        rate_limit = AsyncLimiter(1, 5)
-        tasks = [self.crtsh(session, symbol, rate_limit) for symbol in parameters]
-        await asyncio.gather(*tasks)
+        return set()
 
-    async def get_results(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        await self.tasks_subdomains_crtsh(fuzzy_results, session)
+    async def get_results(self, domains: list, session: aiohttp.ClientSession):
+        for domain in domains:
+            try:
+                subdomains = await self._scrape_subdomains(session, domain)
+                self.results.update(subdomains)
+            except Exception as e:
+                print(f"Failed to scan {domain} on crt.sh: {str(e)}")
         return self.results

@@ -1,50 +1,54 @@
 #!/usr/bin/env python3
 
 import asyncio
-import json
 from bs4 import BeautifulSoup
 import aiohttp
-from aiolimiter import AsyncLimiter
-from domainthreat.core.webscraper import HtmlContent
 
 
 class ScanerRapidDns:
     def __init__(self) -> None:
-        self.results: set = set()
+        self.results: set[tuple[str, str]] = set()
 
-    async def rapiddns(self, session: aiohttp.ClientSession, domain, rate_limit):
+    @staticmethod
+    async def _scrape_subdomains(session: aiohttp.ClientSession, domain: str) -> set[tuple[str, str]]:
+        url = f"https://rapiddns.io/s/{domain}?full=1#result"
         try:
-            async with rate_limit:
-                response = await session.get(f"https://rapiddns.io/s/{domain}?full=1#result", headers=HtmlContent.get_header())
+            async with session.get(url) as response:
                 if response.status == 200:
-                    data1 = await response.text()
-                    soup = BeautifulSoup(data1, "lxml")
-                    table = soup.find("table", id="table")
-                    rows = table.findAll("tr")
-                    for row in rows:
-                        passive_dns = row.findAll("td")
-                        # passive DNS Data
-                        # [value.text.strip() for value in passive_dns]
-                        for subdomain in passive_dns:
-                            subdomain_trans = subdomain.get_text().strip()
-                            if domain in subdomain_trans:
-                                if subdomain_trans != '':
-                                    self.results.add((domain, subdomain_trans))
+                    html = await response.text()
+                    soup = BeautifulSoup(html, "lxml")
 
-        except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print(f'Rapiddns Error via Subdomainscan for: {domain}', e)
+                    if table := soup.find("table", id="table"):
+                        subdomains = set()
+                        rows = table.findAll("tr")
+                        for row in rows:
+                            passive_dns = row.findAll("td")
+                            # passive DNS Data
+                            # [value.text.strip() for value in passive_dns]
+                            for cell in passive_dns:
+                                subdomain = cell.get_text().strip()
+                                if domain in subdomain and subdomain:
+                                    subdomains.add((domain, subdomain))
 
-        except (aiohttp.ClientConnectorError, aiohttp.ServerConnectionError) as e:
-            print(f'Rapiddns Connection Error via Subdomainscan for: {domain}', e)
+                        return subdomains
 
+                else:
+                    print(f"RapidDNS returned status {response.status} for {domain}")
+
+        except asyncio.TimeoutError:
+            print(f"Timeout scanning {domain} on RapidDNS")
+        except (aiohttp.ClientError, aiohttp.ServerConnectionError) as e:
+            print(f"Connection error scanning {domain} on RapidDNS: {str(e)}")
         except Exception as e:
-            print(f'Rapiddns Unusual Error via Subdomainscan for: {domain}', e)
+            print(f"Unexpected error scanning {domain} on RapidDNS: {str(e)}")
 
-    async def tasks_rapiddns(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 5)
-        tasks = [self.rapiddns(session, y, rate_limit) for y in fuzzy_results]
-        await asyncio.gather(*tasks)
+        return set()
 
-    async def get_results(self, fuzzy_results, session: aiohttp.ClientSession):
-        await self.tasks_rapiddns(fuzzy_results, session)
+    async def get_results(self, domains, session: aiohttp.ClientSession):
+        for domain in domains:
+            try:
+                subdomains = await self._scrape_subdomains(session, domain)
+                self.results.update(subdomains)
+            except Exception as e:
+                print(f"Failed to scan {domain} on RapidDNS: {str(e)}")
         return self.results

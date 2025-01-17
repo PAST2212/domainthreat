@@ -1,101 +1,90 @@
 #!/usr/bin/env python3
 
+from typing import Optional
+from dataclasses import dataclass
 import dns.resolver
 from concurrent.futures import ThreadPoolExecutor
+from enum import Enum
+
+
+class RecordStatus(str, Enum):
+    PRESENT = "Yes"
+    ABSENT = "No"
+
+
+@dataclass
+class DNSConfig:
+    resolver_timeout: int = 5
+    resolver_lifetime: int = 5
+    resolver_nameservers: list[str] = None
+
+    def __post_init__(self):
+        if self.resolver_nameservers is None:
+            self.resolver_nameservers = ['8.8.8.8']
 
 
 class ScanerEmailReady:
-    def __init__(self):
-        self.resolver_timeout = 5
-        self.resolver_lifetime = 5
-        self.resolver_nameservers = ['8.8.8.8']
+    def __init__(self, config: Optional[DNSConfig] = None):
+        self.config = config or DNSConfig()
 
-    def _mx_record(self, domain: str) -> tuple:
+    def _get_resolver(self) -> dns.resolver.Resolver:
         resolver = dns.resolver.Resolver()
-        resolver.timeout = self.resolver_timeout
-        resolver.lifetime = self.resolver_lifetime
-        resolver.nameservers = self.resolver_nameservers
-        mx = []
+        resolver.timeout = self.config.resolver_timeout
+        resolver.lifetime = self.config.resolver_lifetime
+        resolver.nameservers = self.config.resolver_nameservers
+        return resolver
+
+    def check_mx_record(self, domain: str) -> tuple[str, RecordStatus]:
+        resolver = self._get_resolver()
         try:
-            MX = resolver.resolve(domain, 'MX')
-            for answer in MX:
-                mx.append(answer.exchange.to_text())
-                if answer is not None:
-                    return domain, 'Yes'
-                else:
-                    return domain, 'No'
-
-        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
+            answers = resolver.resolve(domain, 'MX')
+            if any(ans.exchange for ans in answers):
+                return domain, RecordStatus.PRESENT
+            return domain, RecordStatus.ABSENT
+        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN,
+                dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
                 dns.resolver.NoNameservers):
-            return domain, 'No'
+            return domain, RecordStatus.ABSENT
 
-    def _spf_record(self, domain: str) -> tuple:
-        resolver = dns.resolver.Resolver()
-        resolver.timeout = self.resolver_timeout
-        resolver.lifetime = self.resolver_lifetime
-        resolver.nameservers = self.resolver_nameservers
+    def check_spf_record(self, domain: str) -> tuple[str, RecordStatus]:
+        resolver = self._get_resolver()
         try:
-            SPF = resolver.resolve(domain, 'TXT')
-            for answer in SPF:
-                answer = str(answer).replace('"', '').rstrip(".")
-                answer_1 = answer.startswith("v=spf1")
-                if answer_1 and answer_1 is not None and answer != 'v=spf1 -all':
-                    return domain, 'Yes'
-                else:
-                    return domain, 'No'
-
-        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
+            answers = resolver.resolve(domain, 'TXT')
+            for rdata in answers:
+                txt_string = "".join(str(txt) for txt in rdata.strings)
+                if txt_string.startswith("v=spf1"):
+                    if txt_string != 'v=spf1 -all':
+                        return domain, RecordStatus.PRESENT
+            return domain, RecordStatus.ABSENT
+        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN,
+                dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
                 dns.resolver.NoNameservers):
-            return domain, 'No'
+            return domain, RecordStatus.ABSENT
 
-    def _dmarc_record(self, domain: str) -> tuple:
-        resolver = dns.resolver.Resolver()
-        resolver.timeout = self.resolver_timeout
-        resolver.lifetime = self.resolver_lifetime
-        resolver.nameservers = self.resolver_nameservers
-        dmarc_domain = "_dmarc." + str(domain)
+    def check_dmarc_record(self, domain: str) -> tuple[str, RecordStatus]:
+        resolver = self._get_resolver()
+        dmarc_domain = f"_dmarc.{domain}"
         try:
-            DMARC = resolver.resolve(dmarc_domain, 'TXT')
-            for answer in DMARC:
-                new_string_dmarc = str(answer).replace("; ", " ").replace(";", " ").replace('"', '').rstrip(".")
-                if new_string_dmarc and new_string_dmarc is not None:
-                    return domain, 'Yes'
-                else:
-                    return domain, 'No'
-
-        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
+            answers = resolver.resolve(dmarc_domain, 'TXT')
+            for rdata in answers:
+                txt_string = "".join(str(txt) for txt in rdata.strings)
+                if txt_string.startswith("v=DMARC1"):
+                    return domain, RecordStatus.PRESENT
+            return domain, RecordStatus.ABSENT
+        except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN,
+                dns.resolver.LifetimeTimeout, dns.resolver.Timeout,
                 dns.resolver.NoNameservers):
-            return domain, 'No'
+            return domain, RecordStatus.ABSENT
 
-    def _multithreading_spf(self, numberthreads: list, iterables: list) -> list:
-        iterables_output = []
-        with ThreadPoolExecutor(numberthreads[0]) as executor:
-            results = executor.map(self._spf_record, iterables)
-            for result in results:
-                iterables_output.append(result)
-        return iterables_output
+    def _parallel_check(self, check_func, domains: list[str], num_workers: list) -> list[tuple[str, RecordStatus]]:
+        with ThreadPoolExecutor(max_workers=num_workers[0]) as executor:
+            results = list(executor.map(check_func, domains))
+        return [r for r in results if r is not None]
 
-    def _multithreading_dmarc(self, numberthreads: list, iterables: list) -> list:
-        iterables_output = []
-        with ThreadPoolExecutor(numberthreads[0]) as executor:
-            results = executor.map(self._dmarc_record, iterables)
-            for result in results:
-                iterables_output.append(result)
-        return iterables_output
+    def get_results(self, iterables: list[str], number_workers) -> list:
+        mx_results = self._parallel_check(self.check_mx_record, iterables, number_workers)
+        spf_results = self._parallel_check(self.check_spf_record, iterables, number_workers)
+        dmarc_results = self._parallel_check(self.check_dmarc_record, iterables, number_workers)
+        email_ready = mx_results + dmarc_results + spf_results
 
-    def _multithreading_mx(self, numberthreads: list, iterables: list) -> list:
-        iterables_output = []
-        with ThreadPoolExecutor(numberthreads[0]) as executor:
-            results = executor.map(self._mx_record, iterables)
-            for result in results:
-                iterables_output.append(result)
-        return iterables_output
-
-    def get_results(self, number_workers: list, iterables: list) -> list:
-        mx = self._multithreading_mx(number_workers, iterables)
-        dmarc = self._multithreading_dmarc(number_workers, iterables)
-        spf = self._multithreading_spf(number_workers, iterables)
-
-        email_ready = mx + dmarc + spf
-
-        return list(filter(lambda item: item is not None, email_ready))
+        return email_ready

@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 
 import datetime
+import psutil
+
+
+def get_workers() -> int:
+    cpu_count = psutil.cpu_count(logical=False)
+    print(f"{cpu_count} Physical cores detected")
+    worker = cpu_count - 1
+    print(f"Use {worker} CPU Cores for multiprocessing")
+    return int(worker)
 
 
 class SmoothingResults:
@@ -29,7 +38,6 @@ class SmoothingResults:
                 self._flatten(item)
             else:
                 self.out.extend(list(item))
-
 
     def get_flatten_list(self, nested_list: list) -> list:
         self._flatten(nested_list)

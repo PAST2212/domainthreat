@@ -2,11 +2,11 @@
 
 Daily Domain Monitoring for Brands and Mailing Domain Names
 
-**Current Version:** 3.20
+**Current Version:** 3.21
 
-## What's New in Version 3.20
-- Added new feed for daily updated registered domains from [NRD project](https://github.com/xRuffKez/NRD). The provided 14-Day-Lists will be converted to a daily feed upon first download.
-- Stronger IDN Detection Scope
+## What's New in Version 3.21
+- Better Subdomain Scan Operation in terms of sources, speed and progress visualization
+- other fixes
 
 ## Motivation
 
@@ -130,7 +130,8 @@ Patrick Steinhoff - [LinkedIn](https://www.linkedin.com/in/patrick-steinhoff-168
 - Implement PEP8 compliance
 
 ### Additional Information
-- Public source for newly registered domains (whoisds) is capped at 70,000 daily registrations. New Source [NRD project](https://github.com/xRuffKez/NRD) was added.
+- Public source for newly registered domains (whoisds) is capped at 70,000 daily registrations. 
+- New Source [NRD project](https://github.com/xRuffKez/NRD) was added in Version 3.20. The provided 14-Day-Lists will be converted to a daily feed upon first download.
 - Thresholds for similarity modes can be adjusted to match specific needs.
 - Recommended Python version: >= 3.8 (Written in Python 3.10)
 - Some TLDs (e.g., ".de" domains) may not be consistently included in the public source. You can use [certthreat](https://github.com/PAST2212/certthreat) to bypass this issue.

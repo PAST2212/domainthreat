@@ -2,59 +2,81 @@
 
 
 import asyncio
-import json
 import aiohttp
+import json
 from bs4 import BeautifulSoup
-from aiolimiter import AsyncLimiter
-from domainthreat.core.webscraper import HtmlContent
 
 
 class ScanerDnsDumpster:
     def __init__(self) -> None:
-        self.results: set = set()
+        self.results: set[tuple[str, str]] = set()
 
-    async def dnsdumpster(self, session: aiohttp.ClientSession, domain, rate_limit):
+    @staticmethod
+    async def _scrape_subdomains(session: aiohttp.ClientSession, domain: str) -> set[tuple[str, str]]:
+        url = "https://dnsdumpster.com/"
         try:
-            async with rate_limit:
-                header = HtmlContent.get_header()
-                response = await session.get('https://dnsdumpster.com/', headers=header)
-                data = {}
-                data1 = await response.text()
-                soup1 = BeautifulSoup(data1, 'lxml')
-                csrfmiddlewaretoken = soup1.find("input", {"name": "csrfmiddlewaretoken"}).attrs.get("value", None)
-                if response.status == 200:
-                    if 'csrftoken' in response.cookies.keys():
-                        csrftoken = str(response.cookies).split('csrftoken=')[1].rsplit(';', 1)[0].strip()
-                        data['Cookie'] = f"csfrtoken={csrftoken}"
-                        data['csrfmiddlewaretoken'] = csrfmiddlewaretoken
-                        data['targetip'] = domain
-                        data['user'] = 'free'
-                        header['Referer'] = 'https://dnsdumpster.com/'
-                        header['Origin'] = 'https://dnsdumpster.com'
-                        response2 = await session.post("https://dnsdumpster.com/", data=data, headers=header)
-                        data2 = await response2.text()
-                        soup2 = BeautifulSoup(data2, 'lxml')
-                        subdomains_new = soup2.findAll('td', {"class": "col-md-4"})
-                        for subdomain in subdomains_new:
-                            subdomain_trans = subdomain.get_text().split()[0]
-                            if domain in subdomain_trans:
-                                if subdomain_trans != '':
-                                    self.results.add((domain, subdomain_trans))
+            async with session.get(url=url) as response:
+                if response.status != 200:
+                    print(f"DNSDumpster initial request failed with status {response.status} for {domain}")
+                    return set()
 
-        except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print(f'Dnsdumpster Error via Subdomainscan for: {domain}', e)
+                html = await response.text()
+                soup = BeautifulSoup(html, 'lxml')
+                csrfmiddlewaretoken = soup.find("input", {"name": "csrfmiddlewaretoken"})
+                if not csrfmiddlewaretoken or not csrfmiddlewaretoken.get("value"):
+                    print(f"Could not find CSRF token for {domain}")
+                    return set()
 
-        except (aiohttp.ClientConnectorError, aiohttp.ServerConnectionError) as e:
-            print(f'Dnsdumpster Connection Error via Subdomainscan for: {domain}', e)
+                if 'csrftoken' not in response.cookies:
+                    print(f"No CSRF cookie found for {domain}")
+                    return set()
 
+                csrftoken = str(response.cookies['csrftoken'])
+
+                data = {
+                    'csrfmiddlewaretoken': csrfmiddlewaretoken["value"],
+                    'targetip': domain,
+                    'user': 'free'
+                }
+
+                headers = {
+                    'Referer': url,
+                    'Origin': 'https://dnsdumpster.com',
+                    'Cookie': f'csrftoken={csrftoken}'
+                }
+
+                async with session.post(url, data=data, headers=headers) as scan_response:
+                    if scan_response.status != 200:
+                        print(f"DNSDumpster scan failed with status {scan_response.status} for {domain}")
+                        return set()
+
+                    scan_html = await scan_response.text()
+                    result_soup = BeautifulSoup(scan_html, 'lxml')
+
+                    subdomains = set()
+                    for subdomain_elem in result_soup.findAll('td', {"class": "col-md-4"}):
+                        if subdomain := subdomain_elem.get_text().split()[0]:
+                            if domain in subdomain and subdomain:
+                                subdomains.add((domain, subdomain))
+
+                    return subdomains
+
+        except asyncio.TimeoutError:
+            print(f"Timeout scanning {domain} on DNSDumpster")
+        except json.JSONDecodeError:
+            print(f"Invalid JSON response from DNSDumpster for {domain}")
+        except (aiohttp.ClientError, aiohttp.ServerConnectionError) as e:
+            print(f"Connection error scanning {domain} on DNSDumpster: {str(e)}")
         except Exception as e:
-            print(f'Dnsdumpster Unusual Error via Subdomainscan for: {domain}', e)
+            print(f"Unexpected error scanning {domain} on DNSDumpster: {str(e)}")
 
-    async def tasks_dnsdumpster(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        rate_limit = AsyncLimiter(1, 5)
-        tasks = [self.dnsdumpster(session, y, rate_limit) for y in fuzzy_results]
-        await asyncio.gather(*tasks)
+        return set()
 
-    async def get_results(self, fuzzy_results: list, session: aiohttp.ClientSession):
-        await self.tasks_dnsdumpster(fuzzy_results, session)
+    async def get_results(self, domains: list, session: aiohttp.ClientSession):
+        for domain in domains:
+            try:
+                subdomains = await self._scrape_subdomains(session, domain)
+                self.results.update(subdomains)
+            except Exception as e:
+                print(f"Failed to scan {domain} on DNSDumpster: {str(e)}")
         return self.results

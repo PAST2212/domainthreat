@@ -58,14 +58,12 @@ class ScanerDomains:
         intersection = set(ngram_keyword).intersection(ngram_domain_name)
         union = set(ngram_keyword).union(ngram_domain_name)
         similarity = len(intersection) / len(union) if len(union) > 0 else 0
-
         if similarity >= similarity_value:
             return self.domain
 
     def jaro_winkler(self, similarity_value: float, domain_extract: tldextract.tldextract.TLDExtract) -> str:
         domain_name = domain_extract(self.domain).domain
         winkler = textdistance.jaro_winkler.normalized_similarity(self.keyword, domain_name)
-
         if winkler >= similarity_value:
             return self.domain
 

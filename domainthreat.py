@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import asyncio
 import datetime
 import sys
 import time
@@ -18,19 +17,16 @@ from domainthreat.core.utilities import Helper
 from domainthreat.core.version import VERSION
 from domainthreat.core.emailready import ScanerEmailReady
 from domainthreat.core.parked import ScanerParkedState
-from domainthreat.core.subdomainsearch import ScanerSubdomains
+from domainthreat.core.subdomainsearch import scan_subdomains
+from domainthreat.core.utilities import get_workers
 
 
-if __name__ == '__main__':
-
+def main():
     # initialize once, otherwise tld suffix list will be requested in every multiprocessor
     domain_extract = tldextract.TLDExtract(include_psl_private_domains=True)
     domain_extract('google.com')
 
     FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
-
-    if sys.platform == 'win32':
-        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     number_threads = []
     status_codes = []
@@ -102,29 +98,27 @@ if __name__ == '__main__':
     brandnames = file_manager.get_keywords()
     uniquebrands = file_manager.get_unique_brands()
     blacklist_keywords = file_manager.get_blacklist_keywords()
-    list_topics = file_manager.get_topic_keywords()
-    languages = file_manager.get_languages()
     file_manager.create_csv_basic_monitoring()
     file_manager.create_domain_output_file()
+
+    worker = get_workers()
 
     print(FR + '\nStart Basic Domain Monitoring and Feature Scans' + S)
     print('Quantity of Newly Registered or Updated Domains from', (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('%d.%m.%y') + ':', len(list_file_domains), 'Domains\n')
 
     domaindata_transform = [(x, y) for y in brandnames for x in list_file_domains]
 
-    sub_list = Helper().split_into_chunks(domaindata_transform, multiprocessing.cpu_count())
-    print(multiprocessing.cpu_count(), 'CPU Units detected.')
+    sub_list = Helper().split_into_chunks(domaindata_transform, worker)
 
     que_1 = multiprocessing.Queue()
     que_2 = multiprocessing.Queue()
 
-    processes = [multiprocessing.Process(target=ScanerDomains.get_results, args=(sub, que_1, que_2, blacklist_keywords, thresholds, domain_extract)) for sub
-                 in sub_list]
+    processes = [multiprocessing.Process(target=ScanerDomains.get_results, args=(sub, que_1, que_2, blacklist_keywords, thresholds, domain_extract)) for sub in sub_list]
 
     for p in processes:
         p.start()
 
-    fuzzy_results_temp = [[que_1.get(), que_2.get()] for p in processes]
+    fuzzy_results_temp = [[que_1.get(), que_2.get()] for _ in processes]
 
     for p in processes:
         p.join()
@@ -141,8 +135,8 @@ if __name__ == '__main__':
     e_mail_ready = ScanerEmailReady().get_results(number_workers=number_threads, iterables=domain_results)
     parked_domains = ScanerParkedState().get_results(number_workers=number_threads, iterables=domain_results)
     print(FG + 'End E-Mail Ready & Parked State Scan\n' + S)
-    print(FR + f'\nStart Subdomain Scan: This can take some time {FY}-at least {len(domain_results)*5} Seconds- {FR}to not exceed IP based rate limits' + S)
-    subdomains = ScanerSubdomains().get_results(iterables=domain_results)
+    print(FR + f'\nStart Subdomain Scan' + S)
+    subdomains = scan_subdomains(domains=domain_results)
     print(FG + 'End Subdomain Scan\n' + S)
     print(FG + 'End Basic Domain Monitoring Scan\n' + S)
 
@@ -159,3 +153,7 @@ if __name__ == '__main__':
     print(FR + f'Start Advanced Domain Monitoring for brand keywords {uniquebrands}\n' + S)
     AdvancedMonitoring().get_results(number_workers=number_threads)
     print(FG + f'\nEnd Advanced Domain Monitoring for brand keywords {uniquebrands}' + S)
+
+
+if __name__ == '__main__':
+    main()
