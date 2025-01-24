@@ -14,13 +14,14 @@ class RecordStatus(str, Enum):
 
 @dataclass
 class DNSConfig:
+    # Quad9 resolver per default (default is 9.9.9.9)
     resolver_timeout: int = 5
     resolver_lifetime: int = 5
     resolver_nameservers: list[str] = None
 
     def __post_init__(self):
         if self.resolver_nameservers is None:
-            self.resolver_nameservers = ['8.8.8.8']
+            self.resolver_nameservers = ['9.9.9.9']
 
 
 class ScanerEmailReady:
@@ -76,7 +77,8 @@ class ScanerEmailReady:
                 dns.resolver.NoNameservers):
             return domain, RecordStatus.ABSENT
 
-    def _parallel_check(self, check_func, domains: list[str], num_workers: list) -> list[tuple[str, RecordStatus]]:
+    @staticmethod
+    def _parallel_check(check_func, domains: list[str], num_workers: list) -> list[tuple[str, RecordStatus]]:
         with ThreadPoolExecutor(max_workers=num_workers[0]) as executor:
             results = list(executor.map(check_func, domains))
         return [r for r in results if r is not None]

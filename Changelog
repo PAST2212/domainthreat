@@ -1,3 +1,6 @@
+v 3.22 (24.01.2025)
+- add choice of dns revolver as an argument for domainthreat.py.
+
 v 3.21 (17.01.2025):
 - Better Subdomain Scan Operation in terms of sources, speed and progress visualization.
 - other fixes

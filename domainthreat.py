@@ -15,7 +15,7 @@ from domainthreat.core.sourcecodesearch import AdvancedMonitoring
 from domainthreat.core.utilities import SmoothingResults
 from domainthreat.core.utilities import Helper
 from domainthreat.core.version import VERSION
-from domainthreat.core.emailready import ScanerEmailReady
+from domainthreat.core.emailready import ScanerEmailReady, DNSConfig
 from domainthreat.core.parked import ScanerParkedState
 from domainthreat.core.subdomainsearch import scan_subdomains
 from domainthreat.core.utilities import get_workers
@@ -32,6 +32,7 @@ def main():
     status_codes = []
     topics_matches_domains = []
     thresholds = {}
+    dns_nameservers = []
 
     print(FG + f"""
     -------------------------------------------------------
@@ -45,7 +46,8 @@ def main():
     parser = argparse.ArgumentParser(usage='domainthreat.py [OPTIONS]', formatter_class=lambda prog: argparse.HelpFormatter(prog, width=150, max_help_position=100))
 
     parser.add_argument('-s', '--similarity', type=str, default='close', metavar='SIMILARITY MODE', choices=['close', 'medium', 'wide'], help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" OR "medium" threshold range. Mode "close" is running per default.')
-    parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default threads number is CPU based and per default: {threads_standard}')
+    parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default number of threads is cpu cores based and per default: {threads_standard}')
+    parser.add_argument('-n', '--nameservers', type=str, metavar='DNS NAMESERVERS', help='Comma-separated list of DNS nameservers (e.g. "8.8.8.8,9.9.9.9" OR "9.9.9.9") to use for email-ready checks. Default Quad9 Nameserver: 9.9.9.9')
 
     if len(sys.argv[1:]) == 0:
         parser.print_help()
@@ -57,6 +59,14 @@ def main():
             number_threads.append(args.threads)
         else:
             number_threads.append(threads_standard)
+
+    def arg_nameservers():
+        if args.nameservers:
+            # Split the comma-separated string and strip whitespace
+            servers = [s.strip() for s in args.nameservers.split(',')]
+            dns_nameservers.extend(servers)
+        else:
+            dns_nameservers.append('9.9.9.9')
 
     def arg_thresholds():
         if args.similarity.lower() == 'medium':
@@ -79,10 +89,12 @@ def main():
                          'In case of leaving this similarity input argument blank: "close" mode is running per default')
 
     arg_threads()
+    arg_nameservers()
     arg_thresholds()
 
     print('\nNumber of Threads: ', FG + str(number_threads[0]) + S)
     print('Selected Similarity Mode: ', FG + args.similarity + S)
+    print('DNS Nameservers: ', FG + ', '.join(dns_nameservers) + S)
     time.sleep(4)
 
     print(FR + '\nStart Downloading & Processing Domain Data Feeds' + S)
@@ -131,8 +143,9 @@ def main():
     print(*domain_results, sep="\n")
     print(FY + f'{len(domain_results)} wewly registered domains detected' + S)
     print('Please check:', FY + f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv' + S, f'file for these {len(domain_results)} newly registered domain results only (without additional features like subdomains)\n')
-    print(FR + '\nStart E-Mail Ready & Parked State Scan' + S)
-    e_mail_ready = ScanerEmailReady().get_results(number_workers=number_threads, iterables=domain_results)
+    print(FR + '\nStart E-Mail Ready (via DNS resolver) & Parked State Scan' + S)
+    dns_config = DNSConfig(resolver_nameservers=dns_nameservers)
+    e_mail_ready = ScanerEmailReady(config=dns_config).get_results(number_workers=number_threads, iterables=domain_results)
     parked_domains = ScanerParkedState().get_results(number_workers=number_threads, iterables=domain_results)
     print(FG + 'End E-Mail Ready & Parked State Scan\n' + S)
     print(FR + f'\nStart Subdomain Scan' + S)

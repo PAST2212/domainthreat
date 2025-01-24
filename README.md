@@ -2,11 +2,10 @@
 
 Daily Domain Monitoring for Brands and Mailing Domain Names
 
-**Current Version:** 3.21
+**Current Version:** 3.22
 
-## What's New in Version 3.21
-- Better Subdomain Scan Operation in terms of sources, speed and progress visualization
-- other fixes
+## What's New in Version 3.22
+- add choice of dns revolver as an argument for domainthreat.py (e.g. python domainthreat.py -n "9.9.9.9,8.8.8.8").
 
 ## Motivation
 
@@ -42,6 +41,7 @@ Traditional domain monitoring often relies solely on brand names, which may not 
 - Multithreading (CPU core based), Multiprocessing & Async Requests
 - False Positive Reduction Instruments
 - Keyword detection in websites without brand names in domain
+- Quad9 DNS Resolver is used per default for E-Mail Ready check. 
 
 ## Principles
 
@@ -91,6 +91,9 @@ Options:
   - wide: More false positives and (potentially) less false negatives 
   - medium: Tradeoff between both mode options close and wide.
 - `--threads`: Number of threads (default: CPU core-based)
+- `--nameservers`: Comma-separated list of DNS nameservers for email-ready checks
+  - Default: 9.9.9.9 (Quad9)
+  - Example: --nameservers "9.9.9.9,8.8.8.8" (Will try first server, then second as backup if first fails)
 
 ## Updating
 
