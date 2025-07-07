@@ -6,6 +6,7 @@ Daily Domain Monitoring for Brands and Mailing Domain Names
 
 ## What's New in Version 3.23
 - Hotfix for f-string syntax errors at (newer) python versions.
+- Note: Backup your userdata folder before updating.
 
 ## Motivation
 
