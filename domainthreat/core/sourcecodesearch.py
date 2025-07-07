@@ -43,7 +43,7 @@ class BasicMonitoring:
                     return value
 
             except Exception as e:
-                print(f'Something went wrong at Translation at HTML Tag: {tag}', e)
+                print(f"Something went wrong at Translation at HTML Tag: {tag}. Message: {str(e)}")
 
     # Return Topic Match if matched - Create and Merge Lists per scrapped HTML Tag
     def _matcher(self, domain: str) -> tuple:
@@ -96,26 +96,24 @@ class AdvancedMonitoring:
             latin_syntax = [(unicodedata.normalize('NFKD', lang).encode('latin-1', 'ignore').decode('latin-1'), lang) for lang in flatten_languages]
             latin_translated = list(filter(lambda item: item is not None, [re.sub(r"[^a-z]", "", i[1].lower()) for i in latin_syntax if i[0] == i[1]]))
             latin_translated_deduplicated = list(set(latin_translated))
-            print('Translated Keywords: ', latin_translated_deduplicated)
+            print(f"Translated Keywords: {latin_translated_deduplicated}")
             joined_topic_keywords = latin_translated_deduplicated + list_topics
 
         except Exception as e:
-            print('Something went wrong with Translation of topic keywords: ', e)
+            print(f"Something went wrong with Translation of topic keywords: {e}")
             joined_topic_keywords = []
 
         if len(uniquebrands) > 0 and len(list_topics) > 0:
             if len(joined_topic_keywords) > len(list_topics):
                 thread_ex_list = [y for x in joined_topic_keywords for y in list_file_domains if x in y.split('.')[0]]
-                print(len(thread_ex_list),
-                      f'Newly registered domains detected with topic and translated topic keywords based on file topic_keywords.txt in domain name')
+                print(f"{len(thread_ex_list)} Newly registered domains detected with topic and translated topic keywords based on file topic_keywords.txt in domain name")
 
             else:
                 thread_ex_list = [y for x in list_topics for y in list_file_domains if x in y.split('.')[0]]
-                print(len(thread_ex_list),
-                      f'Newly registered domains detected with topic keywords based on file topic_keywords.txt in domain name')
+                print(f"{len(thread_ex_list)} Newly registered domains detected with topic keywords based on file topic_keywords.txt in domain name")
 
             thread_ex_list = list(set(thread_ex_list))
-            print('Example Domains: ', thread_ex_list[1:8], '\n')
+            print(f"Example Domains: {thread_ex_list[1:8]}\n")
 
             html_content_temp = self._multithreading_advanced(numberthreads=nthreads, iterables=thread_ex_list)
 
@@ -126,15 +124,15 @@ class AdvancedMonitoring:
             return list(set(topic_in_domainname_results))
 
         else:
-            print('Please check unique_brand_names.txt and topic_keywords.txt for input')
+            print("Please check unique_brand_names.txt and topic_keywords.txt for input")
 
     def get_results(self, number_workers: list) -> None:
         results = self._matcher(number_workers)
         if results is not None and len(results) > 0:
-            print(f'\n{len(results)} Matches detected: ', results)
+            print(f"\n{len(results)} Matches detected: {results}")
             print(*results, sep='\n')
             ManageFiles().create_csv_advanced_monitoring()
             ManageFiles().write_csv_advanced_monitoring(iterables=results)
             ManageFiles().postprocessing_advanced_monitoring()
         else:
-            print('\nNo Matches detected: ', results)
+            print(f"\nNo Matches detected: {results}")

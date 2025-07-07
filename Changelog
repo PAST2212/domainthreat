@@ -1,4 +1,8 @@
-v 3.22 (24.01.2025)
+v 3.23 (07.07.2025):
+- Hotfix for f-string syntax errors.
+- Change Default Nameserver from Quad9 to Google
+
+v 3.22 (24.01.2025):
 - add choice of dns revolver as an argument for domainthreat.py.
 
 v 3.21 (17.01.2025):

@@ -14,14 +14,13 @@ class RecordStatus(str, Enum):
 
 @dataclass
 class DNSConfig:
-    # Quad9 resolver per default (default is 9.9.9.9)
     resolver_timeout: int = 5
     resolver_lifetime: int = 5
     resolver_nameservers: list[str] = None
 
     def __post_init__(self):
         if self.resolver_nameservers is None:
-            self.resolver_nameservers = ['9.9.9.9']
+            self.resolver_nameservers = ['8.8.8.8']     # Google resolver per default
 
 
 class ScanerEmailReady:

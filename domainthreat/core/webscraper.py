@@ -43,7 +43,7 @@ class HtmlContent:
                     hey.append(og_keywords.get('content').replace('\n', '').lower().strip())
 
         except Exception as e:
-            print(f'Parsing Webpage Error: {e}')
+            print(f"Parsing Webpage Error: {e}")
 
         return list(filter(lambda item: item is not None, hey))
 
@@ -85,7 +85,7 @@ class HtmlContent:
 
         except (TypeError, AttributeError, KeyError) as e:
             status_codes = 'WebpageError'
-            print(f'Parsing Webpage Error. Something went wrong at scraping: {domain}', e)
+            print(f"Parsing Webpage Error: {str(e)}. Something went wrong at scraping: {domain}")
 
         except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout, requests.exceptions.Timeout):
             status_codes = 'TimeoutError'
@@ -95,7 +95,7 @@ class HtmlContent:
 
         except Exception as e:
             status_codes = 'Unknown'
-            print('Unknown Error occured: ', e)
+            print(f"Unknown Error occured: {str(e)}")
 
         return meta_tags, status_codes
 
