@@ -2,7 +2,6 @@
 
 import tldextract
 import textdistance
-from colorama import Fore, Style
 from domainthreat.core.utilities import Helper
 from domainthreat.core.punycoder import unconfuse
 from domainthreat.core.punycoder import normalize_domain
@@ -88,12 +87,10 @@ class ScanerDomains:
 
     @staticmethod
     def get_results(x, container1, container2, blacklist, similarity_range, domain_extract):
-        FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
-
         index = x[0]
         value = x[1]
         results_temp = []
-        print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
+        print(f"Processor Job {index} for domain monitoring is starting\n")
 
         for domain in value:
             if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
@@ -135,4 +132,4 @@ class ScanerDomains:
 
         container1.put(results_temp)
         container2.put(index)
-        print(FG + f'Processor Job {index} for domain monitoring is finishing\n' + S)
+        print(f"Processor Job {index} for domain monitoring is finishing\n")

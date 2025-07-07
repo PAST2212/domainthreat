@@ -20,16 +20,16 @@ DOMAIN_FILE_DIRECTORY = DATA_DIRECORY / 'domainfile'
 
 class ManageFiles:
     def __init__(self):
-        self.advanced_file = f'Advanced_Monitoring_Results_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
-        self.basic_file = f'Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv'
-        self.domain_output_file = f'domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv'
+        self.advanced_file = f"Advanced_Monitoring_Results_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv"
+        self.basic_file = f"Newly_Registered_Domains_Calender_Week_{datetime.datetime.now().isocalendar()[1]}_{datetime.datetime.today().year}.csv"
+        self.domain_output_file = f"domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv"
         self.keywords = 'keywords'
         self.unique = 'unique_brand_names'
         self.black = 'blacklist_keywords'
         self.lcs = 'blacklist_lcs'
         self.topic = 'topic_keywords'
         self.languages = 'languages_advanced_monitoring'
-        self.whoids_filename = f'whoisds_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
+        self.whoids_filename = f"whoisds_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt"
         self.previous_date = (datetime.datetime.today() - datetime.timedelta(days=1)).strftime('20%y-%m-%d')
         self.domains = 'Domains'
         self.csvcolumn_keyword = 'Keyword Found'
@@ -40,7 +40,7 @@ class ManageFiles:
         self.subdomains = 'Subdomains'
         self.email = 'Email Availability'
         self.parked = 'Parked Domains'
-        self.current_github_filename = f'github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
+        self.current_github_filename = f"github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt"
         self.previous_github_filename = 'previous_github_domains.txt'
 
     def download_whoisds_domains(self) -> None:
@@ -50,7 +50,7 @@ class ManageFiles:
 
         previous_date_formated = self.previous_date + '.zip'
         this_new = base64.b64encode(previous_date_formated.encode('ascii'))
-        whoisds_link = 'https://whoisds.com//whois-database/newly-registered-domains/{}/nrd'.format(this_new.decode('ascii'))
+        whoisds_link = f"https://whoisds.com//whois-database/newly-registered-domains/{this_new.decode('ascii')}/nrd"
         try:
             request = requests.get(whoisds_link)
             zipfiles = zipfile.ZipFile(BytesIO(request.content))
@@ -59,13 +59,13 @@ class ManageFiles:
             print(f"Whoisds Domain file downloaded successfully to {domain_file_path}")
 
         except requests.RequestException as e:
-            print(f'Error downloading Whoisds domain file. Please check: {whoisds_link}\n', e)
+            print(f"Error downloading Whoisds domain file: {str(e)}. Please check: {whoisds_link}\n")
 
     def read_whoisds_domains(self) -> list[str]:
         download_file_path = DOMAIN_FILE_DIRECTORY / 'domain-names.txt'
         domain_file_path = DOMAIN_FILE_DIRECTORY / self.whoids_filename
         if download_file_path.exists():
-            os.rename(f'{DOMAIN_FILE_DIRECTORY}/domain-names.txt', domain_file_path)
+            os.rename(f"{DOMAIN_FILE_DIRECTORY}/domain-names.txt", domain_file_path)
 
         list_file_domains = []
         try:
@@ -74,7 +74,7 @@ class ManageFiles:
                     list_file_domains.append(domain.replace("\n", "").lower().strip())
 
         except IOError as e:
-            print(f'Something went wrong with reading Whoisds Domain File. Please check file {domain_file_path}', e)
+            print(f"Something went wrong with reading Whoisds Domain File: {str(e)}. Please check file {domain_file_path}")
 
         return list_file_domains
 
@@ -82,7 +82,7 @@ class ManageFiles:
     def download_github_domains(self) -> None:
         domain_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
         if not domain_file_path.exists():
-            github_url = 'https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/lists/14-day/domains-only/nrd-14day.txt'
+            github_url = "https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/lists/14-day/domains-only/nrd-14day.txt"
             try:
                 response = requests.get(github_url)
                 response.raise_for_status()
@@ -91,7 +91,7 @@ class ManageFiles:
                 print(f"Github Domain file downloaded successfully to {domain_file_path}")
 
             except requests.RequestException as e:
-                print(f'Error downloading Github domain file. Please check: {github_url}\n', e)
+                print(f"Error downloading Github domain file: {str(e)}. Please check: {github_url}\n")
 
         else:
             domain_file_path.unlink()
@@ -107,13 +107,13 @@ class ManageFiles:
                         github_domains.add(domain.replace("\n", "").lower().strip())
 
         except IOError as e:
-            print(f'Error reading Domain File. Please check: {domain_file_path}', e)
+            print(f"Error reading Domain File: {str(e)}. Please check: {domain_file_path}")
 
         return github_domains
 
     def get_new_github_domains(self) -> list[str]:
         current_domains = self.read_github_domains(self.current_github_filename)
-        print(f'\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as "Newly Registered or Updated Domains", since there is no "previous_github_domains.txt" file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.')
+        print(f"\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as 'Newly Registered or Updated Domains', since there is no 'previous_github_domains.txt' file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.")
 
         previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
         if previous_file_path.exists():
@@ -130,7 +130,7 @@ class ManageFiles:
 
     def user_data(self, file: str) -> list:
         try:
-            file_keywords = open(f'{USER_DATA_DIRECTORY}/{file}.txt', 'r', encoding='utf-8-sig')
+            file_keywords = open(f"{USER_DATA_DIRECTORY}/{file}.txt", 'r', encoding='utf-8-sig')
             keywords = []
             for my_domains in file_keywords:
                 domain = my_domains.replace("\n", "").lower().replace(",", "").replace(" ", "").strip()
@@ -149,8 +149,8 @@ class ManageFiles:
                         keywords.append(domain)
             file_keywords.close()
         except Exception as e:
-            print(f'Something went wrong with reading User Data File. Please check file {USER_DATA_DIRECTORY}/{file}.txt', e)
-            sys.exit()
+            print(f"Something went wrong with reading User Data File: {str(e)}. Please check file {USER_DATA_DIRECTORY}/{file}.txt")
+            sys.exit(1)
 
         return keywords
 
@@ -209,16 +209,16 @@ class ManageFiles:
             df[self.email] = df.apply(lambda x: FeaturesToCSV().email_and_parked(x['Domains'], features=email_info) if x['Domains'] in iterables else x[self.email], axis=1)
             df.to_csv(self.basic_file, index=False)
         except pd.errors.ParserError:
-            print('Newly_Registered_Domains_Calender_Week CSV File seems to be incorrectly formatted. Please rename the file')
+            print("Newly_Registered_Domains_Calender_Week CSV File seems to be incorrectly formatted. Please rename the file")
 
     def postprocessing_advanced_monitoring(self) -> None:
         try:
             df = pd.read_csv(self.advanced_file, delimiter=',')
             df.drop_duplicates(inplace=True, subset=['Domains'])
             df.to_csv(self.advanced_file, index=False)
-            print(f'\nPlease check {self.advanced_file} for results\n')
+            print(f"\nPlease check {self.advanced_file} for results\n")
         except pd.errors.ParserError:
-            print('Advanced_Monitoring_Results_Calender_Week CSV File seems to be incorrectly formatted. Please rename the file')
+            print("Advanced_Monitoring_Results_Calender_Week CSV File seems to be incorrectly formatted. Please rename the file")
 
     def get_keywords(self):
         return self.user_data(self.keywords)

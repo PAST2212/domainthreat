@@ -28,13 +28,13 @@ class ScanerSubdomainCenter:
                             self.results.add((domain, subdomain))
 
         except (asyncio.TimeoutError, TypeError, json.decoder.JSONDecodeError) as e:
-            print(f'Subdomaincenter Error via Subdomainscan for: {domain}', e)
+            print(f"Subdomaincenter Error via Subdomainscan for {domain}: {str(e)}")
 
         except (aiohttp.ClientConnectorError, aiohttp.ServerConnectionError) as e:
-            print(f'Subdomaincenter Connection Error via Subdomainscan for: {domain}', e)
+            print(f"Subdomaincenter Connection Error via Subdomainscan for {domain}: {str(e)}")
 
         except Exception as e:
-            print(f'Subdomaincenter Unusual Error via Subdomainscan for: {domain}', e)
+            print(f"Subdomaincenter Unusual Error via Subdomainscan for {domain}: {str(e)}")
 
     async def tasks_subdomaincenter(self, fuzzy_results: list, session: aiohttp.ClientSession):
         rate_limit = AsyncLimiter(1, 5)

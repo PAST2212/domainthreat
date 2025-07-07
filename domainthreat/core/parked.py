@@ -72,7 +72,6 @@ class ScanerParkedState:
                 iterables_output.append(result)
         return iterables_output
 
-
     def get_results(self, number_workers: list, iterables: list) -> list:
         parked = self._multithreading_parked(number_workers, iterables)
 

@@ -1,9 +1,5 @@
-holiday
-vacation
-travel
-journey
-hotel
-booking
-cruise
-resort
-tourism
+ear
+phone
+headset
+music
+hear
