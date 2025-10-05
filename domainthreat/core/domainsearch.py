@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
 import tldextract
+import datetime
 import textdistance
-from domainthreat.core.utilities import Helper
-from domainthreat.core.punycoder import unconfuse
-from domainthreat.core.punycoder import normalize_domain
-from domainthreat.core.files import ManageFiles
+from colorama import Fore, Style
+from domainthreat.core.punycoder import normalize_domain, decode_domain, unconfuse
 
 
 class ScanerDomains:
@@ -66,70 +65,41 @@ class ScanerDomains:
         if winkler >= similarity_value:
             return self.domain
 
-    # LCS only starts to work for brand names or strings with length greater than 8
-    # Not activated by default
-    def lcs(self, keywordthreshold, domain_extract: tldextract.tldextract.TLDExtract) -> str:
-        domain_name = domain_extract(self.domain).domain
-        if len(self.keyword) > 8:
-            longest_common_substring = ""
-            max_length = 0
-            for i in range(len(self.keyword)):
-                if self.keyword[i] in domain_name:
-                    for j in range(len(self.keyword), i, -1):
-                        if self.keyword[i:j] in domain_name:
-                            if len(self.keyword[i:j]) > max_length:
-                                max_length = len(self.keyword[i:j])
-                                longest_common_substring = self.keyword[i:j]
-            if (len(longest_common_substring) / len(self.keyword)) > keywordthreshold and len(
-                    longest_common_substring) is not len(
-                    self.keyword) and all(black_keyword_lcs not in self.keyword for black_keyword_lcs in ManageFiles().get_blacklist_lcs()):
-                return self.domain
-
     @staticmethod
-    def get_results(x, container1, container2, blacklist, similarity_range, domain_extract):
-        index = x[0]
-        value = x[1]
+    def get_results(chunk, container, blacklist, similarity_range, domain_extract):
+        FG, BT, FR, FY, S = Fore.GREEN, Style.BRIGHT, Fore.RED, Fore.YELLOW, Style.RESET_ALL
+
+        index = chunk[0]
+        value = chunk[1]
+        today = str(datetime.date.today())
         results_temp = []
-        print(f"Processor Job {index} for domain monitoring is starting\n")
+        print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
+        for domain, keyword in value:
+            if keyword in domain and all(black_keyword not in domain for black_keyword in blacklist):
+                results_temp.append((decode_domain(domain), keyword, today, 'Full Word Match'))
 
-        for domain in value:
-            if domain[1] in domain[0] and all(black_keyword not in domain[0] for black_keyword in blacklist):
-                results_temp.append((domain[0], domain[1], Helper.get_today(), 'Full Word Match'))
+            elif ScanerDomains(keyword, domain).jaccard(n_gram=2, similarity_value=similarity_range['jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in domain for black_keyword in blacklist):
+                results_temp.append((decode_domain(domain), keyword, today, 'Similarity Jaccard'))
 
-            elif ScanerDomains(domain[1], domain[0]).jaccard(n_gram=2, similarity_value=similarity_range[
-                'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in domain[0] for black_keyword in blacklist):
-                results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Jaccard'))
+            elif ScanerDomains(keyword, domain).damerau(similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(black_keyword not in domain for black_keyword in blacklist):
+                results_temp.append((decode_domain(domain), keyword, today, 'Similarity Damerau-Levenshtein'))
 
-            elif ScanerDomains(domain[1], domain[0]).damerau(
-                    similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(
-                    black_keyword not in domain[0] for black_keyword in blacklist):
-                results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Damerau-Levenshtein'))
+            elif ScanerDomains(keyword, domain).jaro_winkler(similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(black_keyword not in domain for black_keyword in blacklist):
+                results_temp.append((decode_domain(domain), keyword, today, 'Similarity Jaro-Winkler'))
 
-            elif ScanerDomains(domain[1], domain[0]).jaro_winkler(
-                    similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(
-                    black_keyword not in domain[0] for black_keyword in blacklist):
-                results_temp.append((domain[0], domain[1], Helper.get_today(), 'Similarity Jaro-Winkler'))
+            elif unconfuse(domain) is not domain:
+                ascii_domain = normalize_domain(domain)
+                if keyword in ascii_domain and all(black_keyword not in ascii_domain for black_keyword in blacklist):
+                    results_temp.append((decode_domain(domain), keyword, today, 'IDN Full Word Match'))
 
-            elif unconfuse(domain[0]) is not domain[0]:
-                ascii_domain = normalize_domain(domain[0])
-                if domain[1] in ascii_domain and all(black_keyword not in ascii_domain for black_keyword in blacklist):
-                    results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Full Word Match'))
+                elif ScanerDomains(keyword, ascii_domain).damerau(similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(black_keyword not in ascii_domain for black_keyword in blacklist):
+                    results_temp.append((decode_domain(domain), keyword, today, 'IDN Similarity Damerau-Levenshtein'))
 
-                elif ScanerDomains(domain[1], ascii_domain).damerau(
-                        similarity_value=similarity_range['damerau'], domain_extract=domain_extract) is not None and all(
-                        black_keyword not in ascii_domain for black_keyword in blacklist):
-                    results_temp.append(
-                        (domain[0], domain[1], Helper.get_today(), 'IDN Similarity Damerau-Levenshtein'))
+                elif ScanerDomains(keyword, ascii_domain).jaccard(n_gram=2, similarity_value=similarity_range['jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in ascii_domain for black_keyword in blacklist):
+                    results_temp.append((decode_domain(domain), keyword, today, 'IDN Similarity Jaccard'))
 
-                elif ScanerDomains(domain[1], ascii_domain).jaccard(n_gram=2, similarity_value=similarity_range[
-                    'jaccard'], domain_extract=domain_extract) is not None and all(black_keyword not in ascii_domain for black_keyword in blacklist):
-                    results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaccard'))
+                elif ScanerDomains(keyword, ascii_domain).jaro_winkler(similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(black_keyword not in ascii_domain for black_keyword in blacklist):
+                    results_temp.append((decode_domain(domain), keyword, today, 'IDN Similarity Jaro-Winkler'))
 
-                elif ScanerDomains(domain[1], ascii_domain).jaro_winkler(
-                        similarity_value=similarity_range['jaro_winkler'], domain_extract=domain_extract) is not None and all(
-                        black_keyword not in ascii_domain for black_keyword in blacklist):
-                    results_temp.append((domain[0], domain[1], Helper.get_today(), 'IDN Similarity Jaro-Winkler'))
-
-        container1.put(results_temp)
-        container2.put(index)
-        print(f"Processor Job {index} for domain monitoring is finishing\n")
+        container.put(results_temp)
+        print(FG + f'Processor Job {index} for domain monitoring is finishing\n' + S)
