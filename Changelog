@@ -1,3 +1,8 @@
+v 3.24 (05.10.2025):
+- changed to new github nrd feed project https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd
+- punycode/unicode handling
+- signal handling multiprocessing
+
 v 3.23 (07.07.2025):
 - Hotfix for f-string syntax errors.
 - Change Default Nameserver from Quad9 to Google

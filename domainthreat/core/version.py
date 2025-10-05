@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-VERSION = 'v3.23'
+VERSION = 'v3.24'
 
 
 def version() -> str:

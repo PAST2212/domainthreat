@@ -2,11 +2,11 @@
 
 Daily Domain Monitoring for Brands and Mailing Domain Names
 
-**Current Version:** 3.23
+**Current Version:** 3.24
 
-## What's New in Version 3.23
-- Hotfix for f-string syntax errors at (newer) python versions.
-- Note: Backup your userdata folder before updating.
+## What's New in Version 3.24
+- improved punycode/unicode handling & domain (multi-)processing operation
+- moved to new github newly registered domain feed project https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd
 
 ## Motivation
 
@@ -135,7 +135,7 @@ Patrick Steinhoff - [LinkedIn](https://www.linkedin.com/in/patrick-steinhoff-168
 
 ### Additional Information
 - Public source for newly registered domains (whoisds) is capped at 70,000 daily registrations. 
-- New Source [NRD project](https://github.com/xRuffKez/NRD) was added in Version 3.20. The provided 14-Day-Lists will be converted to a daily feed upon first download.
+- New Source [NRD project](https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd) was added in Version 3.24. The provided 7-Day-Lists will be converted to a daily feed upon first download.
 - Thresholds for similarity modes can be adjusted to match specific needs.
 - Recommended Python version: >= 3.8 (Written in Python 3.10)
 - Some TLDs (e.g., ".de" domains) may not be consistently included in the public source. You can use [certthreat](https://github.com/PAST2212/certthreat) to bypass this issue.
