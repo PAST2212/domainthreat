@@ -1978,23 +1978,31 @@ CONFUSABLES: Dict[str, str] = {
 }
 
 
+def decode_domain(domain: str):
+    try:
+        if domain.startswith('xn--'):
+            return idna.decode(domain)
+        return domain
+    except idna.IDNAError as e:
+        print(f"{type(e)}: IDNA decoding failed for domain: {domain}")
+        return domain
+
+
 # Convert a punycode domain to its Unicode form and replace confusable characters.
 def unconfuse(domain: str) -> str:
-    if domain.startswith('xn--') or domain.startswith('*.xn--'):
-        try:
-            # Try to decode using the built-in idna encoding
-            domain_unicode = domain.encode('idna').decode('idna')
-        except UnicodeError:
-            try:
-                # If that fails, try the idna library
-                domain_unicode = idna.decode(domain)
-            except Exception:
-                # If both methods fail, return the original domain
-                return domain
+    try:
+        if domain.startswith('xn--'):
+            domain_unicode = idna.decode(domain)
+            return ''.join(CONFUSABLES.get(char, char) for char in domain_unicode)
+        else:
+            return domain
 
-        return ''.join(CONFUSABLES.get(char, char) for char in domain_unicode)
+    except idna.IDNAError:
+        return domain
 
-    return domain
+    except Exception as e:
+        print(f"{type(e)}: Unexpected Error occured while unconfusing domain: {domain}")
+        return domain
 
 
 # Normalize a domain name by unconfusing it and converting to ASCII.
