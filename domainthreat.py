@@ -143,6 +143,7 @@ def main():
     print(*domain_results, sep="\n")
     print(f"{FY}{len(domain_results)} newly registered domains detected{S}")
     print(f"Please check:{FY} domain_results_{datetime.datetime.today().strftime('20%y_%m_%d')}.csv{S} file for these {len(domain_results)} newly registered domain results only (without additional features like subdomains)\n")
+
     print(f"{FR}'\nStart E-Mail Ready (via DNS resolver) & Parked State Scan{S}")
     dns_config = DNSConfig(resolver_nameservers=dns_nameservers)
     e_mail_ready = ScanerEmailReady(config=dns_config).get_results(number_workers=number_threads, iterables=domain_results)

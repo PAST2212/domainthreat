@@ -78,11 +78,11 @@ class ManageFiles:
 
         return list_file_domains
 
-    # Project: https://github.com/xRuffKez/NRD
-    def download_github_domains(self) -> None:
-        domain_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
+    @staticmethod
+    def download_github_domains() -> None:
+        domain_file_path = DOMAIN_FILE_DIRECTORY / f'github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
         if not domain_file_path.exists():
-            github_url = "https://raw.githubusercontent.com/xRuffKez/NRD/refs/heads/main/lists/14-day/domains-only/nrd-14day.txt"
+            github_url = 'https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/domains/nrd7.txt'
             try:
                 response = requests.get(github_url)
                 response.raise_for_status()
@@ -91,13 +91,13 @@ class ManageFiles:
                 print(f"Github Domain file downloaded successfully to {domain_file_path}")
 
             except requests.RequestException as e:
-                print(f"Error downloading Github domain file: {str(e)}. Please check: {github_url}\n")
+                print(f'Error downloading Github domain file: {str(e)}. Please check: {github_url}\n')
 
         else:
             domain_file_path.unlink()
 
     @staticmethod
-    def read_github_domains(filename: str) -> set[str]:
+    def _read_github_domains(filename: str) -> list[str]:
         domain_file_path = DOMAIN_FILE_DIRECTORY / filename
         github_domains = set()
         try:
@@ -106,25 +106,26 @@ class ManageFiles:
                     if domain and not domain.startswith('#'):
                         github_domains.add(domain.replace("\n", "").lower().strip())
 
-        except IOError as e:
-            print(f"Error reading Domain File: {str(e)}. Please check: {domain_file_path}")
+        except Exception as e:
+            print(f'Error reading Domain File: {str(e)}. Please check: {domain_file_path}')
 
-        return github_domains
+        return list(github_domains)
 
     def get_new_github_domains(self) -> list[str]:
-        current_domains = self.read_github_domains(self.current_github_filename)
-        print(f"\nNote: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 14 days) will be considered as 'Newly Registered or Updated Domains', since there is no 'previous_github_domains.txt' file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.")
-
+        current_domains = self._read_github_domains(self.current_github_filename)
+        print(f'Note: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 7 days) will be considered as "Newly Registered or Updated Domains", since there is no "previous_github_domains.txt" file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.')
+        print(f"Please check 'https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd' for more notes")
         previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
+        current_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
         if previous_file_path.exists():
-            previous_domains = self.read_github_domains(self.previous_github_filename)
-            new_domains = list(current_domains - previous_domains)
+            previous_domains = self._read_github_domains(self.previous_github_filename)
+            new_domains = list(set(current_domains) - set(previous_domains))
             previous_file_path.unlink()
         else:
-            new_domains = list(current_domains)
+            new_domains = current_domains
 
-        current_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
-        current_file_path.rename(previous_file_path)
+        if current_file_path.exists():
+            current_file_path.rename(previous_file_path)
 
         return new_domains
 
