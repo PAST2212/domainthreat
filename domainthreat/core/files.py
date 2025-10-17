@@ -80,7 +80,7 @@ class ManageFiles:
 
     @staticmethod
     def download_github_domains() -> None:
-        domain_file_path = DOMAIN_FILE_DIRECTORY / f'github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
+        domain_file_path = DOMAIN_FILE_DIRECTORY / f"github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt"
         if not domain_file_path.exists():
             github_url = 'https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/domains/nrd7.txt'
             try:
@@ -244,3 +244,4 @@ class ManageFiles:
 
     def get_github_domainfile(self):
         return self.get_new_github_domains()
+
