@@ -1,3 +1,6 @@
+v 3.24.1 (18.10.2025):
+- fix "SyntaxError: f-string" error for certain python versions
+
 v 3.24 (05.10.2025):
 - changed to new github nrd feed project https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd
 - punycode/unicode handling

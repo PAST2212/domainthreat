@@ -42,7 +42,7 @@ class ScanerDnsDumpster:
                 headers = {
                     'Referer': url,
                     'Origin': 'https://dnsdumpster.com',
-                    'Cookie': f'csrftoken={csrftoken}'
+                    'Cookie': f"csrftoken={csrftoken}"
                 }
 
                 async with session.post(url, data=data, headers=headers) as scan_response:

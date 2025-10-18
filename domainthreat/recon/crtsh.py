@@ -12,7 +12,7 @@ class ScanerCrtsh:
     @staticmethod
     async def _scrape_subdomains(session: aiohttp.ClientSession, domain: str):
         params = {
-            'q': f'%.{domain}',
+            'q': f"%.{domain}",
             'output': 'json'
         }
 

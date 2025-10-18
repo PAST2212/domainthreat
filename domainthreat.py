@@ -95,7 +95,7 @@ def main():
     parser = argparse.ArgumentParser(usage='domainthreat.py [OPTIONS]', formatter_class=lambda prog: argparse.HelpFormatter(prog, width=150, max_help_position=100))
 
     parser.add_argument('-s', '--similarity', type=str, default='close', metavar='SIMILARITY MODE', choices=['close', 'medium', 'wide'], help='Similarity range of homograph, typosquatting detection algorithms with SIMILARITY MODE options "close" OR "wide" OR "medium" threshold range. Mode "close" is running per default.')
-    parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f'Default number of threads is cpu cores based and per default: {threads_standard}')
+    parser.add_argument('-t', '--threads', type=int, metavar='NUMBER THREADS', default=threads_standard, help=f"Default number of threads is cpu cores based and per default: {threads_standard}")
     parser.add_argument('-n', '--nameservers', type=str, metavar='DNS NAMESERVERS', help='Comma-separated list of DNS nameservers (e.g. "8.8.8.8,9.9.9.9" OR "9.9.9.9") to use for email-ready checks. Default Google Nameserver: 8.8.8.8')
 
     if len(sys.argv[1:]) == 0:

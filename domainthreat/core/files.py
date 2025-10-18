@@ -80,7 +80,7 @@ class ManageFiles:
 
     @staticmethod
     def download_github_domains() -> None:
-        domain_file_path = DOMAIN_FILE_DIRECTORY / f'github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt'
+        domain_file_path = DOMAIN_FILE_DIRECTORY / f"github_domains_{datetime.datetime.today().strftime('20%y_%m_%d')}.txt"
         if not domain_file_path.exists():
             github_url = 'https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/domains/nrd7.txt'
             try:
@@ -91,7 +91,7 @@ class ManageFiles:
                 print(f"Github Domain file downloaded successfully to {domain_file_path}")
 
             except requests.RequestException as e:
-                print(f'Error downloading Github domain file: {str(e)}. Please check: {github_url}\n')
+                print(f"Error downloading Github domain file: {str(e)}. Please check: {github_url}\n")
 
         else:
             domain_file_path.unlink()
@@ -107,13 +107,13 @@ class ManageFiles:
                         github_domains.add(domain.replace("\n", "").lower().strip())
 
         except Exception as e:
-            print(f'Error reading Domain File: {str(e)}. Please check: {domain_file_path}')
+            print(f"Error reading Domain File: {str(e)}. Please check: {domain_file_path}")
 
         return list(github_domains)
 
     def get_new_github_domains(self) -> list[str]:
         current_domains = self._read_github_domains(self.current_github_filename)
-        print(f'Note: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 7 days) will be considered as "Newly Registered or Updated Domains", since there is no "previous_github_domains.txt" file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.')
+        print(f"Note: On the first run, all {len(current_domains)} Github Domains (Domains registered within the past 7 days) will be considered as 'Newly Registered or Updated Domains', since there is no 'previous_github_domains.txt' file existent in {DOMAIN_FILE_DIRECTORY} Directory to compare against.")
         print(f"Please check 'https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd' for more notes")
         previous_file_path = DOMAIN_FILE_DIRECTORY / self.previous_github_filename
         current_file_path = DOMAIN_FILE_DIRECTORY / self.current_github_filename
@@ -158,7 +158,7 @@ class ManageFiles:
     def create_csv_basic_monitoring(self) -> None:
         console_file_path = self.basic_file
         if not os.path.exists(console_file_path):
-            print('Create Monitoring with Newly Registered Domains')
+            print("Create Monitoring with Newly Registered Domains")
             header = [self.domains, self.csvcolumn_keyword, self.date, self.detected, self.sourcecode, self.status, self.parked, self.subdomains, self.email]
             with open(console_file_path, 'w') as f:
                 writer = csv.writer(f)

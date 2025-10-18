@@ -73,7 +73,7 @@ class ScanerDomains:
         value = chunk[1]
         today = str(datetime.date.today())
         results_temp = []
-        print(FR + f'Processor Job {index} for domain monitoring is starting\n' + S)
+        print(FR + f"Processor Job {index} for domain monitoring is starting\n" + S)
         for domain, keyword in value:
             if keyword in domain and all(black_keyword not in domain for black_keyword in blacklist):
                 results_temp.append((decode_domain(domain), keyword, today, 'Full Word Match'))
@@ -102,4 +102,4 @@ class ScanerDomains:
                     results_temp.append((decode_domain(domain), keyword, today, 'IDN Similarity Jaro-Winkler'))
 
         container.put(results_temp)
-        print(FG + f'Processor Job {index} for domain monitoring is finishing\n' + S)
+        print(FG + f"Processor Job {index} for domain monitoring is finishing\n" + S)

@@ -2,7 +2,7 @@
 
 Daily Domain Monitoring for Brands and Mailing Domain Names
 
-**Current Version:** 3.24
+**Current Version:** v3.24.1
 
 ## What's New in Version 3.24
 - improved punycode/unicode handling & domain (multi-)processing operation
