@@ -134,6 +134,7 @@ Patrick Steinhoff - [LinkedIn](https://www.linkedin.com/in/patrick-steinhoff-168
 - Implement PEP8 compliance
 
 ### Additional Information
+- Refactoring / Phytonic Memory Improvements / Subdomain Scan Optional
 - Public source for newly registered domains (whoisds) is capped at 70,000 daily registrations. 
 - New Source [NRD project](https://github.com/hagezi/dns-blocklists?tab=readme-ov-file#nrd) was added in Version 3.24. The provided 7-Day-Lists will be converted to a daily feed upon first download.
 - Thresholds for similarity modes can be adjusted to match specific needs.
