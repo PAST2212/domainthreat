@@ -244,3 +244,4 @@ class ManageFiles:
 
     def get_github_domainfile(self):
         return self.get_new_github_domains()
+
